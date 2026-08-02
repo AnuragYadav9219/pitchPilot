@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+
+# Expo
+.expo/
+
+# Build
+dist/
+build/
+
+# Android
+android/
+
+# iOS
+ios/
+
+# Coverage
+coverage/
+
+# Misc
+*.tmp
