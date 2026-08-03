@@ -33,6 +33,7 @@ ios/
 
 # Coverage
 coverage/
+coverage
 
 # Misc
 *.tmp
