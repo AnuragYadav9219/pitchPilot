@@ -1,5 +1,6 @@
 import { View } from "react-native";
 import { CardProps } from "./Card.types";
+import { Colors, Radius, Shadow } from "@/theme";
 import { CardHeader } from "./CardHeader";
 import { CardContent } from "./CardContent";
 import { CardFooter } from "./CardFooter";
@@ -15,7 +16,19 @@ const CardBase: React.FC<CardProps> = ({
     className = "",
 }) => {
     return (
-        <View className={`rounded-3xl border border-zinc-800 bg-zinc-900 p-5 ${className}`}>
+        <View
+            className={className}
+            style={[
+                {
+                    backgroundColor: Colors.surface,
+                    borderRadius: Radius.xl,
+                    borderColor: Colors.border,
+                    borderWidth: 1,
+                    padding: 20,
+                },
+                Shadow.card,
+            ]}
+        >
             {children}
         </View>
     );

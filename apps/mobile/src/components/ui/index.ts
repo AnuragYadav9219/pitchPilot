@@ -8,3 +8,4 @@ export * from "./Loader";
 export * from "./Chip";
 export * from "./Screen";
 export * from "./Typography";
+export * from "./design";

@@ -1,4 +1,7 @@
 import { Pressable } from "react-native";
+
+import { Colors, Radius } from "@/theme";
+
 import { IconButtonProps } from "./IconButton.types";
 
 export function IconButton({
@@ -9,27 +12,35 @@ export function IconButton({
     variant = "secondary",
     disabled = false,
 }: IconButtonProps) {
-    const variants = {
-        primary: "bg-primary",
-        secondary: "bg-zinc-900",
-        ghost: "bg-transparent",
+
+    const background = {
+        primary: Colors.primary,
+        secondary: Colors.surface,
+        ghost: "transparent",
     };
 
     return (
         <Pressable
             disabled={disabled}
             onPress={onPress}
-            className={`items-center justify-center rounded-full ${variants[variant]} ${disabled ? "opacity-50" : ""}`}
+            android_ripple={{
+                color: "rgba(255,255,255,0.08)",
+            }}
             style={{
                 width: size,
                 height: size,
+                borderRadius: Radius.full,
+                backgroundColor: background[variant],
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: disabled ? 0.5 : 1,
             }}
         >
             <Icon
                 size={iconSize}
-                color="#FFFFFF"
+                color={Colors.text}
                 strokeWidth={2}
             />
         </Pressable>
-    )
+    );
 }

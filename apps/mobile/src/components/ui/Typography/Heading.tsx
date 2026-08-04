@@ -6,7 +6,7 @@ export function Heading({
 }: TextProps & { className?: string }) {
     return (
         <Text
-            className={`text-3xl font-bold tracking-tight text-white ${className}`}
+            className={`text-4xl font-extrabold text-white tracking-tight ${className}`}
             {...props}
         />
     );

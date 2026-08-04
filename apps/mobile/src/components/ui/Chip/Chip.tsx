@@ -1,6 +1,7 @@
 import { Pressable, Text } from "react-native";
 
 import { ChipProps } from "./Chip.types";
+import { Colors, Radius, Typography } from "@/theme";
 
 export function Chip({
     title,
@@ -10,14 +11,26 @@ export function Chip({
     return (
         <Pressable
             onPress={onPress}
-            className={`mr-3 rounded-full px-5 py-3 ${selected
-                ? "bg-primary"
-                : "bg-zinc-900"}`}
+            style={{
+                backgroundColor: selected
+                    ? Colors.primary
+                    : Colors.surface,
+
+                borderRadius: Radius.full,
+                paddingHorizontal: 18,
+                paddingVertical: 10,
+            }}
         >
             <Text
-                className={`font-semibold ${selected
-                    ? "text-white"
-                    : "text-zinc-400"}`}
+                style={{
+                    color: selected
+                        ? Colors.white
+                        : Colors.muted,
+
+                    fontWeight: "600",
+
+                    fontSize: Typography.small,
+                }}
             >
                 {title}
             </Text>

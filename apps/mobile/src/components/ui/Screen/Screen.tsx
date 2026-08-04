@@ -9,7 +9,7 @@ export function Screen({ children }: ScreenProps) {
     return (
         <SafeAreaView
             className="flex-1 bg-background"
-            edges={["top"]}
+            edges={["top", "bottom"]}
         >
             {children}
         </SafeAreaView>

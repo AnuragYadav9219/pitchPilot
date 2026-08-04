@@ -1,5 +1,7 @@
 import { ActivityIndicator, View } from "react-native";
 
+import { Colors } from "@/theme";
+
 interface LoaderProps {
     fullScreen?: boolean;
 }
@@ -17,7 +19,7 @@ export function Loader({
         >
             <ActivityIndicator
                 size="large"
-                color="#6D5DFB"
+                color={Colors.primary}
             />
         </View>
     );

@@ -1,13 +1,13 @@
 import { Text, TextProps } from "react-native";
 
 export function Body({
-    className = "",
-    ...props
+  className = "",
+  ...props
 }: TextProps & { className?: string }) {
-    return (
-        <Text
-            className={`text-base leading-6 text-zinc-300 ${className}`}
-            {...props}
-        />
-    );
+  return (
+    <Text
+      className={`text-base text-muted leading-6 ${className}`}
+      {...props}
+    />
+  );
 }

@@ -1,15 +1,26 @@
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 
-import { Screen } from "@/components/ui";
 import { AuthHeader, LoginForm } from "../components";
+import { GlassCard, GlowBackground } from "@/components/ui";
 
 export function LoginScreen() {
-    return (
-        <Screen>
-            <View className="flex-1 justify-center px-6">
-                <AuthHeader />
-                <LoginForm />
-            </View>
-        </Screen>
-    );
+  return (
+    <GlowBackground>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          padding: 24,
+        }}
+      >
+        <GlassCard>
+          <AuthHeader />
+
+          <LoginForm />
+        </GlassCard>
+      </ScrollView>
+    </GlowBackground>
+  );
 }

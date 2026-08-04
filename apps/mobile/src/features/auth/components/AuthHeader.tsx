@@ -1,20 +1,32 @@
-import { View } from "react-native";
-
-import {
-    Heading,
-    Body,
-} from "@/components/ui";
+import { View, Text } from "react-native";
 
 export function AuthHeader() {
     return (
-        <View className="mb-10">
-            <Heading>
-                Welcome Back
-            </Heading>
+        <View
+            style={{
+                marginBottom: 36,
+            }}
+        >
+            <Text
+                style={{
+                    fontSize: 38,
+                    fontWeight: "800",
+                    color: "white",
+                }}
+            >
+                PitchPilot
+            </Text>
 
-            <Body className="mt-3">
-                Let's continue improving your communication.
-            </Body>
+            <Text
+                style={{
+                    marginTop: 10,
+                    color: "#94A3B8",
+                    fontSize: 17,
+                    lineHeight: 26,
+                }}
+            >
+                Practice interviews, negotiations and difficult conversations with AI.
+            </Text>
         </View>
     );
 }

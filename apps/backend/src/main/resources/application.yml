@@ -1,0 +1,23 @@
+spring:
+  jackson:
+    time-zone: Asia/Kolkata
+      
+  application:
+    name: pitchpilot-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pitchpilot
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: true
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8080

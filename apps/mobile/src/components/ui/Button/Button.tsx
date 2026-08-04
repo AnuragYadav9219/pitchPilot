@@ -1,4 +1,7 @@
-import { ActivityIndicator, Pressable, Text } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+
+import { Colors, Radius, Typography } from "@/theme";
+
 import { ButtonProps } from "./Button.types";
 import { variants } from "./Button.styles";
 
@@ -12,28 +15,56 @@ export function Button({
     variant = "primary",
     fullWidth = true,
 }: ButtonProps) {
-    const style = variants[variant];
+    const currentVariant = variants[variant];
 
     return (
         <Pressable
-            disabled={disabled || loading}
             onPress={onPress}
-            className={`flex-row items-center justify-center rounded-2xl px-6 py-4 ${style.container} ${fullWidth
-                ? "w-full"
-                : ""} ${(disabled || loading)
-                    ? "opacity-60"
-                    : ""}`}
+            disabled={disabled || loading}
+            android_ripple={{
+                color: "rgba(255,255,255,0.08)",
+                borderless: false,
+            }}
+            className={`
+        flex-row
+        items-center
+        justify-center
+        ${fullWidth ? "w-full" : ""}
+      `}
+            style={{
+                height: 56,
+                borderRadius: Radius.lg,
+                backgroundColor: currentVariant.backgroundColor,
+                borderWidth: currentVariant.borderWidth,
+                borderColor: currentVariant.borderColor,
+                opacity: disabled || loading ? 0.6 : 1,
+            }}
         >
             {loading ? (
-                <ActivityIndicator color="white" />
+                <ActivityIndicator color={currentVariant.textColor} />
             ) : (
                 <>
-                    {leftIcon}
-                    <Text className={`mx-2 text-lg font-semibold ${style.text}`}>
+                    {leftIcon && (
+                        <View style={{ marginRight: 8 }}>
+                            {leftIcon}
+                        </View>
+                    )}
+
+                    <Text
+                        style={{
+                            color: currentVariant.textColor,
+                            fontSize: Typography.body,
+                            fontWeight: "700",
+                        }}
+                    >
                         {title}
                     </Text>
 
-                    {rightIcon}
+                    {rightIcon && (
+                        <View style={{ marginLeft: 8 }}>
+                            {rightIcon}
+                        </View>
+                    )}
                 </>
             )}
         </Pressable>

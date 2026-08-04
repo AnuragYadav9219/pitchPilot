@@ -1,13 +1,38 @@
 import { Text, View } from "react-native";
 
-interface BadgeProps {
-    text: string;
-}
+import { Colors, Radius, Typography } from "@/theme";
 
-export function Badge({ text }: BadgeProps) {
+import { BadgeProps } from "./Badge.types";
+
+export function Badge({
+    text,
+    variant = "neutral",
+}: BadgeProps) {
+    const variants = {
+        primary: Colors.primary,
+        success: Colors.success,
+        warning: Colors.warning,
+        danger: Colors.danger,
+        neutral: Colors.surface,
+    };
+
     return (
-        <View className="rounded-full bg-zinc-800 px-3 py-1">
-            <Text className="text-xs font-medium text-zinc-300">
+        <View
+            style={{
+                backgroundColor: variants[variant],
+                borderRadius: Radius.full,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                alignSelf: "flex-start",
+            }}
+        >
+            <Text
+                style={{
+                    color: Colors.text,
+                    fontSize: Typography.tiny,
+                    fontWeight: "600",
+                }}
+            >
                 {text}
             </Text>
         </View>

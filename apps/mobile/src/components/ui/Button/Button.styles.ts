@@ -1,26 +1,38 @@
+import { Colors } from "@/theme";
+
 export const variants = {
     primary: {
-        container: "bg-primary",
-        text: "text-white",
+        backgroundColor: Colors.primary,
+        textColor: Colors.white,
+        borderColor: "transparent",
+        borderWidth: 0,
     },
 
     secondary: {
-        container: "bg-zinc-800",
-        text: "text-white",
+        backgroundColor: Colors.surface,
+        textColor: Colors.white,
+        borderColor: "transparent",
+        borderWidth: 0,
     },
 
     outline: {
-        container: "border border-zinc-700 bg-transparent",
-        text: "text-white",
+        backgroundColor: "transparent",
+        textColor: Colors.white,
+        borderColor: Colors.border,
+        borderWidth: 1,
     },
 
     ghost: {
-        container: "bg-transparent",
-        text: "text-white",
+        backgroundColor: "transparent",
+        textColor: Colors.white,
+        borderColor: "transparent",
+        borderWidth: 0,
     },
 
     danger: {
-        container: "bg-red-500",
-        text: "text-white",
+        backgroundColor: Colors.danger,
+        textColor: Colors.white,
+        borderColor: "transparent",
+        borderWidth: 0,
     },
-};
+} as const;
