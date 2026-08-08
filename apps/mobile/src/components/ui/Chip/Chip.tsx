@@ -1,20 +1,23 @@
 import { Pressable, Text } from "react-native";
 
 import { ChipProps } from "./Chip.types";
-import { Colors, Radius, Typography } from "@/theme";
+import { Radius, Typography } from "@/theme";
+import { useTheme } from "@/theme/provider";
 
 export function Chip({
     title,
     selected = false,
     onPress,
 }: ChipProps) {
+    const {colors} = useTheme();
+
     return (
         <Pressable
             onPress={onPress}
             style={{
                 backgroundColor: selected
-                    ? Colors.primary
-                    : Colors.surface,
+                    ? colors.primary
+                    : colors.surface,
 
                 borderRadius: Radius.full,
                 paddingHorizontal: 18,
@@ -24,8 +27,8 @@ export function Chip({
             <Text
                 style={{
                     color: selected
-                        ? Colors.white
-                        : Colors.muted,
+                        ? colors.white
+                        : colors.muted,
 
                     fontWeight: "600",
 

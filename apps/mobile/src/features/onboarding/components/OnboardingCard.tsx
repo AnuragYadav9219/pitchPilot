@@ -1,7 +1,9 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
-import { Colors, Typography, Spacing } from "@/theme";
+import { Spacing, Typography } from "@/theme";
+import { useTheme } from "@/theme/provider";
+
 import { OnboardingItem } from "../data/onboardingData";
 
 interface Props {
@@ -9,20 +11,15 @@ interface Props {
 }
 
 export function OnboardingCard({ item }: Props) {
+    const { colors } = useTheme();
+
     return (
         <View style={styles.container}>
             {/* Illustration */}
-
             <Animated.View
                 entering={FadeInDown.delay(100).duration(700)}
                 style={styles.imageContainer}
             >
-                {/* <Image
-                    source={item.image}
-                    resizeMode="contain"
-                    style={styles.image}
-                /> */}
-
                 {item.image ? (
                     <Image
                         source={item.image}
@@ -31,28 +28,40 @@ export function OnboardingCard({ item }: Props) {
                     />
                 ) : (
                     <View
-                        style={{
-                            width: 260,
-                            height: 260,
-                            borderRadius: 130,
-                            backgroundColor: "rgba(255,255,255,0.05)",
-                        }}
+                        style={[
+                            styles.placeholder,
+                            {
+                                backgroundColor: colors.surface,
+                            },
+                        ]}
                     />
                 )}
-
             </Animated.View>
 
             {/* Content */}
-
             <Animated.View
                 entering={FadeInDown.delay(250).duration(700)}
                 style={styles.content}
             >
-                <Text style={styles.title}>
+                <Text
+                    style={[
+                        styles.title,
+                        {
+                            color: colors.text,
+                        },
+                    ]}
+                >
                     {item.title}
                 </Text>
 
-                <Text style={styles.description}>
+                <Text
+                    style={[
+                        styles.description,
+                        {
+                            color: colors.textSecondary,
+                        },
+                    ]}
+                >
                     {item.description}
                 </Text>
             </Animated.View>
@@ -81,13 +90,18 @@ const styles = StyleSheet.create({
         height: "90%",
     },
 
+    placeholder: {
+        width: 260,
+        height: 260,
+        borderRadius: 130,
+    },
+
     content: {
         marginTop: 40,
         alignItems: "center",
     },
 
     title: {
-        color: Colors.text,
         fontSize: Typography.h1,
         fontWeight: "800",
         textAlign: "center",
@@ -96,7 +110,6 @@ const styles = StyleSheet.create({
 
     description: {
         marginTop: 20,
-        color: Colors.textSecondary,
         fontSize: Typography.body,
         textAlign: "center",
         lineHeight: 28,

@@ -1,0 +1,87 @@
+<svg
+    width="1600"
+    height="900"
+    viewBox="0 0 1600 900"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <defs>
+        <radialGradient id="purpleGlow" cx="0" cy="0" r="1">
+            <stop offset="0" stop-color="#A855F7" stop-opacity="0.28" />
+            <stop offset="1" stop-color="#A855F7" stop-opacity="0" />
+        </radialGradient>
+
+        <radialGradient id="greenGlow" cx="0" cy="0" r="1">
+            <stop offset="0" stop-color="#10B981" stop-opacity="0.16" />
+            <stop offset="1" stop-color="#10B981" stop-opacity="0" />
+        </radialGradient>
+
+        <linearGradient id="lineGradient" x1="0" y1="0" x2="1600" y2="900">
+            <stop stop-color="#A855F7" stop-opacity="0" />
+            <stop offset="0.5" stop-color="#A855F7" stop-opacity="0.22" />
+            <stop offset="1" stop-color="#10B981" stop-opacity="0" />
+        </linearGradient>
+
+        <filter id="blur">
+            <feGaussianBlur stdDeviation="80" />
+        </filter>
+    </defs>
+
+    <!-- Atmospheric glows -->
+    <circle
+        cx="350"
+        cy="220"
+        r="350"
+        fill="url(#purpleGlow)"
+        filter="url(#blur)"
+    />
+
+    <circle
+        cx="1250"
+        cy="650"
+        r="300"
+        fill="url(#greenGlow)"
+        filter="url(#blur)"
+    />
+
+    <!-- Network lines -->
+    <path
+        d="M120 720 L420 470 L710 590 L980 300 L1320 440 L1510 180"
+        stroke="url(#lineGradient)"
+        stroke-width="1"
+    />
+
+    <path
+        d="M200 180 L480 350 L760 180 L1050 520 L1390 300"
+        stroke="url(#lineGradient)"
+        stroke-width="1"
+    />
+
+    <path
+        d="M360 820 L620 620 L930 720 L1220 540 L1510 700"
+        stroke="url(#lineGradient)"
+        stroke-width="1"
+    />
+
+    <!-- Nodes -->
+    <circle cx="420" cy="470" r="4" fill="#A855F7" />
+    <circle cx="710" cy="590" r="4" fill="#A855F7" />
+    <circle cx="980" cy="300" r="4" fill="#A855F7" />
+
+    <circle cx="1320" cy="440" r="4" fill="#10B981" />
+    <circle cx="620" cy="620" r="4" fill="#10B981" />
+    <circle cx="1220" cy="540" r="4" fill="#10B981" />
+
+    <!-- Subtle grid -->
+    <path
+        d="M0 100 H1600 M0 200 H1600 M0 300 H1600 M0 400 H1600 M0 500 H1600 M0 600 H1600 M0 700 H1600 M0 800 H1600"
+        stroke="white"
+        stroke-opacity="0.025"
+    />
+
+    <path
+        d="M100 0 V900 M200 0 V900 M300 0 V900 M400 0 V900 M500 0 V900 M600 0 V900 M700 0 V900 M800 0 V900 M900 0 V900 M1000 0 V900 M1100 0 V900 M1200 0 V900 M1300 0 V900 M1400 0 V900 M1500 0 V900"
+        stroke="white"
+        stroke-opacity="0.025"
+    />
+</svg>

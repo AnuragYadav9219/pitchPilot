@@ -1,0 +1,66 @@
+<svg
+    width="1600"
+    height="900"
+    viewBox="0 0 1600 900"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+>
+    <defs>
+        <linearGradient
+            id="gridFade"
+            x1="800"
+            y1="0"
+            x2="800"
+            y2="900"
+            gradientUnits="userSpaceOnUse"
+        >
+            <stop stop-color="currentColor" stop-opacity="0.16"/>
+            <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+        </linearGradient>
+
+        <radialGradient
+            id="purpleGlow"
+            cx="0"
+            cy="0"
+            r="1"
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(800 280) rotate(90) scale(360 600)"
+        >
+            <stop stop-color="#A855F7" stop-opacity="0.22"/>
+            <stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+        </radialGradient>
+
+        <pattern
+            id="grid"
+            width="64"
+            height="64"
+            patternUnits="userSpaceOnUse"
+        >
+            <path
+                d="M64 0H0V64"
+                stroke="currentColor"
+                stroke-opacity="0.08"
+            />
+        </pattern>
+    </defs>
+
+    <rect
+        width="1600"
+        height="900"
+        fill="url(#grid)"
+    />
+
+    <rect
+        width="1600"
+        height="900"
+        fill="url(#gridFade)"
+    />
+
+    <ellipse
+        cx="800"
+        cy="280"
+        rx="600"
+        ry="360"
+        fill="url(#purpleGlow)"
+    />
+</svg>

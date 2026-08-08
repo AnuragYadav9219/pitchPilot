@@ -7,7 +7,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { ArrowRight } from "lucide-react-native";
 
-import { Colors, Radius, Spacing, Typography } from "@/theme";
+import { Radius, Spacing, Typography } from "@/theme";
+import { useTheme } from "@/theme/provider";
 
 interface BottomControlsProps {
     isLastPage: boolean;
@@ -20,6 +21,8 @@ export function BottomControls({
     onNext,
     onSkip,
 }: BottomControlsProps) {
+    const { colors } = useTheme();
+
     const scale = useSharedValue(1);
 
     const animatedStyle = useAnimatedStyle(() => ({
@@ -34,17 +37,23 @@ export function BottomControls({
             {!isLastPage ? (
                 <TouchableOpacity
                     activeOpacity={0.7}
-                    onPress={() => {
-                        console.log("SKIP");
-                        onSkip();
-                    }}
+                    onPress={onSkip}
+                    accessibilityRole="button"
+                    accessibilityLabel="Skip onboarding"
                 >
-                    <Text style={styles.skip}>
+                    <Text
+                        style={[
+                            styles.skip,
+                            {
+                                color: colors.muted,
+                            },
+                        ]}
+                    >
                         Skip
                     </Text>
                 </TouchableOpacity>
             ) : (
-                <View />
+                <View style={styles.spacer} />
             )}
 
             <Animated.View style={animatedStyle}>
@@ -56,19 +65,36 @@ export function BottomControls({
                     onPressOut={() => {
                         scale.value = withSpring(1);
                     }}
-                    onPress={() => {
-                        console.log("NEXT");
-                        onNext();
-                    }}
-                    style={styles.button}
+                    onPress={onNext}
+                    style={[
+                        styles.button,
+                        {
+                            backgroundColor: colors.primary,
+                            shadowColor: colors.primary,
+                        },
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                        isLastPage
+                            ? "Get started"
+                            : "Next onboarding page"
+                    }
                 >
-                    <Text style={styles.buttonText}>
+                    <Text
+                        style={[
+                            styles.buttonText,
+                            {
+                                color: colors.white,
+                            },
+                        ]}
+                    >
                         {isLastPage ? "Get Started" : "Next"}
                     </Text>
 
                     <ArrowRight
                         size={20}
-                        color={Colors.white}
+                        color={colors.white}
+                        strokeWidth={2.5}
                     />
                 </TouchableOpacity>
             </Animated.View>
@@ -78,14 +104,17 @@ export function BottomControls({
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 24,
+        marginTop: Spacing.lg,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
     },
 
+    spacer: {
+        width: 48,
+    },
+
     skip: {
-        color: Colors.muted,
         fontSize: Typography.body,
         fontWeight: "600",
     },
@@ -94,24 +123,23 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: Colors.primary,
         borderRadius: Radius.full,
         paddingHorizontal: 26,
         paddingVertical: 16,
-        shadowColor: Colors.primary,
+
         shadowOpacity: 0.35,
         shadowRadius: 20,
         shadowOffset: {
             width: 0,
             height: 10,
         },
+
         elevation: 10,
     },
 
     buttonText: {
-        color: Colors.white,
         fontWeight: "700",
         fontSize: Typography.body,
-        marginRight: 8,
+        marginRight: Spacing.sm,
     },
 });

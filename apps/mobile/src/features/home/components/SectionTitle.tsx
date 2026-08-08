@@ -1,12 +1,26 @@
 import { Text } from "react-native";
 
-type Props = {
-    title: string;
-};
+import { useTheme } from "@/theme/provider";
 
-export function SectionTitle({ title }: Props) {
+interface SectionTitleProps {
+    title: string;
+}
+
+export function SectionTitle({
+    title,
+}: SectionTitleProps) {
+    const { colors } = useTheme();
+
     return (
-        <Text className="mb-4 mt-8 px-6 text-2xl font-bold text-white">
+        <Text
+            style={{
+                color: colors.text,
+                fontSize: 20,
+                fontWeight: "700",
+                marginTop: 24,
+                marginBottom: 12,
+            }}
+        >
             {title}
         </Text>
     );

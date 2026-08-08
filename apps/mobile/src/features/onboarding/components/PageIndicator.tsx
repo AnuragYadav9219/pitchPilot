@@ -1,11 +1,11 @@
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, {
     interpolateColor,
     useAnimatedStyle,
     withSpring,
 } from "react-native-reanimated";
 
-import { Colors } from "@/theme";
+import { useTheme } from "@/theme/provider";
 
 interface Props {
     currentIndex: number;
@@ -14,36 +14,66 @@ interface Props {
 
 interface DotProps {
     active: boolean;
+    borderColor: string;
+    primaryColor: string;
 }
 
-function Dot({ active }: DotProps) {
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
+function Dot({
+    active,
+    borderColor,
+    primaryColor,
+}: DotProps) {
+    const animatedStyle = useAnimatedStyle(
+        () => ({
             width: withSpring(active ? 34 : 10),
+
             backgroundColor: interpolateColor(
                 active ? 1 : 0,
                 [0, 1],
-                [Colors.borderStrong, Colors.primary]
+                [borderColor, primaryColor],
             ),
-            opacity: withSpring(active ? 1 : 0.5),
-        };
-    });
 
-    return <Animated.View style={[styles.dot, animatedStyle]} />;
+            opacity: withSpring(
+                active ? 1 : 0.5,
+            ),
+        }),
+        [active, borderColor, primaryColor],
+    );
+
+    return (
+        <Animated.View
+            style={[
+                styles.dot,
+                animatedStyle,
+            ]}
+        />
+    );
 }
 
 export function PageIndicator({
     currentIndex,
     total,
 }: Props) {
+    const { colors } = useTheme();
+
     return (
         <View style={styles.container}>
-            {Array.from({ length: total }).map((_, index) => (
-                <Dot
-                    key={index}
-                    active={index === currentIndex}
-                />
-            ))}
+            {Array.from({ length: total }).map(
+                (_, index) => (
+                    <Dot
+                        key={index}
+                        active={
+                            index === currentIndex
+                        }
+                        borderColor={
+                            colors.borderStrong
+                        }
+                        primaryColor={
+                            colors.primary
+                        }
+                    />
+                ),
+            )}
         </View>
     );
 }

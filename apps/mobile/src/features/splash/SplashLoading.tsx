@@ -1,12 +1,11 @@
 import { View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 
-import Animated, {
-    FadeIn,
-} from "react-native-reanimated";
-
-import { Colors } from "@/theme";
+import { useTheme } from "@/theme/provider";
 
 export function SplashLoading() {
+    const { colors } = useTheme();
+
     return (
         <View
             style={{
@@ -22,7 +21,7 @@ export function SplashLoading() {
                         height: 8,
                         marginHorizontal: 6,
                         borderRadius: 999,
-                        backgroundColor: Colors.primary,
+                        backgroundColor: colors.primary,
                     }}
                 />
             ))}

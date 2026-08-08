@@ -1,8 +1,9 @@
 import { Platform, Text, TextInput, View } from "react-native";
 
-import { Colors, Radius, Typography } from "@/theme";
+import { Radius, Typography } from "@/theme";
 
 import { InputProps } from "./Input.types";
+import { useTheme } from "@/theme/provider";
 
 export function Input({
     label,
@@ -11,13 +12,15 @@ export function Input({
     rightIcon,
     ...props
 }: InputProps) {
+    const {colors} = useTheme();
+
     return (
         <View className="mb-6">
 
             {label && (
                 <Text
                     style={{
-                        color: Colors.muted,
+                        color: colors.muted,
                         fontSize: Typography.small,
                         fontWeight: "600",
                         marginBottom: 10,
@@ -31,11 +34,11 @@ export function Input({
                 style={{
                     height: 56,
                     borderRadius: Radius.lg,
-                    backgroundColor: Colors.surface,
+                    backgroundColor: colors.surface,
                     borderWidth: 1,
                     borderColor: error
-                        ? Colors.danger
-                        : Colors.border,
+                        ? colors.danger
+                        : colors.border,
 
                     flexDirection: "row",
                     alignItems: "center",
@@ -47,13 +50,13 @@ export function Input({
 
                 <TextInput
                     {...props}
-                    placeholderTextColor={Colors.muted}
-                    selectionColor={Colors.primary}
+                    placeholderTextColor={colors.muted}
+                    selectionColor={colors.primary}
                     underlineColorAndroid="transparent"
                     style={[
                         {
                             flex: 1,
-                            color: Colors.text,
+                            color: colors.text,
                             fontSize: Typography.body,
                             paddingVertical: 0,
                             backgroundColor: "transparent",
@@ -75,7 +78,7 @@ export function Input({
                 <Text
                     style={{
                         marginTop: 6,
-                        color: Colors.danger,
+                        color: colors.danger,
                         fontSize: Typography.tiny,
                     }}
                 >

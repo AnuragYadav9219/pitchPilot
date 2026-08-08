@@ -1,0 +1,18 @@
+{
+    "name": "virtualmento",
+    "private": true,
+    "version": "0.1.0",
+    "description": "VirtualMento - AI mentor for better conversations",
+    "workspaces": [
+        "apps/web",
+        "apps/mobile",
+        "packages/*"
+    ],
+    "scripts": {
+        "web": "npm --workspace apps/web run dev",
+        "web:build": "npm --workspace apps/web run build",
+        "web:lint": "npm --workspace apps/web run lint",
+        "mobile": "npm --prefix apps/mobile start",
+        "backend": "cd apps/backend && mvn spring-boot:run"
+    }
+}

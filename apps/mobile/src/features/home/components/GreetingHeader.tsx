@@ -1,14 +1,29 @@
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
+
+import { useTheme } from "@/theme/provider";
 
 export function GreetingHeader() {
+    const { colors } = useTheme();
+
     return (
-        <View className="mt-8 px-6">
-            <Text className="text-4xl font-bold text-white">
-                Good Evening
+        <View>
+            <Text
+                style={{
+                    color: colors.text,
+                    fontSize: 28,
+                    fontWeight: "700",
+                }}
+            >
+                Welcome back
             </Text>
 
-            <Text className="mt-2 text-zinc-400">
-                Ready to improve today?
+            <Text
+                style={{
+                    color: colors.muted,
+                    marginTop: 6,
+                }}
+            >
+                Ready to improve your skills?
             </Text>
         </View>
     );

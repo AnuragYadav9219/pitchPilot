@@ -1,8 +1,9 @@
 import { Pressable } from "react-native";
 
-import { Colors, Radius } from "@/theme";
+import { Radius } from "@/theme";
 
 import { IconButtonProps } from "./IconButton.types";
+import { useTheme } from "@/theme/provider";
 
 export function IconButton({
     icon: Icon,
@@ -12,10 +13,11 @@ export function IconButton({
     variant = "secondary",
     disabled = false,
 }: IconButtonProps) {
+    const {colors} = useTheme();
 
     const background = {
-        primary: Colors.primary,
-        secondary: Colors.surface,
+        primary: colors.primary,
+        secondary: colors.surface,
         ghost: "transparent",
     };
 
@@ -38,7 +40,7 @@ export function IconButton({
         >
             <Icon
                 size={iconSize}
-                color={Colors.text}
+                color={colors.text}
                 strokeWidth={2}
             />
         </Pressable>

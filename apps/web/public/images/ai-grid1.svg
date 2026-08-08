@@ -1,0 +1,282 @@
+<svg
+  width="1600"
+  height="900"
+  viewBox="0 0 1600 900"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.12); opacity: 1; }
+    }
+    @keyframes flowEnergy {
+      0% { stroke-dashoffset: 1200; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes radarPing {
+      0% { r: 6; opacity: 0.8; }
+      100% { r: 32; opacity: 0; }
+    }
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.03; }
+      50% { opacity: 0.07; }
+    }
+
+    .glow-purple {
+      animation: pulseGlow 9s ease-in-out infinite;
+      transform-origin: 350px 220px;
+    }
+    .glow-green {
+      animation: pulseGlow 11s ease-in-out infinite;
+      transform-origin: 1250px 650px;
+    }
+    .energy-path {
+      stroke-dasharray: 15 25;
+      animation: flowEnergy 30s linear infinite;
+    }
+    .energy-path-reverse {
+      stroke-dasharray: 20 20;
+      animation: flowEnergy 25s linear infinite reverse;
+    }
+    .ping-purple {
+      animation: radarPing 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+      transform-origin: center;
+    }
+    .ping-green {
+      animation: radarPing 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+      transform-origin: center;
+      animation-delay: 1.5s;
+    }
+    .interactive-node {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), fill 0.3s ease;
+      cursor: pointer;
+    }
+    .interactive-node:hover {
+      transform: scale(2.2);
+      fill: #FFFFFF !important;
+    }
+    .bg-grid {
+      animation: gridPulse 6s ease-in-out infinite;
+    }
+    .node-label {
+      font-family: monospace;
+      font-size: 11px;
+      fill: rgba(255, 255, 255, 0.6);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      user-select: none;
+    }
+    .interactive-node-group:hover .node-label {
+      opacity: 1;
+    }
+    .cursor-line {
+      stroke: rgba(168, 85, 247, 0.15);
+      stroke-width: 1;
+      stroke-dasharray: 4 4;
+      pointer-events: none;
+      transition: all 0.05s ease-out;
+    }
+    .click-ripple {
+      fill: none;
+      stroke: #A855F7;
+      stroke-width: 1.5;
+      animation: radarPing 0.8s cubic-bezier(0, 0, 0.2, 1) forwards;
+      pointer-events: none;
+    }
+  </style>
+
+  <defs>
+    <!-- Background Base -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#07090E" />
+      <stop offset="0.5" stop-color="#0B0F19" />
+      <stop offset="1" stop-color="#04060A" />
+    </linearGradient>
+
+    <radialGradient id="purpleGlow" cx="0" cy="0" r="1">
+      <stop offset="0" stop-color="#A855F7" stop-opacity="0.35" />
+      <stop offset="1" stop-color="#A855F7" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="greenGlow" cx="0" cy="0" r="1">
+      <stop offset="0" stop-color="#10B981" stop-opacity="0.22" />
+      <stop offset="1" stop-color="#10B981" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="lineGradient" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A855F7" stop-opacity="0" />
+      <stop offset="0.3" stop-color="#A855F7" stop-opacity="0.35" />
+      <stop offset="0.7" stop-color="#10B981" stop-opacity="0.35" />
+      <stop offset="1" stop-color="#10B981" stop-opacity="0" />
+    </linearGradient>
+
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="90" />
+    </filter>
+    
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Deep Background Layer -->
+  <rect width="1600" height="900" fill="url(#bgGrad)" />
+
+  <!-- Parallax Wrapper Group -->
+  <g id="parallaxGroup">
+    <!-- Atmospheric glows with pulse animation -->
+    <g class="glow-purple">
+      <circle cx="350" cy="220" r="380" fill="url(#purpleGlow)" filter="url(#blur)" />
+    </g>
+
+    <g class="glow-green">
+      <circle cx="1250" cy="650" r="330" fill="url(#greenGlow)" filter="url(#blur)" />
+    </g>
+
+    <!-- Interactive Network lines with data-flow animation -->
+    <path d="M120 720 L420 470 L710 590 L980 300 L1320 440 L1510 180" stroke="url(#lineGradient)" stroke-width="1.5" class="energy-path" />
+    <path d="M200 180 L480 350 L760 180 L1050 520 L1390 300" stroke="url(#lineGradient)" stroke-width="1.5" class="energy-path-reverse" />
+    <path d="M360 820 L620 620 L930 720 L1220 540 L1510 700" stroke="url(#lineGradient)" stroke-width="1.5" class="energy-path" />
+
+    <!-- Dynamic pointer follower line (Inserted via JS) -->
+    <g id="dynamicGroup"></g>
+
+    <!-- Radar Ping Rings for Nodes -->
+    <g stroke="#A855F7" stroke-width="1" fill="none">
+      <circle cx="420" cy="470" class="ping-purple" />
+      <circle cx="710" cy="590" class="ping-purple" />
+      <circle cx="980" cy="300" class="ping-purple" />
+    </g>
+    <g stroke="#10B981" stroke-width="1" fill="none">
+      <circle cx="1320" cy="440" class="ping-green" />
+      <circle cx="620" cy="620" class="ping-green" />
+      <circle cx="1220" cy="540" class="ping-green" />
+    </g>
+
+    <!-- Nodes with Hover Effects & Labels -->
+    <g filter="url(#glow)">
+      <!-- Purple Node 1 -->
+      <g class="interactive-node-group">
+        <circle class="interactive-node" cx="420" cy="470" r="5" fill="#C084FC" />
+        <text x="435" y="474" class="node-label">NODE_ALPHA [ACTIVE]</text>
+      </g>
+      <!-- Purple Node 2 -->
+      <g class="interactive-node-group">
+        <circle class="interactive-node" cx="710" cy="590" r="5" fill="#C084FC" />
+        <text x="725" y="594" class="node-label">RELAY_BETA [SECURE]</text>
+      </g>
+      <!-- Purple Node 3 -->
+      <g class="interactive-node-group">
+        <circle class="interactive-node" cx="980" cy="300" r="5" fill="#C084FC" />
+        <text x="995" y="304" class="node-label">CORE_SYNC [ONLINE]</text>
+      </g>
+
+      <!-- Green Node 1 -->
+      <g class="interactive-node-group">
+        <circle class="interactive-node" cx="1320" cy="440" r="5" fill="#34D399" />
+        <text x="1335" y="444" class="node-label">HOST_DELTA [99.8%]</text>
+      </g>
+      <!-- Green Node 2 -->
+      <g class="interactive-node-group">
+        <circle class="interactive-node" cx="620" cy="620" r="5" fill="#34D399" />
+        <text x="635" y="624" class="node-label">NODE_GAMMA [LINKED]</text>
+      </g>
+      <!-- Green Node 3 -->
+      <g class="interactive-node-group">
+        <circle class="interactive-node" cx="1220" cy="540" r="5" fill="#34D399" />
+        <text x="1235" y="544" class="node-label">GATEWAY_OMEGA</text>
+      </g>
+    </g>
+
+    <!-- Animated Subtle Grid -->
+    <g class="bg-grid">
+      <path d="M0 100 H1600 M0 200 H1600 M0 300 H1600 M0 400 H1600 M0 500 H1600 M0 600 H1600 M0 700 H1600 M0 800 H1600" stroke="white" stroke-opacity="0.04" />
+      <path d="M100 0 V900 M200 0 V900 M300 0 V900 M400 0 V900 M500 0 V900 M600 0 V900 M700 0 V900 M800 0 V900 M900 0 V900 M1000 0 V900 M1100 0 V900 M1200 0 V900 M1300 0 V900 M1400 0 V900 M1500 0 V900" stroke="white" stroke-opacity="0.04" />
+    </g>
+  </g>
+
+  <!-- Interactive Control Script -->
+  <script type="text/javascript">
+    <![CDATA[
+      const svg = document.documentElement;
+      const parallaxGroup = document.getElementById('parallaxGroup');
+      const dynamicGroup = document.getElementById('dynamicGroup');
+      
+      // Node coordinates for proximity matching
+      const nodes = [
+        {x: 420, y: 470}, {x: 710, y: 590}, {x: 980, y: 300},
+        {x: 1320, y: 440}, {x: 620, y: 620}, {x: 1220, y: 540}
+      ];
+
+      let mouseX = 800;
+      let mouseY = 450;
+      let targetX = 800;
+      let targetY = 450;
+
+      // Track mouse position relative to SVG viewBox scale
+      svg.addEventListener('mousemove', (e) => {
+        const rect = svg.getBoundingClientRect();
+        const scaleX = 1600 / rect.width;
+        const scaleY = 900 / rect.height;
+        targetX = (e.clientX - rect.left) * scaleX;
+        targetY = (e.clientY - rect.top) * scaleY;
+      });
+
+      // Click ripple effect generator
+      svg.addEventListener('click', (e) => {
+        const rect = svg.getBoundingClientRect();
+        const scaleX = 1600 / rect.width;
+        const scaleY = 900 / rect.height;
+        const clickX = (e.clientX - rect.left) * scaleX;
+        const clickY = (e.clientY - rect.top) * scaleY;
+
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', clickX);
+        circle.setAttribute('cy', clickY);
+        circle.setAttribute('class', 'click-ripple');
+        svg.appendChild(circle);
+
+        setTimeout(() => circle.remove(), 800);
+      });
+
+      // Animation loop for smooth parallax and dynamic tracing
+      function update() {
+        // Smooth easing for parallax
+        mouseX += (targetX - mouseX) * 0.08;
+        mouseY += (targetY - mouseY) * 0.08;
+
+        const offsetX = (mouseX - 800) / 80;
+        const offsetY = (mouseY - 450) / 80;
+        parallaxGroup.setAttribute('transform', `translate(${offsetX}, ${offsetY})`);
+
+        // Find closest node to mouse for dynamic connection line
+        let closest = nodes[0];
+        let minDist = Infinity;
+        nodes.forEach(n => {
+          let dist = Math.hypot(n.x - mouseX, n.y - mouseY);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = n;
+          }
+        });
+
+        // Render dynamic interactive connection if cursor is close enough
+        if (minDist < 300) {
+          dynamicGroup.innerHTML = `<line x1="${mouseX}" y1="${mouseY}" x2="${closest.x}" y2="${closest.y}" class="cursor-line" />`;
+        } else {
+          dynamicGroup.innerHTML = '';
+        }
+
+        requestAnimationFrame(update);
+      }
+
+      requestAnimationFrame(update);
+    ]]>
+  </script>
+</svg>

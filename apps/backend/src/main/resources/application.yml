@@ -1,9 +1,9 @@
 spring:
   jackson:
     time-zone: Asia/Kolkata
-      
+
   application:
-    name: pitchpilot-backend
+    name: virtualmento
 
   datasource:
     url: jdbc:postgresql://localhost:5432/pitchpilot
@@ -12,12 +12,18 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     open-in-view: false
     show-sql: true
 
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
   flyway:
-    enabled: true
+    enabled: false
 
 server:
   port: 8080

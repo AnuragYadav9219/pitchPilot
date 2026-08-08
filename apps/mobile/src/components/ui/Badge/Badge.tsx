@@ -1,19 +1,22 @@
 import { Text, View } from "react-native";
 
-import { Colors, Radius, Typography } from "@/theme";
+import { Radius, Typography } from "@/theme";
 
-import { BadgeProps } from "./Badge.types";
+import type { BadgeProps } from "./Badge.types";
+import { useTheme } from "@/theme/provider";
 
 export function Badge({
     text,
     variant = "neutral",
 }: BadgeProps) {
+    const {colors} = useTheme()
+
     const variants = {
-        primary: Colors.primary,
-        success: Colors.success,
-        warning: Colors.warning,
-        danger: Colors.danger,
-        neutral: Colors.surface,
+        primary: colors.primary,
+        success: colors.success,
+        warning: colors.warning,
+        danger: colors.danger,
+        neutral: colors.surface,
     };
 
     return (
@@ -28,7 +31,7 @@ export function Badge({
         >
             <Text
                 style={{
-                    color: Colors.text,
+                    color: colors.text,
                     fontSize: Typography.tiny,
                     fontWeight: "600",
                 }}

@@ -1,17 +1,50 @@
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
+
+import { useTheme } from "@/theme/provider";
 
 export function ContinueCard() {
+    const { colors } = useTheme();
+
     return (
-        <View className="mx-6 mt-5 rounded-3xl bg-violet-600 p-6">
-
-            <Text className="text-lg font-bold text-white">
-                Continue Practice
+        <View
+            style={{
+                marginTop: 20,
+                padding: 20,
+                borderRadius: 20,
+                backgroundColor: colors.surface,
+                borderWidth: 1,
+                borderColor: colors.border,
+            }}
+        >
+            <Text
+                style={{
+                    color: colors.primary,
+                    fontSize: 13,
+                    fontWeight: "700",
+                }}
+            >
+                CONTINUE PRACTICE
             </Text>
 
-            <Text className="mt-2 text-violet-100">
-                Resume Salary Negotiation
+            <Text
+                style={{
+                    color: colors.text,
+                    fontSize: 20,
+                    fontWeight: "700",
+                    marginTop: 8,
+                }}
+            >
+                Interview Practice
             </Text>
 
+            <Text
+                style={{
+                    color: colors.muted,
+                    marginTop: 6,
+                }}
+            >
+                Continue where you left off.
+            </Text>
         </View>
     );
 }

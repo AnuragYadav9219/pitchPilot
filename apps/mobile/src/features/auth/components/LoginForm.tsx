@@ -2,7 +2,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Pressable, Text, View } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { loginSchema, LoginSchema } from "../validation";
+import { loginSchema, type LoginSchema } from "../validation";
 
 import {
   Body,
@@ -10,13 +10,12 @@ import {
   Input,
 } from "@/components/ui";
 
-import {
-  Colors,
-  Spacing,
-  Typography,
-} from "@/theme";
+import { useTheme } from "@/theme/provider";
+import { Spacing, Typography } from "@/theme";
 
 export function LoginForm() {
+  const { colors } = useTheme();
+
   const {
     control,
     handleSubmit,
@@ -35,13 +34,18 @@ export function LoginForm() {
 
   return (
     <View>
-
       {/* EMAIL */}
 
       <Controller
         control={control}
         name="email"
-        render={({ field: { onChange, value }, fieldState }) => (
+        render={({
+          field: {
+            onChange,
+            value,
+          },
+          fieldState,
+        }) => (
           <Input
             label="Email"
             placeholder="Enter your email"
@@ -49,7 +53,9 @@ export function LoginForm() {
             autoCapitalize="none"
             value={value}
             onChangeText={onChange}
-            error={fieldState.error?.message}
+            error={
+              fieldState.error?.message
+            }
           />
         )}
       />
@@ -59,14 +65,22 @@ export function LoginForm() {
       <Controller
         control={control}
         name="password"
-        render={({ field: { onChange, value }, fieldState }) => (
+        render={({
+          field: {
+            onChange,
+            value,
+          },
+          fieldState,
+        }) => (
           <Input
             label="Password"
             placeholder="Enter your password"
             secureTextEntry
             value={value}
             onChangeText={onChange}
-            error={fieldState.error?.message}
+            error={
+              fieldState.error?.message
+            }
           />
         )}
       />
@@ -81,7 +95,7 @@ export function LoginForm() {
       >
         <Text
           style={{
-            color: Colors.primary,
+            color: colors.primary,
             fontSize: Typography.small,
             fontWeight: "600",
           }}
@@ -105,19 +119,19 @@ export function LoginForm() {
           marginTop: Spacing.lg,
 
           borderWidth: 1,
-          borderColor: Colors.border,
+          borderColor: colors.border,
 
           borderRadius: 20,
 
           justifyContent: "center",
           alignItems: "center",
 
-          backgroundColor: Colors.surface,
+          backgroundColor: colors.surface,
         }}
       >
         <Text
           style={{
-            color: Colors.text,
+            color: colors.text,
             fontSize: Typography.body,
             fontWeight: "600",
           }}
@@ -137,7 +151,7 @@ export function LoginForm() {
       >
         <Body
           style={{
-            color: Colors.muted,
+            color: colors.muted,
           }}
         >
           Don't have an account?
@@ -147,7 +161,7 @@ export function LoginForm() {
           <Text
             style={{
               marginLeft: 6,
-              color: Colors.primary,
+              color: colors.primary,
               fontWeight: "700",
               fontSize: Typography.body,
             }}
@@ -162,17 +176,13 @@ export function LoginForm() {
       <Text
         style={{
           marginTop: Spacing.xxl,
-
           textAlign: "center",
-
-          color: Colors.muted,
-
+          color: colors.muted,
           fontSize: Typography.tiny,
         }}
       >
         🔒 Secure authentication • Your data stays private
       </Text>
-
     </View>
   );
 }

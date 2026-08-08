@@ -1,39 +1,381 @@
+# ============================================================
+# VirtualMento - Root Git Ignore
+# ============================================================
+
+
+# ============================================================
+# OS / SYSTEM FILES
+# ============================================================
+
 # macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
 # Windows
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
 
-# Logs
-*.log
+# Linux
+*~
+.directory
 
-# Environment
+
+# ============================================================
+# ENVIRONMENT / SECRETS
+# ============================================================
+
 .env
 .env.*
+!.env.example
+!.env.development.example
+!.env.production.example
+!.env.test.example
 
-# IDE
-.vscode/
-.idea/
+# Local secrets / credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
 
-# Node
+# Firebase / service account credentials
+service-account*.json
+firebase-adminsdk*.json
+
+
+# ============================================================
+# NODE / JAVASCRIPT / TYPESCRIPT
+# ============================================================
+
 node_modules/
 
-# Expo
-.expo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Build
+.npm/
+.yarn/
+.pnpm-store/
+
+# Package manager temporary files
+*.tgz
+
+# TypeScript build information
+*.tsbuildinfo
+
+
+# ============================================================
+# WEB - REACT / VITE
+# ============================================================
+
+# Vite
+.vite/
+
+# Build output
 dist/
 build/
 
-# Android
-android/
+# Vite cache
+node_modules/.vite/
 
-# iOS
-ios/
+# React / frontend cache
+.cache/
+.parcel-cache/
 
-# Coverage
+
+# ============================================================
+# EXPO / REACT NATIVE
+# ============================================================
+
+.expo/
+.expo-shared/
+
+# Expo generated files
+web-build/
+
+# React Native Metro
+.metro-health-check*
+.metro/
+
+# React Native / Expo logs
+*.hprof
+
+# Native build directories
+apps/mobile/android/
+apps/mobile/ios/
+
+# Expo local state
+apps/mobile/.expo/
+
+# React Native generated files
+*.orig.*
+*.rej
+
+
+# ============================================================
+# ANDROID
+# ============================================================
+
+.gradle/
+local.properties
+
+# Android build output
+**/build/
+**/.cxx/
+
+# Android Studio
+captures/
+.externalNativeBuild/
+
+
+# ============================================================
+# IOS / XCODE
+# ============================================================
+
+DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+
+# Xcode user-specific files
+*.xcuserdatad
+
+# Xcode build
+build/
+
+
+# ============================================================
+# JAVA / SPRING BOOT / MAVEN
+# ============================================================
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.flattened-pom.xml
+
+# Maven wrapper generated files
+.mvn/timing.properties
+
+# Spring Boot logs
+spring.log
+
+# Java compiled files
+*.class
+
+# Java archives
+*.jar
+*.war
+*.ear
+
+# Exception:
+# Keep Maven wrapper JAR if you decide to commit it.
+!.mvn/wrapper/maven-wrapper.jar
+
+
+# ============================================================
+# SPRING BOOT LOCAL CONFIG
+# ============================================================
+
+# Local Spring configuration
+application-local.yml
+application-local.yaml
+application-local.properties
+
+# Local test configuration
+application-test-local.yml
+application-test-local.yaml
+application-test-local.properties
+
+
+# ============================================================
+# DATABASE / LOCAL DATA
+# ============================================================
+
+# PostgreSQL local data
+postgres-data/
+postgres_data/
+
+# Generic database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Database dumps
+*.sql.gz
+*.dump
+*.backup
+
+# IMPORTANT:
+# Do NOT ignore migration SQL files.
+# Flyway migrations should be committed.
+
+
+# ============================================================
+# DOCKER
+# ============================================================
+
+# Docker local override files
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Docker volumes / local persistent data
+docker/volumes/
+docker/data/
+
+# Docker logs
+docker/*.log
+**/docker/*.log
+
+
+# ============================================================
+# TESTING / COVERAGE
+# ============================================================
+
 coverage/
-coverage
+.nyc_output/
+.v8-coverage/
 
-# Misc
+# Jest
+jest-cache/
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+
+# ============================================================
+# IDE / EDITORS
+# ============================================================
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.example.json
+
+# IntelliJ / JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+.nb-gradle/
+
+# Sublime
+*.sublime-workspace
+*.sublime-project
+
+
+# ============================================================
+# LOGS
+# ============================================================
+
+*.log
+logs/
+log/
+
+
+# ============================================================
+# TEMPORARY FILES
+# ============================================================
+
 *.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.backup
+
+# Temporary editor files
+*.orig
+*.rej
+
+
+# ============================================================
+# GENERATED FILES
+# ============================================================
+
+*.generated.*
+generated/
+
+# Local API / code generation output
+.openapi/
+.openapi-generator/
+
+
+# ============================================================
+# CERTIFICATES / LOCAL TLS
+# ============================================================
+
+*.crt
+*.cer
+*.pem
+*.key
+
+# Exception: example certificates can be committed
+!*.example.pem
+!*.example.key
+
+
+# ============================================================
+# LOCAL DEVELOPMENT
+# ============================================================
+
+# Local uploads
+uploads/
+tmp/
+temp/
+
+# Local cache
+.cache/
+.cache-loader/
+
+# OS-level temporary directories
+.tmp/
+
+
+# ============================================================
+# BACKUP FILES
+# ============================================================
+
+*.orig
+*.save
+*.swp
+*.swo
+
+
+# ============================================================
+# VIRTUALMENTO LOCAL FILES
+# ============================================================
+
+# Local development notes
+.local/
+
+# Local deployment configuration
+.deploy/
+
+# Local secrets
+.secrets/

@@ -1,9 +1,22 @@
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import {
+    ActivityIndicator,
+    Pressable,
+    Text,
+    View,
+} from "react-native";
 
-import { Colors, Radius, Typography } from "@/theme";
+import {
+    Radius,
+    Typography,
+} from "@/theme";
 
-import { ButtonProps } from "./Button.types";
-import { variants } from "./Button.styles";
+import { useTheme } from "@/theme/provider";
+
+import type { ButtonProps } from "./Button.types";
+
+import {
+    createButtonVariants,
+} from "./Button.styles";
 
 export function Button({
     title,
@@ -15,45 +28,61 @@ export function Button({
     variant = "primary",
     fullWidth = true,
 }: ButtonProps) {
+    const { colors } = useTheme();
+
+    const variants = createButtonVariants(colors);
     const currentVariant = variants[variant];
+
+    const isDisabled = disabled || loading;
 
     return (
         <Pressable
             onPress={onPress}
-            disabled={disabled || loading}
+            disabled={isDisabled}
             android_ripple={{
-                color: "rgba(255,255,255,0.08)",
+                color: colors.surface3,
                 borderless: false,
             }}
             className={`
-        flex-row
-        items-center
-        justify-center
-        ${fullWidth ? "w-full" : ""}
-      `}
+                flex-row
+                items-center
+                justify-center
+                ${fullWidth ? "w-full" : ""}
+            `}
             style={{
                 height: 56,
                 borderRadius: Radius.lg,
-                backgroundColor: currentVariant.backgroundColor,
-                borderWidth: currentVariant.borderWidth,
-                borderColor: currentVariant.borderColor,
-                opacity: disabled || loading ? 0.6 : 1,
+                backgroundColor:
+                    currentVariant.backgroundColor,
+                borderWidth:
+                    currentVariant.borderWidth,
+                borderColor:
+                    currentVariant.borderColor,
+                opacity: isDisabled ? 0.6 : 1,
             }}
         >
             {loading ? (
-                <ActivityIndicator color={currentVariant.textColor} />
+                <ActivityIndicator
+                    color={currentVariant.textColor}
+                />
             ) : (
                 <>
                     {leftIcon && (
-                        <View style={{ marginRight: 8 }}>
+                        <View
+                            style={{
+                                marginRight: 8,
+                            }}
+                        >
                             {leftIcon}
                         </View>
                     )}
 
                     <Text
                         style={{
-                            color: currentVariant.textColor,
-                            fontSize: Typography.body,
+                            color:
+                                currentVariant.textColor,
+                            fontSize:
+                                Typography.body,
                             fontWeight: "700",
                         }}
                     >
@@ -61,7 +90,11 @@ export function Button({
                     </Text>
 
                     {rightIcon && (
-                        <View style={{ marginLeft: 8 }}>
+                        <View
+                            style={{
+                                marginLeft: 8,
+                            }}
+                        >
                             {rightIcon}
                         </View>
                     )}

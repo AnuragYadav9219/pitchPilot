@@ -4,7 +4,8 @@ import { Button } from "../Button";
 import { Heading, Body } from "../Typography";
 import { EmptyStateProps } from "./EmptyState.types";
 
-import { Colors, Radius, Spacing } from "@/theme";
+import { Radius, Spacing } from "@/theme";
+import { useTheme } from "@/theme/provider";
 
 export function EmptyState({
     icon: Icon,
@@ -13,6 +14,8 @@ export function EmptyState({
     actionText,
     onAction,
 }: EmptyStateProps) {
+    const { colors } = useTheme();
+
     return (
         <View
             className="flex-1 items-center justify-center px-8"
@@ -25,7 +28,7 @@ export function EmptyState({
                     width: 96,
                     height: 96,
                     borderRadius: Radius.full,
-                    backgroundColor: Colors.surface,
+                    backgroundColor: colors.surface,
                     alignItems: "center",
                     justifyContent: "center",
                     marginBottom: Spacing.lg,
@@ -33,7 +36,7 @@ export function EmptyState({
             >
                 <Icon
                     size={44}
-                    color={Colors.primary}
+                    color={colors.primary}
                 />
             </View>
 
@@ -45,7 +48,7 @@ export function EmptyState({
                 className="text-center"
                 style={{
                     marginTop: Spacing.sm,
-                    color: Colors.muted,
+                    color: colors.muted,
                     maxWidth: 300,
                 }}
             >

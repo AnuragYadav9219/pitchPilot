@@ -1,38 +1,46 @@
-import { Colors } from "@/theme";
+import type { ThemeColors } from "@virtualmento/shared";
 
-export const variants = {
-    primary: {
-        backgroundColor: Colors.primary,
-        textColor: Colors.white,
-        borderColor: "transparent",
-        borderWidth: 0,
-    },
+export function createButtonVariants(
+    colors: ThemeColors,
+) {
+    return {
+        primary: {
+            backgroundColor: colors.primary,
+            textColor: colors.white,
+            borderColor: "transparent",
+            borderWidth: 0,
+        },
 
-    secondary: {
-        backgroundColor: Colors.surface,
-        textColor: Colors.white,
-        borderColor: "transparent",
-        borderWidth: 0,
-    },
+        secondary: {
+            backgroundColor: colors.surface,
+            textColor: colors.text,
+            borderColor: "transparent",
+            borderWidth: 0,
+        },
 
-    outline: {
-        backgroundColor: "transparent",
-        textColor: Colors.white,
-        borderColor: Colors.border,
-        borderWidth: 1,
-    },
+        outline: {
+            backgroundColor: "transparent",
+            textColor: colors.text,
+            borderColor: colors.border,
+            borderWidth: 1,
+        },
 
-    ghost: {
-        backgroundColor: "transparent",
-        textColor: Colors.white,
-        borderColor: "transparent",
-        borderWidth: 0,
-    },
+        ghost: {
+            backgroundColor: "transparent",
+            textColor: colors.text,
+            borderColor: "transparent",
+            borderWidth: 0,
+        },
 
-    danger: {
-        backgroundColor: Colors.danger,
-        textColor: Colors.white,
-        borderColor: "transparent",
-        borderWidth: 0,
-    },
-} as const;
+        danger: {
+            backgroundColor: colors.danger,
+            textColor: colors.white,
+            borderColor: "transparent",
+            borderWidth: 0,
+        },
+    } as const;
+}
+
+export type ButtonVariant = keyof ReturnType<
+    typeof createButtonVariants
+>;
