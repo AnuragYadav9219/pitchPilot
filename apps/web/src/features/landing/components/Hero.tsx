@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/Button";
 
 import saasGrid from "@/assets/backgrounds/saas-grid.svg";
 
-export function Hero() {
+type HeroProps = {
+    onEarlyAccess: () => void;
+};
+
+export function Hero({
+    onEarlyAccess,
+}: HeroProps) {
     return (
         <section className="relative isolate overflow-hidden">
             {/* SaaS background grid */}
@@ -61,8 +67,21 @@ export function Hero() {
                         </p>
 
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                            <Button size="lg">
+                            {/* <Button size="lg">
                                 Start Learning
+
+                                <ArrowRight
+                                    size={18}
+                                    aria-hidden="true"
+                                />
+                            </Button> */}
+
+                            <Button
+                                size="lg"
+                                onClick={onEarlyAccess}
+                                className="cursor-pointer"
+                            >
+                                Join Early Access
 
                                 <ArrowRight
                                     size={18}
@@ -73,8 +92,9 @@ export function Hero() {
                             <Button
                                 variant="secondary"
                                 size="lg"
+                                className="cursor-pointer"
                             >
-                                Explore VirtualMento
+                                Explore {Brand.name}
                             </Button>
                         </div>
 
@@ -121,7 +141,7 @@ export function Hero() {
 
                                     <div>
                                         <p className="text-sm font-semibold text-(--vm-text)">
-                                            VirtualMento
+                                            {Brand.name}
                                         </p>
 
                                         <p className="text-xs text-(--vm-muted)">

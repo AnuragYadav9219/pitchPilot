@@ -4,8 +4,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SplashScreen } from "@/features/splash/SplashScreen";
 import { LoginScreen } from "@/features/auth/screens/LoginScreen";
 import { OnboardingScreen } from "@/features/onboarding/screens/OnboardingScreen";
+import { RegisterScreen } from "@/features/auth/screens/RegisterScreen";
+import { RootStackParamList } from "./types";
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function AppNavigator() {
   return (
@@ -32,6 +34,12 @@ export function AppNavigator() {
           name="Login"
           component={LoginScreen}
         />
+
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

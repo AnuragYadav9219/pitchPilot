@@ -28,7 +28,7 @@ interface ThemeProviderProps {
     children: ReactNode;
 }
 
-const STORAGE_KEY = "virtualmento-theme";
+const STORAGE_KEY = "vm-theme";
 
 function getInitialTheme(): ThemeMode {
     const stored =

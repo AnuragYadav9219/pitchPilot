@@ -8,6 +8,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import { Container } from "@/components/ui";
+import { Brand } from "@virtualmento/shared";
 
 interface Step {
     number: string;
@@ -21,7 +22,7 @@ const steps: Step[] = [
         number: "01",
         title: "Choose your goal",
         description:
-            "Tell VirtualMento what you want to practice, whether it is an interview, presentation, negotiation, or difficult conversation.",
+            `Tell ${Brand.name} what you want to practice, whether it is an interview, presentation, negotiation, or difficult conversation.`,
         icon: Target,
     },
     {
@@ -69,7 +70,7 @@ export function HowItWorks() {
                         </h2>
 
                         <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-(--vm-muted) sm:text-lg">
-                            VirtualMento turns preparation into a repeatable
+                            {Brand.name} turns preparation into a repeatable
                             practice loop designed to help you become better
                             through every conversation.
                         </p>

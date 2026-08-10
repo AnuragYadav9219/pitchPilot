@@ -1,31 +1,48 @@
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
-export function AuthHeader() {
+import { Brand } from "@virtualmento/shared";
+
+import { useTheme } from "@/theme/provider";
+
+interface AuthHeaderProps {
+    title?: string;
+    description?: string;
+}
+
+export function AuthHeader({
+    title = "Welcome back.",
+    description = `Continue your ${Brand.name} journey and keep building real-world confidence.`,
+}: AuthHeaderProps) {
+    const { colors } = useTheme();
+
     return (
         <View
             style={{
-                marginBottom: 36,
+                marginBottom: 24,
             }}
         >
             <Text
                 style={{
-                    fontSize: 38,
+                    color: colors.text,
+                    fontSize: 30,
+                    lineHeight: 36,
                     fontWeight: "800",
-                    color: "white",
+                    letterSpacing: -0.5,
                 }}
             >
-                PitchPilot
+                {title}
             </Text>
 
             <Text
                 style={{
-                    marginTop: 10,
-                    color: "#94A3B8",
-                    fontSize: 17,
-                    lineHeight: 26,
+                    marginTop: 8,
+                    color: colors.muted,
+                    fontSize: 14,
+                    lineHeight: 21,
+                    maxWidth: 310,
                 }}
             >
-                Practice interviews, negotiations and difficult conversations with AI.
+                {description}
             </Text>
         </View>
     );

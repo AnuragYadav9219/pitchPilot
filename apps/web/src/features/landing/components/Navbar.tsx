@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
-import { Brand } from "@virtualmento/shared";
 import { Button, Container, ThemeToggle } from "@/components/ui";
+import { Logo } from "@/components/branding/Logo";
 
 interface NavigationItem {
     label: string;
@@ -40,14 +40,7 @@ export function Navbar() {
                     aria-label="Main navigation"
                 >
                     {/* Brand */}
-                    <Link
-                        to="/"
-                        onClick={closeMobileMenu}
-                        className="text-xl font-bold tracking-tight text-(--vm-text)"
-                        aria-label={`${Brand.name} home`}
-                    >
-                        {Brand.name}
-                    </Link>
+                    <Logo />
 
                     {/* Desktop navigation */}
                     <div className="hidden items-center gap-8 md:flex">

@@ -2,6 +2,7 @@ package com.virtualmento.user.entity;
 
 import java.util.UUID;
 
+import com.virtualmento.common.entity.BaseEntity;
 import com.virtualmento.common.enums.Role;
 
 import jakarta.persistence.Column;
@@ -25,24 +26,38 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String fullName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private Role role = Role.USER;
 
+    @Column(nullable = false)
     @Builder.Default
     private Boolean enabled = true;
+
+    @Column(length = 20, unique = true)
+    private String phoneNumber;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean phoneVerified = false;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean emailVerified = false;
 }

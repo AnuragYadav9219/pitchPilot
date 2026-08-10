@@ -17,12 +17,12 @@ import Animated, {
 
 import { GlowBackground } from "@/components/ui";
 import { useTheme } from "@/theme/provider";
-import { Brand } from "@/config/brand";
 
 import type { RootStackParamList } from "@/navigation/types";
 
 import { SplashLogo } from "./SplashLogo";
 import { SplashLoading } from "./SplashLoading";
+import { Brand } from "@virtualmento/shared";
 
 type SplashNavigationProp =
     NativeStackNavigationProp<

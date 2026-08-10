@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { Card, Container } from "@/components/ui";
+import { Brand } from "@virtualmento/shared";
 
 interface UseCase {
     icon: LucideIcon;
@@ -75,7 +76,7 @@ export function UseCases() {
                         </h2>
 
                         <p className="mt-6 max-w-xl text-base leading-7 text-(--vm-muted) sm:text-lg">
-                            VirtualMento isn't limited to interview preparation.
+                            {Brand.name} isn't limited to interview preparation.
                             Use your AI mentor whenever you need to prepare
                             for an important conversation.
                         </p>

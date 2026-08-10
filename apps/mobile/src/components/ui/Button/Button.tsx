@@ -51,13 +51,11 @@ export function Button({
             `}
             style={{
                 height: 56,
-                borderRadius: Radius.lg,
-                backgroundColor:
-                    currentVariant.backgroundColor,
-                borderWidth:
-                    currentVariant.borderWidth,
-                borderColor:
-                    currentVariant.borderColor,
+                marginTop:8, 
+                borderRadius: Radius.md,
+                backgroundColor: currentVariant.backgroundColor,
+                borderWidth: currentVariant.borderWidth,
+                borderColor: currentVariant.borderColor,
                 opacity: isDisabled ? 0.6 : 1,
             }}
         >

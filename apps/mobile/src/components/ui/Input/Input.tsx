@@ -15,7 +15,7 @@ export function Input({
     const {colors} = useTheme();
 
     return (
-        <View className="mb-6">
+        <View className="mb-4">
 
             {label && (
                 <Text
@@ -32,8 +32,8 @@ export function Input({
 
             <View
                 style={{
-                    height: 56,
-                    borderRadius: Radius.lg,
+                    height: 48,
+                    borderRadius: Radius.md,
                     backgroundColor: colors.surface,
                     borderWidth: 1,
                     borderColor: error
@@ -43,7 +43,7 @@ export function Input({
                     flexDirection: "row",
                     alignItems: "center",
 
-                    paddingHorizontal: 16,
+                    paddingHorizontal: 14,
                 }}
             >
                 {leftIcon}

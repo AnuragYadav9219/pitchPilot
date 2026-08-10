@@ -10,6 +10,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import { Card, Container } from "@/components/ui";
+import { Brand } from "@virtualmento/shared";
 
 type FeatureAccent = "purple" | "green" | "orange";
 
@@ -60,7 +61,7 @@ const features: Feature[] = [
         icon: Globe2,
         title: "Web + Mobile",
         description:
-            "Keep your mentoring journey connected across VirtualMento's web and mobile experiences.",
+            `Keep your mentoring journey connected across ${Brand.name}'s web and mobile experiences.`,
         accent: "orange",
     },
 ];
@@ -193,7 +194,7 @@ export function Features() {
                         </h2>
 
                         <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-(--vm-muted) sm:text-lg">
-                            VirtualMento helps you practice the conversations
+                            {Brand.name} helps you practice the conversations
                             that matter, understand your weaknesses, and build
                             confidence through deliberate practice.
                         </p>

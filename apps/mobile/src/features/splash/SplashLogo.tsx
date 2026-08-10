@@ -1,4 +1,3 @@
-import { Image } from "react-native";
 import { useEffect } from "react";
 
 import Animated, {
@@ -9,7 +8,7 @@ import Animated, {
     withSpring,
 } from "react-native-reanimated";
 
-import { Brand } from "@/config/brand";
+import { Logo } from "@/components/branding";
 
 export function SplashLogo() {
     const scale = useSharedValue(0.8);
@@ -17,13 +16,23 @@ export function SplashLogo() {
     useEffect(() => {
         scale.value = withRepeat(
             withSequence(
-                withSpring(1),
-                withSpring(0.95)
+                withSpring(1, {
+                    damping: 12,
+                    stiffness: 120,
+                }),
+                withSpring(0.95, {
+                    damping: 12,
+                    stiffness: 120,
+                }),
             ),
             -1,
-            true
+            true,
         );
-    }, []);
+
+        return () => {
+            scale.value = 0.8;
+        };
+    }, [scale]);
 
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [
@@ -35,14 +44,7 @@ export function SplashLogo() {
 
     return (
         <Animated.View style={animatedStyle}>
-            <Image
-                source={Brand.logo}
-                resizeMode="contain"
-                style={{
-                    width: Brand.logoSize,
-                    height: Brand.logoSize,
-                }}
-            />
+            <Logo size={96} />
         </Animated.View>
     );
 }
