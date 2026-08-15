@@ -6,7 +6,7 @@ import {
 
 import { LoaderCircle } from "lucide-react";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 
 type ButtonSize = "sm" | "md" | "lg";
 
@@ -27,6 +27,9 @@ const variants: Record<ButtonVariant, string> = {
 
     ghost:
         "text-(--vm-text-secondary) hover:bg-(--vm-surface) hover:text-(--vm-text) focus-visible:ring-(--vm-border-strong)",
+
+    danger:
+        "bg-(--vm-danger) text-white hover:opacity-90 focus-visible:ring-(--vm-danger)",
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -63,6 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                     "font-medium",
                     "transition-colors duration-(--vm-animation-fast)",
                     "outline-none",
+                    "cursor-pointer",
                     "focus-visible:ring-2",
                     "focus-visible:ring-offset-2",
                     "focus-visible:ring-offset-(--vm-background)",

@@ -1,87 +1,31 @@
-import { useState, type FormEvent } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+    Eye,
+    EyeOff,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
-interface LoginFormData {
-    email: string;
-    password: string;
-}
+import { useLogin } from "../hooks";
+import { Button } from "@/components/ui";
 
 export function LoginForm() {
-    const [form, setForm] = useState<LoginFormData>({
-        email: "",
-        password: "",
-    });
-
-    const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
-    function updateField(
-        field: keyof LoginFormData,
-        value: string,
-    ) {
-        setForm((current) => ({
-            ...current,
-            [field]: value,
-        }));
-
-        if (error) {
-            setError("");
-        }
-    }
-
-    async function handleSubmit(
-        event: FormEvent<HTMLFormElement>,
-    ) {
-        event.preventDefault();
-
-        setError("");
-
-        if (!form.email.trim()) {
-            setError("Please enter your email address.");
-            return;
-        }
-
-        if (!form.password) {
-            setError("Please enter your password.");
-            return;
-        }
-
-        setLoading(true);
-
-        try {
-            /*
-             * Backend authentication will be connected here.
-             *
-             * Example later:
-             *
-             * await login({
-             *     email: form.email,
-             *     password: form.password,
-             * });
-             */
-
-            await new Promise((resolve) =>
-                setTimeout(resolve, 800),
-            );
-
-            console.log("Login:", form);
-        } catch {
-            setError(
-                "Unable to sign in right now. Please try again.",
-            );
-        } finally {
-            setLoading(false);
-        }
-    }
+    const {
+        form,
+        error,
+        isLoading,
+        showPassword,
+        updateField,
+        togglePassword,
+        submit,
+    } = useLogin();
 
     return (
         <form
-            onSubmit={handleSubmit}
+            onSubmit={submit}
             className="space-y-5"
             noValidate
         >
+            {/* error */}
+
             {error && (
                 <div
                     role="alert"
@@ -90,6 +34,8 @@ export function LoginForm() {
                     {error}
                 </div>
             )}
+
+            {/* Email */}
 
             <div>
                 <label
@@ -111,19 +57,11 @@ export function LoginForm() {
                     }
                     placeholder="you@example.com"
                     autoComplete="email"
-                    className={[
-                        "h-12 w-full rounded-(--vm-radius-md)",
-                        "border border-(--vm-border)",
-                        "bg-(--vm-surface)",
-                        "px-4 text-sm text-(--vm-text)",
-                        "outline-none",
-                        "placeholder:text-(--vm-muted)",
-                        "transition-all",
-                        "focus:border-(--vm-primary)",
-                        "focus:ring-2 focus:ring-(--vm-primary)/20",
-                    ].join(" ")}
+                    className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
                 />
             </div>
+
+            {/* Password */}
 
             <div>
                 <div className="mb-2 flex items-center justify-between">
@@ -136,7 +74,7 @@ export function LoginForm() {
 
                     <Link
                         to="/forgot-password"
-                        className="text-xs font-medium text-(--vm-primary) transition-colors hover:text-(--vm-primary-pressed)"
+                        className="text-xs font-medium text-(--vm-primary)"
                     >
                         Forgot password?
                     </Link>
@@ -159,75 +97,38 @@ export function LoginForm() {
                         }
                         placeholder="Enter your password"
                         autoComplete="current-password"
-                        className={[
-                            "h-12 w-full rounded-(--vm-radius-md)",
-                            "border border-(--vm-border)",
-                            "bg-(--vm-surface)",
-                            "px-4 pr-12 text-sm text-(--vm-text)",
-                            "outline-none",
-                            "placeholder:text-(--vm-muted)",
-                            "transition-all",
-                            "focus:border-(--vm-primary)",
-                            "focus:ring-2 focus:ring-(--vm-primary)/20",
-                        ].join(" ")}
+                        className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 pr-12 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
                     />
 
                     <button
                         type="button"
-                        onClick={() =>
-                            setShowPassword(
-                                (current) => !current,
-                            )
-                        }
-                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                        aria-label={
-                            showPassword
-                                ? "Hide password"
-                                : "Show password"
-                        }
+                        onClick={togglePassword}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-(--vm-muted) hover:text-(--vm-text)"
                     >
                         {showPassword ? (
                             <EyeOff
                                 size={18}
-                                aria-hidden="true"
                             />
                         ) : (
                             <Eye
                                 size={18}
-                                aria-hidden="true"
                             />
                         )}
                     </button>
                 </div>
             </div>
 
-            <button
-                type="submit"
-                disabled={loading}
-                className={[
-                    "flex h-12 w-full items-center justify-center gap-2",
-                    "rounded-(--vm-radius-md)",
-                    "bg-(--vm-primary)",
-                    "text-sm font-semibold text-white",
-                    "shadow-lg",
-                    "transition-all duration-(--vm-animation-fast)",
-                    "hover:bg-(--vm-primary-pressed)",
-                    "hover:-translate-y-px",
-                    "disabled:cursor-not-allowed disabled:opacity-60",
-                ].join(" ")}
-            >
-                {loading && (
-                    <Loader2
-                        size={17}
-                        className="animate-spin"
-                        aria-hidden="true"
-                    />
-                )}
+            {/* Submit */}
 
-                {loading
+            <Button
+                type="submit"
+                loading={isLoading}
+                className="w-full"
+            >
+                {isLoading
                     ? "Signing in..."
                     : "Continue"}
-            </button>
+            </Button>
         </form>
     );
 }

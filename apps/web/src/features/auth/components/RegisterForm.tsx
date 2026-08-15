@@ -1,4 +1,3 @@
-import { useState, type FormEvent } from "react";
 import {
     Eye,
     EyeOff,
@@ -6,93 +5,25 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-interface RegisterFormData {
-    fullName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
+import { useRegister } from "../hooks";
 
 export function RegisterForm() {
-    const [form, setForm] =
-        useState<RegisterFormData>({
-            fullName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-        });
+    const {
+        form,
+        error,
+        isLoading,
+        showPassword,
+        showConfirmPassword,
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
-    function updateField(
-        field: keyof RegisterFormData,
-        value: string,
-    ) {
-        setForm((current) => ({
-            ...current,
-            [field]: value,
-        }));
-
-        if (error) {
-            setError("");
-        }
-    }
-
-    async function handleSubmit(
-        event: FormEvent<HTMLFormElement>,
-    ) {
-        event.preventDefault();
-        setError("");
-
-        if (!form.fullName.trim()) {
-            setError("Please enter your full name.");
-            return;
-        }
-
-        if (!form.email.trim()) {
-            setError("Please enter your email address.");
-            return;
-        }
-
-        if (form.password.length < 8) {
-            setError(
-                "Your password must contain at least 8 characters.",
-            );
-            return;
-        }
-
-        if (form.password !== form.confirmPassword) {
-            setError("Passwords do not match.");
-            return;
-        }
-
-        setLoading(true);
-
-        try {
-            /*
-             * Backend registration will be connected here.
-             */
-
-            await new Promise((resolve) =>
-                setTimeout(resolve, 800),
-            );
-
-            console.log("Register:", form);
-        } catch {
-            setError(
-                "Unable to create your account right now.",
-            );
-        } finally {
-            setLoading(false);
-        }
-    }
+        updateField,
+        togglePassword,
+        toggleConfirmPassword,
+        submit,
+    } = useRegister();
 
     return (
         <form
-            onSubmit={handleSubmit}
+            onSubmit={submit}
             className="space-y-4"
             noValidate
         >
@@ -125,7 +56,8 @@ export function RegisterForm() {
                     }
                     placeholder="Your name"
                     autoComplete="name"
-                    className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
+                    disabled={isLoading}
+                    className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20 disabled:cursor-not-allowed disabled:opacity-60"
                 />
             </div>
 
@@ -149,7 +81,8 @@ export function RegisterForm() {
                     }
                     placeholder="you@example.com"
                     autoComplete="email"
-                    className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
+                    disabled={isLoading}
+                    className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20 disabled:cursor-not-allowed disabled:opacity-60"
                 />
             </div>
 
@@ -178,16 +111,16 @@ export function RegisterForm() {
                         }
                         placeholder="At least 8 characters"
                         autoComplete="new-password"
-                        className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 pr-12 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
+                        disabled={isLoading}
+                        className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 pr-12 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20 disabled:cursor-not-allowed disabled:opacity-60"
                     />
 
                     <button
                         type="button"
-                        onClick={() =>
-                            setShowPassword(
-                                (current) => !current,
-                            )
+                        onClick={
+                            togglePassword
                         }
+                        disabled={isLoading}
                         className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-(--vm-muted) hover:text-(--vm-text)"
                         aria-label={
                             showPassword
@@ -220,7 +153,9 @@ export function RegisterForm() {
                                 ? "text"
                                 : "password"
                         }
-                        value={form.confirmPassword}
+                        value={
+                            form.confirmPassword
+                        }
                         onChange={(event) =>
                             updateField(
                                 "confirmPassword",
@@ -229,16 +164,16 @@ export function RegisterForm() {
                         }
                         placeholder="Repeat your password"
                         autoComplete="new-password"
-                        className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 pr-12 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
+                        disabled={isLoading}
+                        className="h-12 w-full rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) px-4 pr-12 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20 disabled:cursor-not-allowed disabled:opacity-60"
                     />
 
                     <button
                         type="button"
-                        onClick={() =>
-                            setShowConfirmPassword(
-                                (current) => !current,
-                            )
+                        onClick={
+                            toggleConfirmPassword
                         }
+                        disabled={isLoading}
                         className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-(--vm-muted) hover:text-(--vm-text)"
                         aria-label={
                             showConfirmPassword
@@ -259,6 +194,7 @@ export function RegisterForm() {
                 <input
                     type="checkbox"
                     required
+                    disabled={isLoading}
                     className="mt-1 accent-(--vm-primary)"
                 />
 
@@ -283,20 +219,22 @@ export function RegisterForm() {
 
             <button
                 type="submit"
-                disabled={loading}
+                disabled={isLoading}
                 className="flex h-12 w-full items-center justify-center gap-2 rounded-(--vm-radius-md) bg-(--vm-primary) text-sm font-semibold text-white shadow-lg transition-all hover:-translate-y-px hover:bg-(--vm-primary-pressed) disabled:cursor-not-allowed disabled:opacity-60"
             >
-                {loading && (
+                {isLoading && (
                     <Loader2
                         size={17}
                         className="animate-spin"
                     />
                 )}
 
-                {loading
+                {isLoading
                     ? "Creating account..."
                     : "Create account"}
             </button>
         </form>
     );
 }
+
+export default RegisterForm;

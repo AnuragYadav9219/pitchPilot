@@ -127,8 +127,7 @@ public class EmailVerificationService {
     // =========================================================
 
     @Transactional
-    public void resendVerificationEmail(
-            User user) {
+    public void resendVerificationEmail(User user) {
 
         sendVerificationEmail(user);
     }

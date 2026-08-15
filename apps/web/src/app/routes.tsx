@@ -1,7 +1,12 @@
 import { lazy, Suspense } from "react";
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import {
+    createBrowserRouter,
+    Outlet,
+} from "react-router-dom";
 
-import { Brand } from "@virtualmento/shared";
+import { PageLoader } from "@/components/feedback";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 
 const LandingPage = lazy(
     () =>
@@ -24,38 +29,107 @@ const RegisterPage = lazy(
         ),
 );
 
-function PageLoader() {
-    return (
-        <div className="flex min-h-screen items-center justify-center bg-(--vm-background) text-(--vm-text)">
-            Loading {Brand.name}...
-        </div>
-    );
-}
+const VerifyOtpPage = lazy(
+    () =>
+        import(
+            "@/features/auth/pages/VerifyOtpPage"
+        ),
+);
+
+const TermsPage = lazy(
+    () =>
+        import(
+            "@/pages/TermsPage"
+        ),
+);
+
+const PrivacyPage = lazy(
+    () =>
+        import(
+            "@/pages/PrivacyPage"
+        ),
+);
+
+const DashboardPage = lazy(
+    () =>
+        import(
+            "@/features/dashboard/pages/DashboardPage"
+        ),
+);
 
 function RootLayout() {
     return (
-        <Suspense fallback={<PageLoader />}>
+        <Suspense
+            fallback={
+                <PageLoader />
+            }
+        >
             <Outlet />
         </Suspense>
     );
 }
 
-export const router = createBrowserRouter([
-    {
-        element: <RootLayout />,
-        children: [
-            {
-                path: "/",
-                element: <LandingPage />,
-            },
-            {
-                path: "/login",
-                element: <LoginPage />,
-            },
-            {
-                path: "/register",
-                element: <RegisterPage />,
-            },
-        ],
-    },
-]);
+export const router =
+    createBrowserRouter([
+        {
+            element: <RootLayout />,
+            children: [
+                /*
+                 * -------------------------
+                 * PUBLIC ROUTES
+                 * -------------------------
+                 */
+
+                {
+                    path: "/",
+                    element: <LandingPage />,
+                },
+
+                {
+                    path: "/login",
+                    element: <LoginPage />,
+                },
+
+                {
+                    path: "/register",
+                    element: <RegisterPage />,
+                },
+
+                {
+                    path: "/verify-otp",
+                    element: <VerifyOtpPage />,
+                },
+
+                {
+                    path: "/terms",
+                    element: <TermsPage />,
+                },
+
+                {
+                    path: "/privacy",
+                    element: <PrivacyPage />,
+                },
+
+                /*
+                 * -------------------------
+                 * PROTECTED APPLICATION
+                 * -------------------------
+                 */
+
+                {
+                    element: <ProtectedRoute />,
+                    children: [
+                        {
+                            element: <AppLayout />,
+                            children: [
+                                {
+                                    path: "/dashboard",
+                                    element: <DashboardPage />,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+    ]);
