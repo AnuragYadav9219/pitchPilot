@@ -63,6 +63,8 @@ public class SecurityConfig {
                                 "/api/auth/refresh",
                                 "/api/auth/logout",
                                 "/api/auth/logout-other-devices",
+                                "/api/otp/send",
+                                "/api/otp/verify",
                                 "/api/auth/verify-email",
                                 "/api/auth/resend-verification",
                                 "/api/auth/forgot-password",
@@ -77,7 +79,7 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/api/auth/sessions/**",
-                                "/api/users/me"
+                                "/api/users/**"
                         ).authenticated()
 
                         .requestMatchers(

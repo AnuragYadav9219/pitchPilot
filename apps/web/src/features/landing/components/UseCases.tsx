@@ -82,7 +82,7 @@ export function UseCases() {
                         </p>
 
                         <div className="mt-8 grid grid-cols-2 gap-4">
-                            <div className="rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) p-4">
+                            <div className="rounded-(--vm-radius-md) shadow-2xl border border-(--vm-border) bg-(--vm-surface) p-4">
                                 <p className="text-2xl font-bold text-(--vm-text)">
                                     24/7
                                 </p>
@@ -92,7 +92,7 @@ export function UseCases() {
                                 </p>
                             </div>
 
-                            <div className="rounded-(--vm-radius-md) border border-(--vm-border) bg-(--vm-surface) p-4">
+                            <div className="rounded-(--vm-radius-md) shadow-2xl border border-(--vm-border) bg-(--vm-surface) p-4">
                                 <p className="text-2xl font-bold text-(--vm-text)">
                                     AI
                                 </p>
@@ -113,7 +113,7 @@ export function UseCases() {
                                     key={useCase.title}
                                     interactive
                                     className={[
-                                        "group p-6",
+                                        "group p-6 shadow-2xl",
                                         index === 4
                                             ? "sm:col-span-2"
                                             : "",

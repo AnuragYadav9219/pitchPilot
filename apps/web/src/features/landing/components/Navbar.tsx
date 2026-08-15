@@ -63,7 +63,7 @@ export function Navbar() {
                             Log in
                         </Link>
 
-                        <Link to="/login">
+                        <Link to="/register">
                             <Button size="sm">
                                 Get Started
                             </Button>
@@ -132,7 +132,7 @@ export function Navbar() {
                             </Link>
 
                             <Link
-                                to="/login"
+                                to="/register"
                                 onClick={closeMobileMenu}
                                 className="mt-2"
                             >

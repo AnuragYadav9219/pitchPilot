@@ -98,7 +98,7 @@ function FeatureCard({ feature }: FeatureCardProps) {
     return (
         <Card
             interactive
-            className="group relative overflow-hidden p-6"
+            className="group relative overflow-hidden shadow-2xl p-6"
         >
             {/* Decorative glow */}
             <div

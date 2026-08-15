@@ -211,7 +211,7 @@ public class RefreshTokenService {
                         UUID currentSessionId) {
 
                 return refreshTokenRepository
-                                .finByUserIdAndRevokedAtIsNullOrderByLastUsedAtDesc(userId)
+                                .findByUserIdAndRevokedAtIsNullOrderByLastUsedAtDesc(userId)
                                 .stream()
                                 .map(token -> new SessionResponse(
                                                 token.getId(),

@@ -119,7 +119,7 @@ export function HowItWorks() {
                         </div>
                     </div>
 
-                    <div className="mx-auto mt-16 max-w-3xl rounded-(--vm-radius-xl) border border-(--vm-border) bg-(--vm-surface) p-6 backdrop-blur-xl sm:p-8">
+                    <div className="mx-auto mt-16 max-w-3xl shadow-2xl hover:-translate-y-1 rounded-(--vm-radius-xl) border border-(--vm-border) bg-(--vm-surface) p-6 backdrop-blur-xl sm:p-8">
                         <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
                             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-(--vm-radius-md) bg-(--vm-primary)/12 text-(--vm-primary)">
                                 <Sparkles size={23} />

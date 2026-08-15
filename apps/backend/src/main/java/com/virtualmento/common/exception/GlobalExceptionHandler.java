@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.virtualmento.ai.exception.AiProviderRateLimitException;
+import com.virtualmento.ai.exception.AiProviderUnavailableException;
 import com.virtualmento.common.response.ApiResponse;
 import com.virtualmento.common.response.ResponseBuilder;
 import com.virtualmento.notification.exception.EmailNotVerifiedException;
@@ -105,27 +107,23 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(InvalidOtpException.class)
-        public ResponseEntity<ApiResponse<Void>> handleInvalidOtp(
-                        InvalidOtpException ex) {
+        public ResponseEntity<ApiResponse<Void>> handleInvalidOtp(InvalidOtpException ex) {
 
                 return ResponseEntity
                                 .status(HttpStatus.BAD_REQUEST)
-                                .body(
-                                                ApiResponse.fail(
-                                                                ex.getMessage(),
-                                                                null));
+                                .body(ApiResponse.fail(
+                                                ex.getMessage(),
+                                                null));
         }
 
         @ExceptionHandler(OtpExpiredException.class)
-        public ResponseEntity<ApiResponse<Void>> handleOtpExpired(
-                        OtpExpiredException ex) {
+        public ResponseEntity<ApiResponse<Void>> handleOtpExpired(OtpExpiredException ex) {
 
                 return ResponseEntity
                                 .status(HttpStatus.BAD_REQUEST)
-                                .body(
-                                                ApiResponse.fail(
-                                                                ex.getMessage(),
-                                                                null));
+                                .body(ApiResponse.fail(
+                                                ex.getMessage(),
+                                                null));
         }
 
         @ExceptionHandler(OtpLockedException.class)
@@ -150,5 +148,25 @@ public class GlobalExceptionHandler {
                                                 ApiResponse.fail(
                                                                 ex.getMessage(),
                                                                 null));
+        }
+
+        @ExceptionHandler(AiProviderRateLimitException.class)
+        public ResponseEntity<ApiResponse<Void>> handleAiRateLimit(AiProviderRateLimitException ex) {
+
+                return ResponseEntity
+                                .status(HttpStatus.TOO_MANY_REQUESTS)
+                                .body(ApiResponse.fail(
+                                                "AI service is temporarily busy. Please try again.",
+                                                null));
+        }
+
+        @ExceptionHandler(AiProviderUnavailableException.class)
+        public ResponseEntity<ApiResponse<Void>> handleAiUnavailable(AiProviderUnavailableException ex) {
+
+                return ResponseEntity
+                                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                                .body(ApiResponse.fail(
+                                                "AI service is temporarily unavailable. Please try again later.",
+                                                null));
         }
 }

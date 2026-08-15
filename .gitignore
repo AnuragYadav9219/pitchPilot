@@ -186,6 +186,10 @@ spring.log
 # SPRING BOOT LOCAL CONFIG
 # ============================================================
 
+# Main local Spring Boot configuration
+apps/backend/src/main/resources/application.yml
+apps/backend/src/main/resources/application.yaml
+
 # Local Spring configuration
 application-local.yml
 application-local.yaml

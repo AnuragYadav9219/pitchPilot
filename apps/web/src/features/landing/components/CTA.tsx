@@ -35,7 +35,7 @@ export function CTA({
                             className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--vm-glow-purple) opacity-20 blur-[110px]"
                         />
 
-                        <div className="relative">
+                        <div className="relative ">
                             {/* Icon */}
                             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-(--vm-primary)/12 text-(--vm-primary)">
                                 <Sparkles

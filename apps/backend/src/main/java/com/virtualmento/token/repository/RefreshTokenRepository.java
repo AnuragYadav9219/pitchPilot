@@ -17,7 +17,7 @@ public interface RefreshTokenRepository
 
         Optional<RefreshToken> findByTokenHash(String tokenHash);
 
-        List<RefreshToken> finByUserIdAndRevokedAtIsNullOrderByLastUsedAtDesc(UUID userId);
+        List<RefreshToken> findByUserIdAndRevokedAtIsNullOrderByLastUsedAtDesc(UUID userId);
 
         @Modifying
         @Query("""

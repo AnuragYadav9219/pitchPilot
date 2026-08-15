@@ -20,6 +20,9 @@ public class UserMapper {
                 user.getEmail(),
                 user.getRole(),
                 user.getEnabled(),
-                user.getEmailVerified());
+                user.getEmailVerified(),
+                user.getPhoneVerified(),
+                user.getCreatedAt(),
+                user.getUpdatedAt());
     }
 }

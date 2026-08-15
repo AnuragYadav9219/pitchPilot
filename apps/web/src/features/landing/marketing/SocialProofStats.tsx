@@ -59,7 +59,7 @@ export default function SocialProofStats({
         <section className="relative py-10 sm:py-12">
             <Container>
                 <div
-                    className="relative overflow-hidden border border-(--vm-border-strong) bg-(--vm-surface)"
+                    className="relative overflow-hidden shadow-2xl hover:-translate-y-1 duration-500 border border-(--vm-border-strong) bg-(--vm-surface)"
                     style={{
                         borderRadius: Radius.xl,
                     }}
