@@ -135,12 +135,6 @@ export function useRegister() {
             }
 
             try {
-                const response =
-                    await register({
-                        fullName,
-                        email,
-                        password: form.password,
-                    }).unwrap();
 
                 sessionStorage.setItem(
                     PENDING_EMAIL_KEY,
