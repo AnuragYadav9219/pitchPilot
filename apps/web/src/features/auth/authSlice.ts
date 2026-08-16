@@ -7,6 +7,7 @@ import type {
     AuthResponse,
     User,
 } from "./types";
+import { authStorage } from "./authStorage";
 
 interface AuthState {
     user: User | null;
@@ -42,6 +43,17 @@ const authSlice = createSlice({
                 action.payload.refreshToken;
 
             state.isAuthenticated = true;
+
+            authStorage.setSession({
+                accessToken:
+                    action.payload.accessToken,
+
+                refreshToken:
+                    action.payload.refreshToken,
+
+                user:
+                    action.payload.user,
+            });
         },
 
         clearCredentials: (state) => {

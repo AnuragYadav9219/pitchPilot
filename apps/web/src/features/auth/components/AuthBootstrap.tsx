@@ -5,6 +5,7 @@ import {
 } from "react";
 
 import { useAppDispatch } from "@/app/store/hooks";
+
 import { PageLoader } from "@/components/feedback";
 
 import {
@@ -13,19 +14,38 @@ import {
 } from "../authSlice";
 
 import { authStorage } from "../authStorage";
+
 import { useRefreshMutation } from "../authApi";
+
+import type {
+    ApiResponse,
+    AuthResponse,
+} from "../types";
 
 interface AuthBootstrapProps {
     children: ReactNode;
 }
 
+/*
+ * Only one refresh request can exist at a time.
+ */
+let restoreSessionPromise:
+    Promise<
+        ApiResponse<AuthResponse>
+    > | null = null;
+
 export function AuthBootstrap({
     children,
 }: AuthBootstrapProps) {
-    const dispatch = useAppDispatch();
+    const dispatch =
+        useAppDispatch();
 
-    const [refresh] =
-        useRefreshMutation();
+    const [
+        refresh,
+        {
+            isLoading: isRefreshing,
+        },
+    ] = useRefreshMutation();
 
     const [
         isChecking,
@@ -33,17 +53,21 @@ export function AuthBootstrap({
     ] = useState(true);
 
     useEffect(() => {
-        let mounted = true;
+        let cancelled = false;
 
         async function restoreSession() {
+            console.log(
+                "AuthBootstrap: restoring session...",
+            );
+
             const refreshToken =
                 authStorage.getRefreshToken();
 
             /*
-             * No existing session.
+             * No stored refresh token.
              */
             if (!refreshToken) {
-                if (mounted) {
+                if (!cancelled) {
                     setIsChecking(false);
                 }
 
@@ -51,19 +75,51 @@ export function AuthBootstrap({
             }
 
             try {
-                const response =
-                    await refresh({
-                        refreshToken,
-                    }).unwrap();
+                /*
+                 * =============================================
+                 * SINGLE-FLIGHT REFRESH
+                 * =============================================
+                 */
+                if (
+                    !restoreSessionPromise
+                ) {
+                    console.log(
+                        "AuthBootstrap: starting refresh request...",
+                    );
 
-                if (!response.data) {
+                    restoreSessionPromise =
+                        refresh({
+                            refreshToken,
+                        }).unwrap();
+                } else {
+                    console.log(
+                        "AuthBootstrap: waiting for existing refresh request...",
+                    );
+                }
+
+                const response =
+                    await restoreSessionPromise;
+
+                console.log(
+                    "AuthBootstrap: refresh response:",
+                    response,
+                );
+
+                if (
+                    !response.success ||
+                    !response.data
+                ) {
                     throw new Error(
-                        "Invalid refresh response.",
+                        response.message ||
+                            "Invalid refresh response.",
                     );
                 }
 
                 /*
-                 * Restore Redux state.
+                 * Update Redux.
+                 *
+                 * setCredentials() also stores the
+                 * NEW rotated refresh token.
                  */
                 dispatch(
                     setCredentials(
@@ -71,31 +127,18 @@ export function AuthBootstrap({
                     ),
                 );
 
-                /*
-                 * Persist rotated tokens
-                 * and refreshed user data.
-                 */
-                authStorage.setSession({
-                    accessToken:
-                        response.data
-                            .accessToken,
-
-                    refreshToken:
-                        response.data
-                            .refreshToken,
-
-                    user:
-                        response.data.user,
-                });
+                console.log(
+                    "AuthBootstrap: session restored.",
+                );
             } catch (error) {
-                console.warn(
-                    "Session restoration failed:",
+                console.error(
+                    "AuthBootstrap: session restoration failed:",
                     error,
                 );
 
                 /*
-                 * Refresh token is invalid,
-                 * expired, revoked, etc.
+                 * Only clear the session when the
+                 * shared refresh request actually failed.
                  */
                 authStorage.clear();
 
@@ -103,7 +146,15 @@ export function AuthBootstrap({
                     clearCredentials(),
                 );
             } finally {
-                if (mounted) {
+                /*
+                 * Important:
+                 *
+                 * The request is finished, so a future
+                 * browser refresh can create a new one.
+                 */
+                restoreSessionPromise = null;
+
+                if (!cancelled) {
                     setIsChecking(false);
                 }
             }
@@ -112,11 +163,17 @@ export function AuthBootstrap({
         void restoreSession();
 
         return () => {
-            mounted = false;
+            cancelled = true;
         };
-    }, [dispatch, refresh]);
+    }, [
+        dispatch,
+        refresh,
+    ]);
 
-    if (isChecking) {
+    if (
+        isChecking ||
+        isRefreshing
+    ) {
         return (
             <PageLoader
                 label="Restoring your session..."

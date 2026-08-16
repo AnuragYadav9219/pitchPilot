@@ -15,6 +15,7 @@ import com.virtualmento.ai.context.UserProfileContext;
 import com.virtualmento.ai.context.UserProfileContextMapper;
 import com.virtualmento.ai.exception.AiProviderRateLimitException;
 import com.virtualmento.ai.exception.AiProviderUnavailableException;
+import com.virtualmento.ai.prompt.MentorPromptBuilder;
 import com.virtualmento.ai.provider.AiRequest;
 import com.virtualmento.ai.provider.AiResponse;
 import com.virtualmento.ai.service.AiService;
@@ -53,6 +54,7 @@ public class ConversationServiceImpl implements ConversationService {
 
         private final AiService aiService;
         private final AiProperties aiProperties;
+        private final MentorPromptBuilder mentorPromptBuilder;
 
         private final ConversationContextBuilder contextBuilder;
         private final UserProfileContextMapper profileContextMapper;
@@ -65,15 +67,13 @@ public class ConversationServiceImpl implements ConversationService {
         // =========================================================
 
         @Override
-        public ConversationResponse create(
-                        CreateConversationRequest request) {
+        public ConversationResponse create(CreateConversationRequest request) {
 
                 UUID userId = currentUserProvider.getUserId();
 
                 User user = userRepository
                                 .findById(userId)
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                                "User not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
                 String title = request.title();
 
@@ -232,12 +232,19 @@ public class ConversationServiceImpl implements ConversationService {
                                 conversation.getSummary(),
                                 recentMessages);
 
+                // SCENARIO-SPECIFIC MENTOR BEHAVIOUR
+                String mentorInstruction = mentorPromptBuilder.build(
+                        conversation.getType(), 
+                        conversation.getTitle());
+
+                String systemInstruction = mentorInstruction + "\n\n" + context.systemInstruction();
+
                 // =====================================================
                 // BUILD AI REQUEST
                 // =====================================================
 
                 AiRequest aiRequest = new AiRequest(
-                                context.systemInstruction(),
+                                systemInstruction,
                                 context.messages(),
                                 null,
                                 null,

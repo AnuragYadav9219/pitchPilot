@@ -1,0 +1,97 @@
+import type { Scenario } from "../types";
+
+export const scenarios: Scenario[] = [
+    {
+        id: "job-interview",
+        title: "Job Interview",
+        description:
+            "Practice answering realistic interview questions with an AI interviewer.",
+        category: "INTERVIEW",
+        difficulty: "BEGINNER",
+        estimatedMinutes: 10,
+        tags: [
+            "Interview",
+            "Confidence",
+            "Career",
+        ],
+        conversationType: "INTERVIEW",
+    },
+
+    {
+        id: "behavioral-interview",
+        title: "Behavioral Interview",
+        description:
+            "Handle challenging behavioral questions and explain your experiences clearly.",
+        category: "INTERVIEW",
+        difficulty: "INTERMEDIATE",
+        estimatedMinutes: 15,
+        tags: [
+            "STAR Method",
+            "Interview",
+            "Career",
+        ],
+        conversationType: "INTERVIEW",
+    },
+
+    {
+        id: "team-conflict",
+        title: "Team Conflict",
+        description:
+            "Practice resolving a disagreement with a teammate professionally.",
+        category: "WORKPLACE",
+        difficulty: "INTERMEDIATE",
+        estimatedMinutes: 10,
+        tags: [
+            "Conflict",
+            "Workplace",
+            "Communication",
+        ],
+        conversationType: "ROLEPLAY",
+    },
+
+    {
+        id: "leadership-challenge",
+        title: "Leadership Challenge",
+        description:
+            "Practice making decisions and communicating with your team under pressure.",
+        category: "LEADERSHIP",
+        difficulty: "ADVANCED",
+        estimatedMinutes: 15,
+        tags: [
+            "Leadership",
+            "Decision Making",
+        ],
+        conversationType: "ROLEPLAY",
+    },
+
+    {
+        id: "presentation",
+        title: "Present Your Idea",
+        description:
+            "Practice explaining an idea clearly to a team or stakeholder.",
+        category: "COMMUNICATION",
+        difficulty: "BEGINNER",
+        estimatedMinutes: 10,
+        tags: [
+            "Presentation",
+            "Communication",
+        ],
+        conversationType: "GENERAL",
+    },
+
+    {
+        id: "difficult-manager",
+        title: "Difficult Manager",
+        description:
+            "Practice navigating a difficult workplace conversation with your manager.",
+        category: "WORKPLACE",
+        difficulty: "ADVANCED",
+        estimatedMinutes: 12,
+        tags: [
+            "Workplace",
+            "Conflict",
+            "Confidence",
+        ],
+        conversationType: "ROLEPLAY",
+    },
+];
