@@ -34,6 +34,11 @@ export function applyTheme(mode: ThemeMode) {
     );
 
     root.style.setProperty(
+        "--vm-surface-solid",
+        colors.surfaceSolid,
+    );
+
+    root.style.setProperty(
         "--vm-border",
         colors.border,
     );

@@ -1,6 +1,5 @@
 package com.virtualmento.conversation.controller;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -10,11 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.virtualmento.common.response.ApiResponse;
 import com.virtualmento.common.response.ResponseBuilder;
 import com.virtualmento.conversation.dto.ConversationDetailResponse;
+import com.virtualmento.conversation.dto.ConversationPageResponse;
 import com.virtualmento.conversation.dto.ConversationResponse;
 import com.virtualmento.conversation.dto.CreateConversationRequest;
 import com.virtualmento.conversation.dto.MessageResponse;
@@ -29,74 +30,107 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ConversationController {
 
-    private final ConversationService conversationService;
-    private final ResponseBuilder responseBuilder;
+        private final ConversationService conversationService;
+        private final ResponseBuilder responseBuilder;
 
-    // =========================================================
-    // CREATE
-    // =========================================================
+        // =========================================================
+        // CREATE
+        // =========================================================
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<ConversationResponse>> create(
-            @Valid @RequestBody CreateConversationRequest request) {
+        @PostMapping
+        public ResponseEntity<ApiResponse<ConversationResponse>> create(
+                        @Valid @RequestBody CreateConversationRequest request) {
 
-        return responseBuilder.ok(
-                "Conversation created successfully",
-                conversationService.create(request));
-    }
+                return responseBuilder.ok(
+                                "Conversation created successfully",
+                                conversationService.create(request));
+        }
 
-    // =========================================================
-    // LIST
-    // =========================================================
+        // =========================================================
+        // LIST
+        // =========================================================
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<ConversationResponse>>> getMyConversations() {
+        @GetMapping
+        public ResponseEntity<ApiResponse<ConversationPageResponse>> getMyConversations(
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "20") int size) {
 
-        return responseBuilder.ok(
-                "Conversations fetched successfully",
-                conversationService.getMyConversations());
-    }
+                if (page < 0) {
+                        page = 0;
+                }
 
-    // =========================================================
-    // DETAILS
-    // =========================================================
+                if (size < 1) {
+                        size = 20;
+                }
 
-    @GetMapping("/{conversationId}")
-    public ResponseEntity<ApiResponse<ConversationDetailResponse>> getConversation(@PathVariable UUID conversationId) {
+                if (size > 50) {
+                        size = 50;
+                }
 
-        return responseBuilder.ok(
-                "Conversation fetched successfully",
-                conversationService.getConversation(
-                        conversationId));
-    }
+                return responseBuilder.ok(
+                                "Conversations fetched successfully",
+                                conversationService.getMyConversations(
+                                                page,
+                                                size));
+        }
 
-    // =========================================================
-    // SEND MESSAGE
-    // =========================================================
+        // =========================================================
+        // DETAILS
+        // =========================================================
 
-    @PostMapping("/{conversationId}/messages")
-    public ResponseEntity<ApiResponse<MessageResponse>> sendMessage(
-            @PathVariable UUID conversationId,
-            @Valid @RequestBody SendMessageRequest request) {
+        @GetMapping("/{conversationId}")
+        public ResponseEntity<ApiResponse<ConversationDetailResponse>> getConversation(
+                        @PathVariable UUID conversationId) {
 
-        return responseBuilder.ok(
-                "Message sent successfully",
-                conversationService.sendResponse(
-                        conversationId,
-                        request));
-    }
+                return responseBuilder.ok(
+                                "Conversation fetched successfully",
+                                conversationService.getConversation(
+                                                conversationId));
+        }
 
-    // =========================================================
-    // ARCHIVE
-    // =========================================================
+        // =========================================================
+        // SEND MESSAGE
+        // =========================================================
 
-    @DeleteMapping("/{conversationId}")
-    public ResponseEntity<ApiResponse<Void>> archive(@PathVariable UUID conversationId) {
+        @PostMapping("/{conversationId}/messages")
+        public ResponseEntity<ApiResponse<MessageResponse>> sendMessage(
+                        @PathVariable UUID conversationId,
+                        @Valid @RequestBody SendMessageRequest request) {
 
-        conversationService.archive(conversationId);
+                return responseBuilder.ok(
+                                "Message sent successfully",
+                                conversationService.sendResponse(
+                                                conversationId,
+                                                request));
+        }
 
-        return responseBuilder.ok(
-                "Conversation archived successfully",
-                null);
-    }
+        // =========================================================
+        // ARCHIVE
+        // =========================================================
+
+        @DeleteMapping("/{conversationId}")
+        public ResponseEntity<ApiResponse<Void>> archive(@PathVariable UUID conversationId) {
+
+                conversationService.archive(conversationId);
+
+                return responseBuilder.ok(
+                                "Conversation archived successfully",
+                                null);
+        }
+
+        // =========================================================
+        // PERMANENT DELETE
+        // =========================================================
+
+        @DeleteMapping("/{conversationId}/permanent")
+        public ResponseEntity<ApiResponse<Void>> permanentlyDelete(
+                        @PathVariable UUID conversationId) {
+
+                conversationService.permanentlyDelete(
+                                conversationId);
+
+                return responseBuilder.ok(
+                                "Conversation deleted permanently",
+                                null);
+        }
 }

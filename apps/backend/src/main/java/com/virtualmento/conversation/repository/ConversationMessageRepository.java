@@ -19,4 +19,8 @@ public interface ConversationMessageRepository extends JpaRepository<Conversatio
                         Pageable pageable);
 
         Optional<ConversationMessage> findByIdAndConversationId(UUID messageId, UUID conversationId);
+
+        void deleteByConversationId(UUID conversationId);
+
+        long countByConversationId(UUID conversationId);
 }

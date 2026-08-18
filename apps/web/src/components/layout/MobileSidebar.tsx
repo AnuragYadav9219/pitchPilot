@@ -56,19 +56,20 @@ export function MobileSidebar({
     }
 
     return (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-100 lg:hidden">
             {/* Backdrop */}
             <button
                 type="button"
                 aria-label="Close navigation"
                 onClick={onClose}
-                className="absolute inset-0 bg-black/50 backdrop-blur-[5px]"
+                className="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[5px]"
             />
 
             {/* Drawer */}
             <aside
                 className={[
-                    "relative flex h-full w-[min(82vw,320px)] flex-col",
+                    "relative z-101",
+                    "flex h-full w-[min(82vw,320px)] flex-col",
                     "border-r border-(--vm-border)",
                     "bg-(--vm-surface)",
                     "shadow-2xl",

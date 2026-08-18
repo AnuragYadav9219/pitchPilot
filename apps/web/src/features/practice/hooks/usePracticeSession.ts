@@ -1,384 +1,253 @@
-import {
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
-
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     useCreateConversationMutation,
+    useGetConversationQuery,
     useSendMessageMutation,
 } from "@/features/conversation/conversationApi";
-
 import type {
     ConversationMessage,
     ConversationType,
 } from "@/features/conversation/types";
 
+/* ============================================================= */
+/* TYPES */
+/* ============================================================= */
+
 interface UsePracticeSessionOptions {
     title: string;
     type: ConversationType;
+    conversationId?: string;
 }
+
+interface ApiError {
+    status?: number | string;
+    data?: {
+        message?: string;
+    };
+}
+
+/* ============================================================= */
+/* HOOK */
+/* ============================================================= */
 
 export function usePracticeSession({
     title,
     type,
+    conversationId: existingConversationId,
 }: UsePracticeSessionOptions) {
-    const [
-        createConversation,
-    ] = useCreateConversationMutation();
+    /* API Mutations & Queries */
+    const [createConversation] = useCreateConversationMutation();
+    const [sendMessage, { isLoading: isSendingMessage }] = useSendMessageMutation();
 
-    const [
-        sendMessage,
-        {
-            isLoading: isSendingMessage,
-        },
-    ] = useSendMessageMutation();
+    const {
+        data: existingResponse,
+        isLoading: isLoadingExisting,
+        isFetching: isFetchingExisting,
+        error: existingError,
+    } = useGetConversationQuery(existingConversationId ?? "", {
+        skip: !existingConversationId,
+    });
 
-    const [
-        conversationId,
-        setConversationId,
-    ] = useState<string | null>(null);
+    /* State */
+    const [conversationId, setConversationId] = useState<string | null>(
+        existingConversationId ?? null
+    );
+    const [messages, setMessages] = useState<ConversationMessage[]>([]);
+    const [isCreating, setIsCreating] = useState(!existingConversationId);
+    const [error, setError] = useState<string | null>(null);
 
-    const [
-        messages,
-        setMessages,
-    ] = useState<ConversationMessage[]>([]);
+    // Prevent duplicate creation requests
+    const creationKeyRef = useRef<string | null>(null);
 
-    const [
-        isLoading,
-        setIsLoading,
-    ] = useState(true);
+    /* ========================================================= */
+    /* EXISTING CONVERSATION — LOAD */
+    /* ========================================================= */
 
-    const [
-        error,
-        setError,
-    ] = useState<string | null>(null);
-
-    /*
-     * Keeps the initialization request alive
-     * across React StrictMode's effect cleanup/re-run.
-     */
-    const initializationPromiseRef =
-        useRef<Promise<string> | null>(null);
-
-    const initializationKeyRef =
-        useRef<string>("");
-
-    /*
-     * =========================================================
-     * CREATE CONVERSATION
-     * =========================================================
-     */
     useEffect(() => {
-        const initializationKey =
-            `${type}:${title}`;
-
-        /*
-         * If this exact scenario is already being
-         * initialized, don't create another conversation.
-         */
-        if (
-            initializationKeyRef.current ===
-            initializationKey &&
-            initializationPromiseRef.current
-        ) {
+        if (!existingConversationId || !existingResponse?.data) {
             return;
         }
 
-        /*
-         * New scenario.
-         */
-        initializationKeyRef.current =
-            initializationKey;
+        const conversation = existingResponse.data.conversation;
+        const loadedMessages = existingResponse.data.messages ?? [];
 
-        setConversationId(null);
-        setMessages([]);
+        console.log("Existing conversation loaded:", {
+            conversation,
+            messages: loadedMessages,
+        });
+
+        setConversationId(conversation.id);
+        setMessages(loadedMessages);
         setError(null);
-        setIsLoading(true);
+        setIsCreating(false);
+    }, [existingConversationId, existingResponse]);
 
-        const initializeConversation =
-            async (): Promise<string> => {
-                console.log(
-                    "Creating conversation:",
-                    {
-                        title,
-                        type,
-                    },
-                );
+    /* ========================================================= */
+    /* EXISTING CONVERSATION — ERROR */
+    /* ========================================================= */
 
-                const response =
-                    await createConversation({
-                        title,
-                        type,
-                    }).unwrap();
+    useEffect(() => {
+        if (!existingConversationId || !existingError) {
+            return;
+        }
 
-                console.log(
-                    "Conversation created:",
-                    response,
-                );
+        console.error("Failed to load conversation:", existingError);
+        setError(getConversationError(existingError));
+        setIsCreating(false);
+    }, [existingConversationId, existingError]);
 
-                const id =
-                    response.data?.id;
+    /* ========================================================= */
+    /* CREATE NEW CONVERSATION */
+    /* ========================================================= */
 
+    useEffect(() => {
+        if (existingConversationId) {
+            setIsCreating(false);
+            return;
+        }
+
+        const key = `${type}:${title}`;
+        if (creationKeyRef.current === key) {
+            return;
+        }
+        creationKeyRef.current = key;
+
+        let cancelled = false;
+
+        async function create() {
+            try {
+                setIsCreating(true);
+                setError(null);
+
+                console.log("Creating NEW conversation:", { title, type });
+
+                const response = await createConversation({
+                    title,
+                    type,
+                }).unwrap();
+
+                if (cancelled) return;
+
+                const id = response.data?.id;
                 if (!id) {
-                    throw new Error(
-                        "Conversation was created but no conversation ID was returned.",
-                    );
+                    throw new Error("Conversation ID was not returned.");
                 }
 
-                return id;
-            };
-
-        /*
-         * Create ONE shared promise.
-         *
-         * React StrictMode may execute this effect
-         * more than once, but both executions can
-         * use the same promise.
-         */
-        const promise =
-            initializationPromiseRef.current ??
-            initializeConversation();
-
-        initializationPromiseRef.current =
-            promise;
-
-        promise
-            .then((id) => {
-                console.log(
-                    "Practice session ready:",
-                    id,
-                );
+                console.log("NEW conversation created:", id);
 
                 setConversationId(id);
-                setIsLoading(false);
-                setError(null);
-            })
-            .catch((err) => {
-                console.error(
-                    "Failed to create conversation:",
-                    err,
-                );
+                setMessages([]);
+                setIsCreating(false);
+            } catch (err) {
+                if (cancelled) return;
 
+                console.error("Conversation creation failed:", err);
                 setConversationId(null);
+                setError(getConversationError(err));
+                setIsCreating(false);
+            }
+        }
 
-                setError(
-                    getConversationError(err),
-                );
+        void create();
 
-                setIsLoading(false);
-            });
+        return () => {
+            cancelled = true;
+        };
+    }, [existingConversationId, title, type, createConversation]);
 
-        /*
-         * IMPORTANT:
-         *
-         * Do NOT set initializationPromiseRef.current
-         * to null during cleanup.
-         *
-         * React StrictMode would otherwise create
-         * another conversation.
-         */
-    }, [
-        title,
-        type,
-        createConversation,
-    ]);
+    /* ========================================================= */
+    /* SEND MESSAGE */
+    /* ========================================================= */
 
-    /*
-     * =========================================================
-     * SEND MESSAGE
-     * =========================================================
-     */
     const send = useCallback(
         async (content: string) => {
-            const trimmedContent =
-                content.trim();
+            const trimmed = content.trim();
 
-            /*
-             * Session is still starting.
-             */
             if (!conversationId) {
-                setError(
-                    "Your practice session is still starting. Please wait a moment and try again.",
-                );
-
+                setError("Your practice session is still starting. Please wait a moment.");
                 return;
             }
 
-            /*
-             * Empty message.
-             */
-            if (!trimmedContent) {
-                return;
-            }
+            if (!trimmed) return;
 
             setError(null);
 
-            /*
-             * Optimistically show the user's message.
-             */
-            const temporaryUserMessage:
-                ConversationMessage = {
-                id: `temp-user-${Date.now()}`,
+            const temporaryMessage: ConversationMessage = {
+                id: `temp-${Date.now()}`,
                 role: "USER",
-                content: trimmedContent,
+                content: trimmed,
                 model: null,
-                createdAt:
-                    new Date().toISOString(),
+                createdAt: new Date().toISOString(),
             };
 
-            setMessages(
-                (current) => [
-                    ...current,
-                    temporaryUserMessage,
-                ],
-            );
+            setMessages((current) => [...current, temporaryMessage]);
 
             try {
-                console.log(
-                    "Sending message:",
-                    {
-                        conversationId,
-                        content:
-                            trimmedContent,
-                    },
-                );
+                const response = await sendMessage({
+                    conversationId,
+                    content: trimmed,
+                }).unwrap();
 
-                const response =
-                    await sendMessage({
-                        conversationId,
-                        content:
-                            trimmedContent,
-                    }).unwrap();
-
-                console.log(
-                    "Message response:",
-                    response,
-                );
-
-                /*
-                 * Backend returns the assistant
-                 * MessageResponse.
-                 */
                 if (response.data) {
-                    setMessages(
-                        (current) => [
-                            ...current,
-                            response.data,
-                        ],
-                    );
+                    setMessages((current) => [...current, response.data]);
                 }
             } catch (err) {
-                console.error(
-                    "Failed to send message:",
-                    err,
+                console.error("Failed to send message:", err);
+
+                setMessages((current) =>
+                    current.filter((message) => message.id !== temporaryMessage.id)
                 );
 
-                /*
-                 * Remove optimistic user message
-                 * when the request fails.
-                 */
-                setMessages(
-                    (current) =>
-                        current.filter(
-                            (message) =>
-                                message.id !==
-                                temporaryUserMessage.id,
-                        ),
-                );
-
-                setError(
-                    getMessageError(err),
-                );
+                setError(getMessageError(err));
             }
         },
-        [
-            conversationId,
-            sendMessage,
-        ],
+        [conversationId, sendMessage]
     );
 
+    /* ========================================================= */
+    /* LOADING & RETURN */
+    /* ========================================================= */
+
+    const isLoading = Boolean(existingConversationId)
+        ? isLoadingExisting || isFetchingExisting
+        : isCreating;
+
     return {
+        conversationId,
         messages,
         isLoading,
         isSendingMessage,
         error,
         send,
-        conversationId,
     };
 }
 
-/*
- * =========================================================
- * ERROR HELPERS
- * =========================================================
- */
+/* ============================================================= */
+/* ERRORS */
+/* ============================================================= */
 
-function getConversationError(
-    error: unknown,
-): string {
-    if (
-        typeof error === "object" &&
-        error !== null
-    ) {
-        const apiError =
-            error as {
-                status?: number | string;
-                data?: {
-                    message?: string;
-                };
-            };
-
-        if (
-            apiError.data?.message
-        ) {
-            return apiError.data.message;
-        }
-
-        if (
-            apiError.status === 401
-        ) {
-            return "Your session has expired. Please sign in again.";
-        }
-
-        if (
-            apiError.status === 400
-        ) {
-            return "Unable to create this practice session. Please try again.";
-        }
+function parseApiError(error: unknown): ApiError | null {
+    if (typeof error === "object" && error !== null) {
+        return error as ApiError;
     }
-
-    return "Unable to start the practice session. Please try again.";
+    return null;
 }
 
-function getMessageError(
-    error: unknown,
-): string {
-    if (
-        typeof error === "object" &&
-        error !== null
-    ) {
-        const apiError =
-            error as {
-                status?: number | string;
-                data?: {
-                    message?: string;
-                };
-            };
+function getConversationError(error: unknown): string {
+    const apiError = parseApiError(error);
 
-        if (
-            apiError.data?.message
-        ) {
-            return apiError.data.message;
-        }
+    if (apiError?.data?.message) return apiError.data.message;
+    if (apiError?.status === 401) return "Your session has expired. Please sign in again.";
+    if (apiError?.status === 404) return "This practice session could not be found.";
 
-        if (
-            apiError.status === 401
-        ) {
-            return "Your session has expired. Please sign in again.";
-        }
-    }
+    return "Unable to load the practice session.";
+}
 
-    return "Unable to send your message. Please try again.";
+function getMessageError(error: unknown): string {
+    const apiError = parseApiError(error);
+
+    if (apiError?.data?.message) return apiError.data.message;
+    if (apiError?.status === 401) return "Your session has expired. Please sign in again.";
+
+    return "Unable to send your message.";
 }

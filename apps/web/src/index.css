@@ -6,6 +6,7 @@
     --vm-surface: #ffffff;
     --vm-surface-2: #f1f1f5;
     --vm-surface-3: #e8e8ef;
+    --vm-surface-solid: #ffffff;
 
     --vm-border: rgba(17, 24, 39, 0.08);
     --vm-border-strong: rgba(17, 24, 39, 0.14);
@@ -40,6 +41,7 @@
     --vm-surface: rgba(255, 255, 255, 0.05);
     --vm-surface-2: rgba(255, 255, 255, 0.08);
     --vm-surface-3: rgba(255, 255, 255, 0.12);
+    --vm-surface-solid: #111111;
 
     --vm-border: rgba(255, 255, 255, 0.10);
     --vm-border-strong: rgba(255, 255, 255, 0.18);
@@ -89,4 +91,32 @@ body {
 ::selection {
     background: var(--vm-primary);
     color: white;
+}
+
+@keyframes mentor-float {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-3px) rotate(2deg);
+    }
+}
+
+@keyframes loading-progress {
+    0% {
+        transform: translateX(-120%);
+        width: 30%;
+    }
+
+    50% {
+        transform: translateX(120%);
+        width: 45%;
+    }
+
+    100% {
+        transform: translateX(360%);
+        width: 30%;
+    }
 }

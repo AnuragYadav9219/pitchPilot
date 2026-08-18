@@ -1,0 +1,22 @@
+package com.virtualmento.conversation.dto;
+
+import java.util.List;
+
+public record ConversationPageResponse(
+
+        List<ConversationResponse> content,
+
+        int page,
+
+        int size,
+
+        long totalElements,
+
+        int totalPages,
+
+        boolean first,
+
+        boolean last
+
+) {
+}

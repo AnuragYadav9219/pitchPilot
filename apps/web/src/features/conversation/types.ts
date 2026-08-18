@@ -11,6 +11,11 @@ export type MessageRole =
     | "ASSISTANT"
     | "SYSTEM";
 
+export type EvaluationStatus =
+    | "PROCESSING"
+    | "COMPLETED"
+    | "FAILED";
+
 export interface ApiResponse<T> {
     success: boolean;
     message: string;
@@ -37,6 +42,19 @@ export interface Conversation {
     updatedAt: string;
 }
 
+export interface ConversationPage {
+    content: Conversation[];
+
+    page: number;
+    size: number;
+
+    totalElements: number;
+    totalPages: number;
+
+    first: boolean;
+    last: boolean;
+}
+
 export interface ConversationDetail {
     conversation: Conversation;
     messages: ConversationMessage[];
@@ -49,4 +67,26 @@ export interface CreateConversationRequest {
 
 export interface SendMessageRequest {
     content: string;
+}
+
+export interface SessionEvaluation {
+    id: string;
+    conversationId: string;
+
+    status: EvaluationStatus;
+
+    overallScore: number | null;
+    communicationScore: number | null;
+    clarityScore: number | null;
+    confidenceScore: number | null;
+    relevanceScore: number | null;
+
+    strengths: string[];
+    improvements: string[];
+
+    recommendation: string | null;
+    evaluatorFeedback: string | null;
+
+    createdAt: string;
+    completedAt: string | null;
 }

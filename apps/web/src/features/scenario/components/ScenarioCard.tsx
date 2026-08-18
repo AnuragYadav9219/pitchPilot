@@ -33,7 +33,7 @@ export function ScenarioCard({
 }: ScenarioCardProps) {
     return (
         <Link
-            to={`/practice/${scenario.id}`}
+            to={`/practice/scenario/${scenario.id}`}
             className="group block"
         >
             <Card

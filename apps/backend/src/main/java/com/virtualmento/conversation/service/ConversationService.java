@@ -1,9 +1,9 @@
 package com.virtualmento.conversation.service;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.virtualmento.conversation.dto.ConversationDetailResponse;
+import com.virtualmento.conversation.dto.ConversationPageResponse;
 import com.virtualmento.conversation.dto.ConversationResponse;
 import com.virtualmento.conversation.dto.CreateConversationRequest;
 import com.virtualmento.conversation.dto.MessageResponse;
@@ -13,7 +13,7 @@ public interface ConversationService {
 
     ConversationResponse create(CreateConversationRequest request);
 
-    List<ConversationResponse> getMyConversations();
+    ConversationPageResponse getMyConversations(int page, int size);
 
     ConversationDetailResponse getConversation(UUID conversationId);
 
@@ -22,4 +22,6 @@ public interface ConversationService {
             SendMessageRequest request);
 
     void archive(UUID conversationId);
+
+    void permanentlyDelete(UUID conversationId);
 }

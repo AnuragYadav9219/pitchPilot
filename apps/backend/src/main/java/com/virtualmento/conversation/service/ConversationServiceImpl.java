@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.virtualmento.ai.config.AiProperties;
 import com.virtualmento.ai.context.ConversationContext;
@@ -22,6 +24,7 @@ import com.virtualmento.ai.service.AiService;
 import com.virtualmento.common.exception.ResourceNotFoundException;
 import com.virtualmento.common.security.CurrentUserProvider;
 import com.virtualmento.conversation.dto.ConversationDetailResponse;
+import com.virtualmento.conversation.dto.ConversationPageResponse;
 import com.virtualmento.conversation.dto.ConversationResponse;
 import com.virtualmento.conversation.dto.CreateConversationRequest;
 import com.virtualmento.conversation.dto.MessageResponse;
@@ -31,6 +34,7 @@ import com.virtualmento.conversation.entity.ConversationMessage;
 import com.virtualmento.conversation.mapper.ConversationMapper;
 import com.virtualmento.conversation.repository.ConversationMessageRepository;
 import com.virtualmento.conversation.repository.ConversationRepository;
+import com.virtualmento.conversation.repository.SessionEvaluationRepository;
 import com.virtualmento.user.entity.User;
 import com.virtualmento.user.entity.UserProfile;
 import com.virtualmento.user.repository.UserProfileRepository;
@@ -48,6 +52,7 @@ public class ConversationServiceImpl implements ConversationService {
         private final ConversationMessageRepository messageRepository;
         private final UserRepository userRepository;
         private final UserProfileRepository userProfileRepository;
+        private final SessionEvaluationRepository evaluationRepository;
 
         private final ConversationMapper conversationMapper;
         private final CurrentUserProvider currentUserProvider;
@@ -61,6 +66,7 @@ public class ConversationServiceImpl implements ConversationService {
 
         private final ConversationMessagePersistenceService messagePersistenceService;
         private final ConversationSummaryService conversationSummaryService;
+        private final ConversationTitleService conversationTitleService;
 
         // =========================================================
         // CREATE CONVERSATION
@@ -84,15 +90,13 @@ public class ConversationServiceImpl implements ConversationService {
                         title = title.trim();
                 }
 
-                Instant now = Instant.now();
-
                 Conversation conversation = Conversation.builder()
                                 .user(user)
                                 .title(title)
                                 .type(request.type())
                                 .summary(null)
                                 .archived(false)
-                                .lastMessageAt(now)
+                                .lastMessageAt(null)
                                 .build();
 
                 conversationRepository.save(conversation);
@@ -105,15 +109,31 @@ public class ConversationServiceImpl implements ConversationService {
         // =========================================================
 
         @Override
-        public List<ConversationResponse> getMyConversations() {
+        @Transactional(readOnly = true)
+        public ConversationPageResponse getMyConversations(
+                        int page,
+                        int size) {
 
                 UUID userId = currentUserProvider.getUserId();
 
-                return conversationRepository
-                                .findByUserIdAndArchivedFalseOrderByLastMessageAtDesc(userId)
-                                .stream()
-                                .map(conversationMapper::toResponse)
-                                .toList();
+                PageRequest pageable = PageRequest.of(page, size);
+
+                Page<Conversation> conversationPage = conversationRepository
+                                .findUserConversationsWithMessages(userId, pageable);
+
+                return new ConversationPageResponse(
+                                conversationPage
+                                                .getContent()
+                                                .stream()
+                                                .map(conversationMapper::toResponse)
+                                                .toList(),
+
+                                conversationPage.getNumber(),
+                                conversationPage.getSize(),
+                                conversationPage.getTotalElements(),
+                                conversationPage.getTotalPages(),
+                                conversationPage.isFirst(),
+                                conversationPage.isLast());
         }
 
         // =========================================================
@@ -172,6 +192,17 @@ public class ConversationServiceImpl implements ConversationService {
                         throw new IllegalArgumentException("Message content cannot be empty");
                 }
 
+                boolean firstUserMessage = messageRepository
+                                .countByConversationId(conversation.getId()) == 0;
+
+                if (firstUserMessage) {
+                        String generatedTitle = buildConversationTitle(conversation, content);
+
+                        conversation.setTitle(generatedTitle);
+
+                        conversationRepository.save(conversation);
+                }
+
                 // =====================================================
                 // SAVE USER MESSAGE + PROCESSING ASSISTANT MESSAGE
                 // =====================================================
@@ -180,6 +211,15 @@ public class ConversationServiceImpl implements ConversationService {
                                 .createMessages(
                                                 conversation,
                                                 content);
+
+                // GENERATE USEFUL HISTORY TITLE
+                if ("New Conversation".equals(conversation.getTitle())) {
+                        String generatedTitle = conversationTitleService.generateFromMessage(content);
+
+                        conversation.setTitle(generatedTitle);
+
+                        conversationRepository.save(conversation);
+                }
 
                 ConversationMessage assistantMessage = messagePair.assistantMessage();
 
@@ -234,8 +274,8 @@ public class ConversationServiceImpl implements ConversationService {
 
                 // SCENARIO-SPECIFIC MENTOR BEHAVIOUR
                 String mentorInstruction = mentorPromptBuilder.build(
-                        conversation.getType(), 
-                        conversation.getTitle());
+                                conversation.getType(),
+                                conversation.getTitle());
 
                 String systemInstruction = mentorInstruction + "\n\n" + context.systemInstruction();
 
@@ -370,5 +410,81 @@ public class ConversationServiceImpl implements ConversationService {
                                                 userId)
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 "Conversation not found"));
+        }
+
+        // =========================================================
+        // PERMANENT DELETE
+        // =========================================================
+
+        @Override
+        @Transactional
+        public void permanentlyDelete(UUID conversationId) {
+
+                UUID userId = currentUserProvider.getUserId();
+
+                Conversation conversation = getUserConversation(
+                                conversationId,
+                                userId);
+
+                evaluationRepository.findByConversationId(conversation.getId())
+                                .ifPresent(evaluationRepository::delete);
+
+                messageRepository.deleteByConversationId(conversation.getId());
+
+                conversationRepository.delete(conversation);
+        }
+
+        // =========================================================
+        // PRIVATE METHODS
+        // =========================================================
+
+        private String buildConversationTitle(
+                        Conversation conversation,
+                        String firstMessage) {
+
+                String cleaned = firstMessage
+                                .replaceAll("\\s+", " ")
+                                .trim();
+
+                if (cleaned.isBlank()) {
+                        return conversation.getTitle();
+                }
+
+                /*
+                 * Remove common introductions.
+                 */
+                cleaned = cleaned.replaceFirst("(?i)^(hi|hello|hey)[,!.]?\\s*", "");
+
+                cleaned = cleaned.replaceFirst("(?i)^(my name is|i am|i'm)\\s+[^,.!?]+[,!.]?\\s*", "");
+
+                if (cleaned.isBlank()) {
+                        return conversation.getTitle();
+                }
+
+                if (cleaned.length() > 60) {
+                        cleaned = cleaned.substring(0, 57)
+                                        .trim() + "...";
+                }
+
+                return switch (conversation.getType()) {
+
+                        case INTERVIEW ->
+                                "Interview: " + cleaned;
+
+                        case ROLEPLAY ->
+                                "Roleplay: " + cleaned;
+
+                        case CAREER ->
+                                "Career: " + cleaned;
+
+                        case CODING ->
+                                "Coding: " + cleaned;
+
+                        case LEARNING ->
+                                "Learning: " + cleaned;
+
+                        case GENERAL ->
+                                cleaned;
+                };
         }
 }

@@ -4,8 +4,10 @@ import org.springframework.stereotype.Component;
 
 import com.virtualmento.conversation.dto.ConversationResponse;
 import com.virtualmento.conversation.dto.MessageResponse;
+import com.virtualmento.conversation.dto.SessionEvaluationResponse;
 import com.virtualmento.conversation.entity.Conversation;
 import com.virtualmento.conversation.entity.ConversationMessage;
+import com.virtualmento.conversation.entity.SessionEvaluation;
 
 @Component
 public class ConversationMapper {
@@ -32,5 +34,25 @@ public class ConversationMapper {
                 message.getContent(),
                 message.getModel(),
                 message.getCreatedAt());
+    }
+
+    public SessionEvaluationResponse toEvaluationResponse(
+            SessionEvaluation evaluation) {
+
+        return new SessionEvaluationResponse(
+                evaluation.getId(),
+                evaluation.getConversation().getId(),
+                evaluation.getStatus(),
+                evaluation.getOverallScore(),
+                evaluation.getCommunicationScore(),
+                evaluation.getClarityScore(),
+                evaluation.getConfidenceScore(),
+                evaluation.getRelevanceScore(),
+                evaluation.getStrengths(),
+                evaluation.getImprovements(),
+                evaluation.getRecommendation(),
+                evaluation.getEvaluatorFeedback(),
+                evaluation.getCreatedAt(),
+                evaluation.getCompletedAt());
     }
 }

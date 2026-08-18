@@ -38,11 +38,9 @@ export default function ScenariosPage() {
 
         return scenarios.filter(
             (scenario) => {
-                const matchesCategory = category === "ALL" ||
-                    scenario.category === category;
+                const matchesCategory = category === "ALL" || scenario.category === category;
 
-                const matchesSearch = !query || scenario.title
-                    .toLowerCase().includes(query) ||
+                const matchesSearch = !query || scenario.title.toLowerCase().includes(query) ||
 
                     scenario.description.toLowerCase().includes(query) ||
 
@@ -93,10 +91,7 @@ export default function ScenariosPage() {
                         </p>
                     </div>
 
-                    <label
-                        htmlFor="scenario-search"
-                        className="relative z-50 block w-full cursor-text lg:w-72"
-                    >
+                    <div className="relative block w-full lg:w-72">
                         <Search
                             size={17}
                             aria-hidden="true"
@@ -113,7 +108,7 @@ export default function ScenariosPage() {
                             placeholder="Search scenarios..."
                             className="block h-11 w-full rounded-xl border border-(--vm-border) bg-(--vm-surface) pl-10 pr-4 text-sm text-(--vm-text) outline-none placeholder:text-(--vm-muted) transition-all focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
                         />
-                    </label>
+                    </div>
                 </div>
             </div>
 
@@ -133,8 +128,7 @@ export default function ScenariosPage() {
             <div className="mb-4 flex items-center justify-between">
                 <p className="text-sm text-(--vm-muted)">
                     {filteredScenarios.length}{" "}
-                    {filteredScenarios.length ===
-                        1
+                    {filteredScenarios.length === 1
                         ? "scenario"
                         : "scenarios"}
                 </p>

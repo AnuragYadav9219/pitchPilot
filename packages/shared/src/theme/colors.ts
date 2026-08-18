@@ -4,6 +4,7 @@ export const LightColors = {
   surface: "#FFFFFF",
   surface2: "#F1F1F5",
   surface3: "#E8E8EF",
+  surfaceSolid: "#FFFFFF",
 
   border: "rgba(17, 24, 39, 0.08)",
   borderStrong: "rgba(17, 24, 39, 0.14)",
@@ -35,6 +36,7 @@ export const DarkColors = {
   surface: "rgba(255, 255, 255, 0.05)",
   surface2: "rgba(255, 255, 255, 0.08)",
   surface3: "rgba(255, 255, 255, 0.12)",
+  surfaceSolid: "#111111",
 
   border: "rgba(255, 255, 255, 0.10)",
   borderStrong: "rgba(255, 255, 255, 0.18)",
