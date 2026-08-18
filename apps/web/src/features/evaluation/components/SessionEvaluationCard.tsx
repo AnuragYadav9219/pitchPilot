@@ -4,11 +4,10 @@ import {
     Sparkles,
 } from "lucide-react";
 
-import type { SessionEvaluation } from "../../types";
-
 import { ScoreCircle } from "./ScoreCircle";
 import { EvaluationScoreGrid } from "./EvaluationScoreGrid";
 import { EvaluationFeedback } from "./EvaluationFeedback";
+import type { SessionEvaluation } from "@/features/conversation/types";
 
 interface SessionEvaluationCardProps {
     evaluation: SessionEvaluation;

@@ -1,7 +1,4 @@
-import {
-    useGenerateEvaluationMutation,
-    useGetEvaluationQuery,
-} from "../conversationApi";
+import { useGenerateEvaluationMutation, useGetEvaluationQuery } from "@/features/conversation/conversationApi";
 
 export function useSessionEvaluation(
     conversationId: string | null,

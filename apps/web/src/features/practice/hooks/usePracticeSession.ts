@@ -188,8 +188,16 @@ export function usePracticeSession({
                     content: trimmed,
                 }).unwrap();
 
+                const assistantMessage = response.data;
+
+                if (!assistantMessage) {
+                    throw new Error(
+                        "The server returned an empty message response.",
+                    );
+                }
+
                 if (response.data) {
-                    setMessages((current) => [...current, response.data]);
+                    setMessages((current) => [...current, assistantMessage]);
                 }
             } catch (err) {
                 console.error("Failed to send message:", err);
