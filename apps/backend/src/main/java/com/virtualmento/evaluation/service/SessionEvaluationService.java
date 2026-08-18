@@ -1,8 +1,8 @@
-package com.virtualmento.conversation.service;
+package com.virtualmento.evaluation.service;
 
 import java.util.UUID;
 
-import com.virtualmento.conversation.dto.SessionEvaluationResponse;
+import com.virtualmento.evaluation.dto.SessionEvaluationResponse;
 
 public interface SessionEvaluationService {
 

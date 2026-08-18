@@ -1,6 +1,5 @@
 import { baseApi } from "@/services/baseApi";
 import type {
-    ApiResponse,
     Conversation,
     ConversationDetail,
     ConversationMessage,
@@ -9,6 +8,7 @@ import type {
     SendMessageRequest,
     SessionEvaluation,
 } from "./types";
+import type { ApiResponse } from "@/services/types";
 
 export const conversationApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({

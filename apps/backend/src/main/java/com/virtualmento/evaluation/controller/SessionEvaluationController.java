@@ -1,4 +1,4 @@
-package com.virtualmento.conversation.controller;
+package com.virtualmento.evaluation.controller;
 
 import java.util.UUID;
 
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.virtualmento.common.response.ApiResponse;
 import com.virtualmento.common.response.ResponseBuilder;
-import com.virtualmento.conversation.dto.SessionEvaluationResponse;
-import com.virtualmento.conversation.service.SessionEvaluationService;
+import com.virtualmento.evaluation.dto.SessionEvaluationResponse;
+import com.virtualmento.evaluation.service.SessionEvaluationService;
 
 import lombok.RequiredArgsConstructor;
 

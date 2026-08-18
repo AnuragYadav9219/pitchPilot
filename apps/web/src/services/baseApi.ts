@@ -18,9 +18,9 @@ import {
 } from "@/features/auth/authStorage";
 
 import type {
-    ApiResponse,
     AuthResponse,
 } from "@/features/auth/types";
+import type { ApiResponse } from "./types";
 
 const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL ||
@@ -195,6 +195,8 @@ export const baseApi = createApi({
         "Session",
         "Dashboard",
         "Scenario",
+        "UserProfile",
+        "Recommendation",
         "Conversation",
         "Evaluation",
         "Feedback",

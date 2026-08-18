@@ -9,6 +9,7 @@ public record UserResponse(
         UUID id,
         String fullName,
         String email,
+        String phoneNumber,
         Role role,
         Boolean enabled,
         Boolean emailVerified,

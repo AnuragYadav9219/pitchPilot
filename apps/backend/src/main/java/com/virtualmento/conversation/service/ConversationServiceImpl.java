@@ -34,7 +34,7 @@ import com.virtualmento.conversation.entity.ConversationMessage;
 import com.virtualmento.conversation.mapper.ConversationMapper;
 import com.virtualmento.conversation.repository.ConversationMessageRepository;
 import com.virtualmento.conversation.repository.ConversationRepository;
-import com.virtualmento.conversation.repository.SessionEvaluationRepository;
+import com.virtualmento.evaluation.repository.SessionEvaluationRepository;
 import com.virtualmento.user.entity.User;
 import com.virtualmento.user.entity.UserProfile;
 import com.virtualmento.user.repository.UserProfileRepository;

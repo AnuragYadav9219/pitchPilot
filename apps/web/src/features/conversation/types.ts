@@ -16,14 +16,6 @@ export type EvaluationStatus =
     | "COMPLETED"
     | "FAILED";
 
-export interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    data: T;
-    errors?: unknown;
-    timestamp: string;
-}
-
 export interface ConversationMessage {
     id: string;
     role: MessageRole;

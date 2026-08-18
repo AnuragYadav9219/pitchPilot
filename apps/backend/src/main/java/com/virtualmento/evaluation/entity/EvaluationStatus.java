@@ -1,4 +1,4 @@
-package com.virtualmento.conversation.entity;
+package com.virtualmento.evaluation.entity;
 
 public enum EvaluationStatus {
 

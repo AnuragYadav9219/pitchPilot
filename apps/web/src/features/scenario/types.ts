@@ -11,6 +11,14 @@ export type ScenarioDifficulty =
     | "INTERMEDIATE"
     | "ADVANCED";
 
+export type ScenarioFocus =
+    | "CONFIDENCE"
+    | "CLARITY"
+    | "COMMUNICATION"
+    | "RELEVANCE"
+    | "LEADERSHIP"
+    | "CONFLICT_HANDLING";
+
 export interface Scenario {
     id: string;
     title: string;
@@ -18,6 +26,8 @@ export interface Scenario {
 
     category: ScenarioCategory;
     difficulty: ScenarioDifficulty;
+
+    focus: ScenarioFocus;
 
     estimatedMinutes: number;
 

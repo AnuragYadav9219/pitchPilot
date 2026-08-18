@@ -1,10 +1,4 @@
-export interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    data: T | null;
-    errors?: unknown;
-    timestamp: string;
-}
+import type { ApiResponse } from "@/services/types";
 
 export interface RecentSession {
     conversationId: string;

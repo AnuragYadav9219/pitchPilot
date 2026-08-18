@@ -1,10 +1,11 @@
-package com.virtualmento.conversation.entity;
+package com.virtualmento.evaluation.entity;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 import com.virtualmento.common.entity.BaseEntity;
+import com.virtualmento.conversation.entity.Conversation;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;

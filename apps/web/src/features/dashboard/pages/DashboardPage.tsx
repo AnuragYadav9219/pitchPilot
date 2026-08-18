@@ -1,6 +1,7 @@
 import { Container } from "@/components/ui";
 import { DashboardError, DashboardHeader, DashboardLoading, QuickPractice, RecentSessions, SkillOverview, StatsGrid } from "../components";
 import { useGetDashboardQuery } from "../dashboardApi";
+import { RecommendedScenarioCard } from "@/features/scenario/components";
 
 export default function DashboardPage() {
     const {
@@ -32,6 +33,10 @@ export default function DashboardPage() {
                 <DashboardHeader
                     isFetching={isFetching}
                 />
+
+                <section className="mt-6">
+                    <RecommendedScenarioCard />
+                </section>
 
                 {/* Stats */}
                 <StatsGrid

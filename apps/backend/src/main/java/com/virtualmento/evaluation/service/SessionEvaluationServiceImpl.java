@@ -1,4 +1,4 @@
-package com.virtualmento.conversation.service;
+package com.virtualmento.evaluation.service;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -18,14 +18,14 @@ import com.virtualmento.ai.provider.AiResponse;
 import com.virtualmento.ai.service.AiService;
 import com.virtualmento.common.exception.ResourceNotFoundException;
 import com.virtualmento.common.security.CurrentUserProvider;
-import com.virtualmento.conversation.dto.SessionEvaluationResponse;
 import com.virtualmento.conversation.entity.Conversation;
 import com.virtualmento.conversation.entity.ConversationMessage;
-import com.virtualmento.conversation.entity.EvaluationStatus;
-import com.virtualmento.conversation.entity.SessionEvaluation;
 import com.virtualmento.conversation.repository.ConversationMessageRepository;
 import com.virtualmento.conversation.repository.ConversationRepository;
-import com.virtualmento.conversation.repository.SessionEvaluationRepository;
+import com.virtualmento.evaluation.dto.SessionEvaluationResponse;
+import com.virtualmento.evaluation.entity.EvaluationStatus;
+import com.virtualmento.evaluation.entity.SessionEvaluation;
+import com.virtualmento.evaluation.repository.SessionEvaluationRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

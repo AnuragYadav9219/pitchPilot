@@ -1,9 +1,9 @@
 import { baseApi } from "@/services/baseApi";
 
 import type {
-    ApiResponse,
     DashboardResponse,
 } from "./types";
+import type { ApiResponse } from "@/services/types";
 
 export const dashboardApi =
     baseApi.injectEndpoints({

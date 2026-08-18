@@ -1,10 +1,10 @@
-package com.virtualmento.conversation.dto;
+package com.virtualmento.evaluation.dto;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-import com.virtualmento.conversation.entity.EvaluationStatus;
+import com.virtualmento.evaluation.entity.EvaluationStatus;
 
 public record SessionEvaluationResponse(
 

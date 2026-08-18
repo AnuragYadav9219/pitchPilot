@@ -4,10 +4,10 @@ import org.springframework.stereotype.Component;
 
 import com.virtualmento.conversation.dto.ConversationResponse;
 import com.virtualmento.conversation.dto.MessageResponse;
-import com.virtualmento.conversation.dto.SessionEvaluationResponse;
 import com.virtualmento.conversation.entity.Conversation;
 import com.virtualmento.conversation.entity.ConversationMessage;
-import com.virtualmento.conversation.entity.SessionEvaluation;
+import com.virtualmento.evaluation.dto.SessionEvaluationResponse;
+import com.virtualmento.evaluation.entity.SessionEvaluation;
 
 @Component
 public class ConversationMapper {

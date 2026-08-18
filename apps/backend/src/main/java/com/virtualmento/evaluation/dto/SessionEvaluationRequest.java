@@ -1,4 +1,4 @@
-package com.virtualmento.conversation.dto;
+package com.virtualmento.evaluation.dto;
 
 public record SessionEvaluationRequest(
 

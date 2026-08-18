@@ -5,7 +5,6 @@ import {
 } from "./authSlice";
 
 import type {
-    ApiResponse,
     AuthResponse,
     LoginRequest,
     RegisterRequest,
@@ -16,6 +15,7 @@ import type {
     SendOtpRequest,
     VerifyOtpRequest,
 } from "./types";
+import type { ApiResponse } from "@/services/types";
 
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({

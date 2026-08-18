@@ -18,9 +18,9 @@ import { authStorage } from "../authStorage";
 import { useRefreshMutation } from "../authApi";
 
 import type {
-    ApiResponse,
     AuthResponse,
 } from "../types";
+import type { ApiResponse } from "@/services/types";
 
 interface AuthBootstrapProps {
     children: ReactNode;

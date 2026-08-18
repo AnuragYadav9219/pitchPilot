@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.virtualmento.common.security.CurrentUserProvider;
 import com.virtualmento.conversation.dto.DashboardResponse;
 import com.virtualmento.conversation.entity.Conversation;
-import com.virtualmento.conversation.entity.EvaluationStatus;
-import com.virtualmento.conversation.entity.SessionEvaluation;
-import com.virtualmento.conversation.repository.SessionEvaluationRepository;
+import com.virtualmento.evaluation.entity.EvaluationStatus;
+import com.virtualmento.evaluation.entity.SessionEvaluation;
+import com.virtualmento.evaluation.repository.SessionEvaluationRepository;
 
 import lombok.RequiredArgsConstructor;
 

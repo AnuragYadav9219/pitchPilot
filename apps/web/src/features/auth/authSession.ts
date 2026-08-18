@@ -1,5 +1,5 @@
+import type { ApiResponse } from "@/services/types";
 import type {
-    ApiResponse,
     AuthResponse,
 } from "./types";
 

@@ -1,5 +1,5 @@
 import {
-    BookOpen,
+    BarChart3,
     History,
     LayoutDashboard,
     MessageCircle,
@@ -19,18 +19,18 @@ interface MobileSidebarProps {
 const practiceNavigation = [
     {
         label: "Practice",
-        href: "/practice",
-        icon: MessageCircle,
-    },
-    {
-        label: "Scenarios",
         href: "/scenarios",
-        icon: BookOpen,
+        icon: MessageCircle,
     },
     {
         label: "History",
         href: "/history",
         icon: History,
+    },
+    {
+        label: "Progress",
+        href: "/progress",
+        icon: BarChart3,
     },
 ];
 
@@ -71,7 +71,7 @@ export function MobileSidebar({
                     "relative z-101",
                     "flex h-full w-[min(82vw,320px)] flex-col",
                     "border-r border-(--vm-border)",
-                    "bg-(--vm-surface)",
+                    "bg-(--vm-surface-solid)",
                     "shadow-2xl",
                     "animate-in slide-in-from-left duration-200",
                 ].join(" ")}

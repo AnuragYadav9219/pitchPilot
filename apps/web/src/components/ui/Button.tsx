@@ -10,12 +10,12 @@ export type ButtonVariant =
     | "secondary"
     | "outline"
     | "ghost"
-    | "danger";
+    | "danger"
+    | "edit"
+    | "cancel"
+    | "save";
 
-export type ButtonSize =
-    | "sm"
-    | "md"
-    | "lg";
+export type ButtonSize = "xs" | "sm" | "md" | "lg";
 
 export interface ButtonProps
     extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -64,9 +64,39 @@ const variants: Record<ButtonVariant, string> = {
         "hover:opacity-90",
         "focus-visible:ring-(--vm-danger)",
     ].join(" "),
+
+    edit: [
+        "rounded-(--vm-radius-sm)",
+        "text-(--vm-muted)",
+        "hover:bg-(--vm-surface-2)",
+        "hover:text-(--vm-text)",
+        "active:bg-(--vm-surface-3)",
+        "focus-visible:ring-(--vm-border-strong)",
+    ].join(" "),
+
+    cancel: [
+        "rounded-(--vm-radius-sm)",
+        "border border-(--vm-border)",
+        "bg-transparent",
+        "text-(--vm-muted)",
+        "hover:bg-(--vm-surface-2)",
+        "hover:text-(--vm-text)",
+        "active:bg-(--vm-surface-3)",
+        "focus-visible:ring-(--vm-border-strong)",
+    ].join(" "),
+
+    save: [
+        "rounded-(--vm-radius-sm)",
+        "bg-(--vm-primary)",
+        "text-white",
+        "hover:bg-(--vm-primary-pressed)",
+        "active:bg-(--vm-primary-pressed)",
+        "focus-visible:ring-(--vm-primary)",
+    ].join(" "),
 };
 
 const sizes: Record<ButtonSize, string> = {
+    xs: "h-8 px-2.5 text-xs",
     sm: "h-9 px-3 text-sm",
     md: "h-11 px-5 text-sm",
     lg: "h-12 px-6 text-base",
@@ -125,6 +155,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                         aria-hidden="true"
                     />
                 )}
+
                 {children}
             </button>
         );

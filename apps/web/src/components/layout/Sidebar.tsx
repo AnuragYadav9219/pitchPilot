@@ -1,4 +1,5 @@
 import {
+    BarChart3,
     History,
     LayoutDashboard,
     MessageCircle,
@@ -12,6 +13,7 @@ const navigation = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Practice", href: "/scenarios", icon: MessageCircle },
     { label: "History", href: "/history", icon: History },
+    { label: "Progress", href: "/progress", icon: BarChart3 },
 ];
 
 const accountNavigation = [
