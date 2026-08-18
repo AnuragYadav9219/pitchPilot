@@ -85,8 +85,7 @@ export function CTA({
                             </div>
 
                             <p className="mt-4 text-xs text-(--vm-muted)">
-                                Be among the first to know when
-                                VirtualMento launches.
+                                Be among the first to know when {Brand.name} launches.
                             </p>
                         </div>
                     </div>

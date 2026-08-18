@@ -6,6 +6,7 @@ import { useLogoutMutation } from "@/features/auth/authApi";
 import { authStorage } from "@/features/auth/authStorage";
 import { appToast } from "@/lib/toast";
 import { ConfirmDialog } from "../dialogs";
+import { Brand } from "@virtualmento/shared";
 
 export function UserMenu() {
     const navigate = useNavigate();
@@ -219,7 +220,7 @@ export function UserMenu() {
             ================================================= */}
             <ConfirmDialog
                 open={logoutDialogOpen}
-                title="Log out of VirtualMento?"
+                title={`Log out of ${Brand.name}?`}
                 description="You'll need to sign in again to access your mentoring workspace."
                 confirmLabel="Log out"
                 cancelLabel="Stay signed in"

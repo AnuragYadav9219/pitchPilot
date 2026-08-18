@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui";
 import { MessageCircle, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -9,16 +10,11 @@ export function DashboardHeader({
     isFetching,
 }: DashboardHeaderProps) {
     return (
-        <section className="relative overflow-hidden rounded-(--vm-radius-xl) border border-(--vm-border) bg-(--vm-surface) p-6 sm:p-8">
+        <Card className="relative overflow-hidden rounded-(--vm-radius-xl) border border-(--vm-border) bg-(--vm-surface) p-6 sm:p-8">
             {/* Glow */}
             <div
                 aria-hidden="true"
-                className="
-                    pointer-events-none absolute
-                    -right-20 -top-24 h-56 w-56
-                    rounded-full bg-(--vm-primary)/10
-                    blur-3xl
-                "
+                className="pointer-events-none absolute -right-20 -top-24 h-56 w-56 rounded-full bg-(--vm-primary)/10 blur-3xl"
             />
 
             <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -45,28 +41,18 @@ export function DashboardHeader({
                     </h1>
 
                     <p className="mt-2 max-w-xl text-sm leading-6 text-(--vm-muted)">
-                        Keep practicing, review your
-                        performance, and build stronger
-                        communication skills.
+                        Keep practicing, review your performance, and build stronger communication skills.
                     </p>
                 </div>
 
                 <Link
                     to="/scenarios"
-                    className="
-                        inline-flex h-11 shrink-0 items-center
-                        justify-center gap-2 rounded-(--vm-radius-md)
-                        bg-(--vm-primary) px-5
-                        text-sm font-medium text-white
-                        shadow-sm transition-all
-                        hover:bg-(--vm-primary-pressed)
-                        hover:-translate-y-0.5
-                    "
+                    className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-(--vm-radius-md) bg-(--vm-primary) px-5 text-sm font-medium text-white shadow-sm transition-all hover:bg-(--vm-primary-pressed) hover:-translate-y-0.5"
                 >
                     <MessageCircle size={17} />
                     Start Practice
                 </Link>
             </div>
-        </section>
+        </Card>
     );
 }

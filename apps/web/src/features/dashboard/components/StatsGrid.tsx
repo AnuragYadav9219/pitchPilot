@@ -49,6 +49,7 @@ export function StatsGrid({
 
                 return (
                     <Card
+                        interactive
                         key={stat.label}
                         className="p-5"
                     >

@@ -43,8 +43,7 @@ export function SkillOverview({
                     </p>
 
                     <p className="mt-1 text-xs text-(--vm-muted)">
-                        Average performance across your
-                        completed sessions.
+                        Average performance across your completed sessions.
                     </p>
                 </div>
 

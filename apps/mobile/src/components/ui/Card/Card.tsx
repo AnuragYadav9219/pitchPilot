@@ -19,7 +19,12 @@ const CardBase: React.FC<CardProps> = ({
     children,
     className = "",
 }) => {
-    const { colors } = useTheme();
+    const { colors, mode } = useTheme();
+
+    const cardShadow =
+        mode === "dark"
+            ? Shadow.dark.card
+            : Shadow.light.card;
 
     return (
         <View
@@ -30,9 +35,8 @@ const CardBase: React.FC<CardProps> = ({
                     borderRadius: Radius.xl,
                     borderColor: colors.border,
                     borderWidth: 1,
-                    padding: 20,
                 },
-                Shadow.card,
+                cardShadow,
             ]}
         >
             {children}

@@ -8,6 +8,7 @@ import {
 
 import { Container } from "@/components/ui";
 import {
+    Brand,
     Radius,
     Typography,
 } from "@virtualmento/shared";
@@ -108,8 +109,7 @@ export default function SocialProofStats({
                                     lineHeight: 1.6,
                                 }}
                             >
-                                Join the growing community preparing
-                                for the VirtualMento launch.
+                                Join the growing community preparing for the {Brand.name} launch.
                             </p>
                         </div>
 
@@ -230,7 +230,7 @@ export default function SocialProofStats({
                                                 Typography.tiny,
                                         }}
                                     >
-                                        VirtualMento app
+                                        {Brand.name} app
                                     </p>
                                 </div>
                             </div>

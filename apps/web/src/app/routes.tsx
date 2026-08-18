@@ -24,9 +24,10 @@ const DashboardPage = lazy(() => import("@/features/dashboard/pages/DashboardPag
 const ScenarioPage = lazy(() => import("@/features/scenario/pages/ScenarioPage"));
 const PracticePage = lazy(() => import("@/features/practice/pages/PracticePage"));
 const HistoryPage = lazy(() => import("@/features/conversation/pages/HistoryPage"));
-const SessionEvaluationPage = lazy(() => import("@/features/conversation/pages/SessionEvaluationPage"));
+const SessionEvaluationPage = lazy(() => import("@/features/evaluation/pages/SessionEvaluationPage"));
 const ProgressPage = lazy(() => import("@/features/progress/pages/ProgressPage"));
 const ProfilePage = lazy(() => import("@/features/profile/pages/ProfilePage"));
+const SettingsPage = lazy(() => import("@/features/settings/pages/SettingsPage"));
 
 /* ============================================================= */
 /* ROOT LAYOUT                                                   */
@@ -68,6 +69,7 @@ export const router = createBrowserRouter([
                             { path: "/history", element: <HistoryPage /> },
                             { path: "/progress", element: <ProgressPage /> },
                             { path: "/profile", element: <ProfilePage /> },
+                            { path: "/settings", element: <SettingsPage /> },
                             
                             { path: "/practice/scenario/:scenarioId", element: <PracticePage /> },
                             { path: "/practice/conversation/:conversationId", element: <PracticePage /> },

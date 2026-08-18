@@ -27,12 +27,7 @@ export function RecentSessions({
 
                 <Link
                     to="/history"
-                    className="
-                        inline-flex items-center gap-1
-                        text-xs font-medium
-                        text-(--vm-primary)
-                        hover:underline
-                    "
+                    className="inline-flex items-center gap-1 text-xs font-medium text-(--vm-primary) hover:underline"
                 >
                     View all
                     <ArrowRight size={13} />

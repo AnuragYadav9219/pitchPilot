@@ -1,217 +1,154 @@
 @import "tailwindcss";
 
 :root {
-    /* =========================================================
-       BACKGROUNDS
-    ========================================================= */
+   /* =========================================================
+       LIGHT THEME
+       ========================================================= */
 
-    --vm-background: #f6f5f9;
+   --vm-background: #f7f7fa;
 
-    --vm-surface: #ffffff;
-    --vm-surface-2: #f3f1f7;
-    --vm-surface-3: #ebe8f1;
+   --vm-surface: #ffffff;
+   --vm-surface-2: #f1f1f5;
+   --vm-surface-3: #e8e8ef;
+   --vm-surface-solid: #ffffff;
 
-    /*
-     * Solid surface for overlays:
-     * dropdowns, popovers, menus, dialogs, etc.
-     */
-    --vm-surface-solid: #ffffff;
+   --vm-border: rgba(17, 24, 39, 0.08);
+   --vm-border-strong: rgba(17, 24, 39, 0.14);
 
+   /* Card depth */
+   --vm-card-shadow:
+      0 1px 2px rgba(17, 24, 39, 0.03),
+      0 8px 24px rgba(17, 24, 39, 0.05),
+      0 20px 45px rgba(17, 24, 39, 0.035);
 
-    /* =========================================================
-       BORDERS
-    ========================================================= */
+   --vm-card-shadow-hover:
+      0 2px 4px rgba(17, 24, 39, 0.04),
+      0 12px 30px rgba(17, 24, 39, 0.07),
+      0 24px 55px rgba(17, 24, 39, 0.05);
 
-    --vm-border: rgba(24, 24, 32, 0.08);
-    --vm-border-strong: rgba(24, 24, 32, 0.14);
+   --vm-primary: #8b5cf6;
+   --vm-primary-pressed: #7c3aed;
 
+   --vm-secondary: #059669;
+   --vm-accent: #ea580c;
 
-    /* =========================================================
-       BRAND
-    ========================================================= */
+   --vm-glow-purple: rgba(139, 92, 246, 0.18);
+   --vm-glow-green: rgba(5, 150, 105, 0.14);
+   --vm-glow-orange: rgba(234, 88, 12, 0.12);
 
-    --vm-primary: #8b5cf6;
-    --vm-primary-pressed: #7c3aed;
+   --vm-text: #111118;
+   --vm-text-secondary: #3f3f46;
+   --vm-muted: #71717a;
 
+   --vm-success: #16a34a;
+   --vm-warning: #d97706;
+   --vm-danger: #dc2626;
 
-    /* =========================================================
-       SECONDARY COLORS
-    ========================================================= */
-
-    --vm-secondary: #059669;
-    --vm-accent: #ea580c;
-
-
-    /* =========================================================
-       BRAND GLOWS
-    ========================================================= */
-
-    --vm-glow-purple: rgba(139, 92, 246, 0.16);
-    --vm-glow-green: rgba(5, 150, 105, 0.12);
-    --vm-glow-orange: rgba(234, 88, 12, 0.10);
-
-
-    /* =========================================================
-       TEXT
-    ========================================================= */
-
-    --vm-text: #18181b;
-    --vm-text-secondary: #3f3f46;
-    --vm-muted: #71717a;
-
-
-    /* =========================================================
-       STATUS
-    ========================================================= */
-
-    --vm-success: #16a34a;
-    --vm-warning: #d97706;
-    --vm-danger: #dc2626;
-
-
-    /* =========================================================
-       RADIUS
-    ========================================================= */
-
-    --vm-radius-sm: 8px;
-    --vm-radius-md: 14px;
-    --vm-radius-lg: 20px;
-    --vm-radius-xl: 28px;
+   --vm-radius-sm: 8px;
+   --vm-radius-md: 14px;
+   --vm-radius-lg: 20px;
+   --vm-radius-xl: 28px;
 }
 
 
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
 :root.dark {
-    /* =========================================================
-       BACKGROUNDS
-    ========================================================= */
+   --vm-background: #050505;
 
-    --vm-background: #08080a;
+   --vm-surface: #101010;
+   --vm-surface-2: #171717;
+   --vm-surface-3: #202020;
+   --vm-surface-solid: #101010;
 
-    --vm-surface: #111113;
-    --vm-surface-2: #18181b;
-    --vm-surface-3: #202023;
+   --vm-border: rgba(255, 255, 255, 0.09);
+   --vm-border-strong: rgba(255, 255, 255, 0.16);
 
-    /*
-     * IMPORTANT:
-     * Keep this solid.
-     * Used by dropdowns, menus, popovers and dialogs.
-     */
-    --vm-surface-solid: #111113;
+   /* Dark mode needs stronger ambient depth */
+   --vm-card-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 10px 30px rgba(0, 0, 0, 0.28),
+      0 24px 60px rgba(0, 0, 0, 0.22);
 
+   --vm-card-shadow-hover:
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      0 14px 35px rgba(0, 0, 0, 0.35),
+      0 28px 70px rgba(0, 0, 0, 0.28);
 
-    /* =========================================================
-       BORDERS
-    ========================================================= */
+   --vm-primary: #a855f7;
+   --vm-primary-pressed: #9333ea;
 
-    --vm-border: rgba(255, 255, 255, 0.09);
-    --vm-border-strong: rgba(255, 255, 255, 0.15);
+   --vm-secondary: #10b981;
+   --vm-accent: #f97316;
 
+   --vm-glow-purple: rgba(168, 85, 247, 0.35);
+   --vm-glow-green: rgba(16, 185, 129, 0.30);
+   --vm-glow-orange: rgba(249, 115, 22, 0.28);
 
-    /* =========================================================
-       BRAND
-    ========================================================= */
+   --vm-text: #ffffff;
+   --vm-text-secondary: #e4e4e7;
+   --vm-muted: #a1a1aa;
 
-    --vm-primary: #a855f7;
-    --vm-primary-pressed: #9333ea;
-
-
-    /* =========================================================
-       SECONDARY COLORS
-    ========================================================= */
-
-    --vm-secondary: #10b981;
-    --vm-accent: #f97316;
-
-
-    /* =========================================================
-       BRAND GLOWS
-    ========================================================= */
-
-    --vm-glow-purple: rgba(168, 85, 247, 0.22);
-    --vm-glow-green: rgba(16, 185, 129, 0.18);
-    --vm-glow-orange: rgba(249, 115, 22, 0.16);
-
-
-    /* =========================================================
-       TEXT
-    ========================================================= */
-
-    --vm-text: #f5f5f7;
-    --vm-text-secondary: #d4d4d8;
-    --vm-muted: #92929d;
-
-
-    /* =========================================================
-       STATUS
-    ========================================================= */
-
-    --vm-success: #22c55e;
-    --vm-warning: #f59e0b;
-    --vm-danger: #ef4444;
-
-
-    /* =========================================================
-       RADIUS
-    ========================================================= */
-
-    --vm-radius-sm: 8px;
-    --vm-radius-md: 14px;
-    --vm-radius-lg: 20px;
-    --vm-radius-xl: 28px;
+   --vm-success: #22c55e;
+   --vm-warning: #f59e0b;
+   --vm-danger: #ef4444;
 }
 
 html {
-    scroll-behavior: smooth;
+   scroll-behavior: smooth;
 }
 
 body {
-    margin: 0;
-    min-width: 320px;
-    background: var(--vm-background);
-    color: var(--vm-text);
-    font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+   margin: 0;
+   min-width: 320px;
+   background: var(--vm-background);
+   color: var(--vm-text);
+   font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
 
-    transition:
-        background-color 200ms ease,
-        color 200ms ease;
+   transition:
+      background-color 200ms ease,
+      color 200ms ease;
 }
 
 ::selection {
-    background: var(--vm-primary);
-    color: white;
+   background: var(--vm-primary);
+   color: white;
 }
 
 @keyframes mentor-float {
-    0%,
-    100% {
-        transform: translateY(0) rotate(0deg);
-    }
 
-    50% {
-        transform: translateY(-3px) rotate(2deg);
-    }
+   0%,
+   100% {
+      transform: translateY(0) rotate(0deg);
+   }
+
+   50% {
+      transform: translateY(-3px) rotate(2deg);
+   }
 }
 
 @keyframes loading-progress {
-    0% {
-        transform: translateX(-120%);
-        width: 30%;
-    }
+   0% {
+      transform: translateX(-120%);
+      width: 30%;
+   }
 
-    50% {
-        transform: translateX(120%);
-        width: 45%;
-    }
+   50% {
+      transform: translateX(120%);
+      width: 45%;
+   }
 
-    100% {
-        transform: translateX(360%);
-        width: 30%;
-    }
+   100% {
+      transform: translateX(360%);
+      width: 30%;
+   }
 }

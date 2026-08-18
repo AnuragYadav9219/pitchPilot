@@ -3,8 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
     useGenerateEvaluationMutation,
     useGetEvaluationQuery,
-} from "../conversationApi";
-import { SessionEvaluationCard } from "../components/evaluation/SessionEvaluationCard";
+} from "../../conversation/conversationApi";
+import { Brand } from "@virtualmento/shared";
+import { SessionEvaluationCard } from "../components/SessionEvaluationCard";
 
 export default function SessionEvaluationPage() {
     const { conversationId } = useParams<{ conversationId: string }>();
@@ -71,7 +72,7 @@ export default function SessionEvaluationPage() {
             return (
                 <EvaluationError
                     title="Evaluation failed"
-                    message="VirtualMento could not complete the evaluation for this session."
+                    message={`${Brand.name} could not complete the evaluation for this session.`}
                     onBack={handleHistory}
                     onRetry={handleGenerate}
                 />
@@ -167,7 +168,7 @@ function EvaluationLoading() {
                     Preparing your evaluation
                 </h1>
                 <p className="mt-2 text-sm leading-6 text-(--vm-muted)">
-                    VirtualMento is analyzing your practice session.
+                    {Brand.name} is analyzing your practice session.
                 </p>
                 <div className="mt-6 h-1.5 overflow-hidden rounded-full bg-(--vm-surface-2)">
                     <div className="h-full w-1/2 animate-pulse rounded-full bg-(--vm-primary)" />
@@ -188,7 +189,7 @@ function EvaluationProcessing() {
                     Evaluation in progress
                 </h1>
                 <p className="mt-2 text-sm leading-6 text-(--vm-muted)">
-                    VirtualMento is analyzing your communication, clarity, confidence, and relevance.
+                    {Brand.name} is analyzing your communication, clarity, confidence, and relevance.
                 </p>
             </div>
         </div>

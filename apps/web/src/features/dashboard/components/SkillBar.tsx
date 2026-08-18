@@ -23,11 +23,7 @@ export function SkillBar({
 
             <div className="h-2 overflow-hidden rounded-full bg-(--vm-surface-2)">
                 <div
-                    className="
-                        h-full rounded-full
-                        bg-(--vm-primary)
-                        transition-all duration-700
-                    "
+                    className="h-full rounded-full bg-(--vm-primary) transition-all duration-700"
                     style={{
                         width: `${score}%`,
                     }}

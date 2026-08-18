@@ -13,18 +13,12 @@ export function RecentSessionsEmpty() {
             </p>
 
             <p className="mx-auto mt-1 max-w-xs text-[11px] leading-5 text-(--vm-muted)">
-                Complete your first practice session to
-                start tracking your progress.
+                Complete your first practice session to start tracking your progress.
             </p>
 
             <Link
                 to="/scenarios"
-                className="
-                    mt-4 inline-flex items-center
-                    gap-1.5 text-xs font-medium
-                    text-(--vm-primary)
-                    hover:underline
-                "
+                className="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-(--vm-primary) hover:underline"
             >
                 Start practicing
                 <ArrowRight size={13} />

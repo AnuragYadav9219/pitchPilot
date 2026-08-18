@@ -175,9 +175,7 @@ export default function AppComingSoon() {
                             </h3>
 
                             <p className="mt-5 max-w-md text-sm leading-6 text-(--vm-muted)">
-                                VirtualMento combines AI mentorship with
-                                realistic practice so you can develop skills
-                                through experience, not just information.
+                                {Brand.name} combines AI mentorship with realistic practice so you can develop skills through experience, not just information.
                             </p>
 
                             <div className="mt-7 space-y-3">

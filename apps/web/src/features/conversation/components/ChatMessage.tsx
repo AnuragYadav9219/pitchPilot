@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import type { ConversationMessage } from "../types";
+import { Brand } from "@virtualmento/shared";
 
 interface ChatMessageProps {
     message: ConversationMessage;
@@ -26,7 +27,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
             <div className={`flex min-w-0 max-w-[88%] flex-col sm:max-w-[78%] ${isUser ? "items-end" : "items-start"}`}>
                 {/* Sender */}
                 <div className={`mb-1.5 px-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${isUser ? "text-(--vm-muted)" : "text-(--vm-primary)"}`}>
-                    {isUser ? "You" : "VirtualMento"}
+                    {isUser ? "You" : `${Brand.name}`}
                 </div>
 
                 {/* Bubble */}

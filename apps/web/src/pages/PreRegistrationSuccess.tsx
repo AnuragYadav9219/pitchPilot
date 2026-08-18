@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
+import { Brand } from "@virtualmento/shared";
 
 type Status = "loading" | "success" | "error";
 
@@ -180,7 +181,7 @@ export default function PreRegistrationSuccess() {
                         href="/"
                         className="mt-8 inline-flex rounded-(--vm-radius-md) bg-(--vm-primary) px-6 py-3 font-semibold text-white transition hover:bg-(--vm-primary-pressed)"
                     >
-                        Back to VirtualMento
+                        Back to {Brand.name}
                     </a>
                 </div>
             </main>
@@ -207,7 +208,7 @@ export default function PreRegistrationSuccess() {
                     href="/"
                     className="mt-8 inline-flex rounded-(--vm-radius-md) bg-(--vm-primary) px-6 py-3 font-semibold text-white transition hover:bg-(--vm-primary-pressed)"
                 >
-                    Back to VirtualMento
+                    Back to {Brand.name}
                 </a>
             </div>
         </main>

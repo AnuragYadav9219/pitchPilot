@@ -1,6 +1,7 @@
 import { Sparkles, X } from "lucide-react";
 
 import EarlyAccessForm from "@/features/landing/marketing/EarlyAccessForm";
+import { Brand } from "@virtualmento/shared";
 
 type EarlyAccessModalProps = {
     open: boolean;
@@ -63,9 +64,7 @@ export function EarlyAccessModal({
                     </h2>
 
                     <p className="mt-2 text-sm leading-6 text-(--vm-muted)">
-                        Be among the first students to
-                        experience VirtualMento when it
-                        becomes available.
+                        Be among the first students to experience {Brand.name} when it becomes available.
                     </p>
                 </div>
 

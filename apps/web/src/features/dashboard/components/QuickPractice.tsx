@@ -43,15 +43,7 @@ export function QuickPractice() {
                         <Link
                             key={practice.title}
                             to="/scenarios"
-                            className="
-                                group rounded-(--vm-radius-lg)
-                                border border-(--vm-border)
-                                bg-(--vm-surface)
-                                p-5 transition-all
-                                hover:-translate-y-0.5
-                                hover:border-(--vm-primary)/30
-                                hover:shadow-lg
-                            "
+                            className="group rounded-(--vm-radius-lg) border border-(--vm-border) bg-(--vm-surface) p-5 transition-all hover:-translate-y-0.5 hover:border-(--vm-primary)/30 hover:shadow-lg"
                         >
                             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-(--vm-primary)/10 text-(--vm-primary)">
                                 <Icon size={17} />

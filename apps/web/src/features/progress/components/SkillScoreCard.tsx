@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui";
 import {
     Brain,
     CheckCircle2,
@@ -29,7 +30,7 @@ export function SkillScoreCard({
     const value = score ?? 0;
 
     return (
-        <div className="rounded-(--vm-radius-lg) border border-(--vm-border) bg-(--vm-surface) p-5">
+        <Card interactive className="rounded-(--vm-radius-lg) border border-(--vm-border) bg-(--vm-surface) p-5">
             <div className="flex items-start justify-between gap-4">
                 <div>
                     <p className="text-sm font-semibold text-(--vm-text)">
@@ -62,6 +63,6 @@ export function SkillScoreCard({
                     style={{ width: `${value}%` }}
                 />
             </div>
-        </div>
+        </Card>
     );
 }

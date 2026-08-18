@@ -8,7 +8,7 @@ import {
 
 import { createPreRegistration } from "@/services/preRegistrationService";
 
-import { Radius, Typography } from "@virtualmento/shared";
+import { Brand, Radius, Typography } from "@virtualmento/shared";
 
 type FormState = {
     name: string;
@@ -136,7 +136,7 @@ export default function EarlyAccessForm({
                 >
                     Thanks for your interest in{" "}
                     <span className="font-semibold text-(--vm-text)">
-                        VirtualMento
+                        {Brand.name}
                     </span>
                     . We'll keep you updated about
                     the launch and early-access

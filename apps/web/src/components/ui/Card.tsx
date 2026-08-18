@@ -18,16 +18,22 @@ export function Card({
                 "border border-(--vm-border)",
                 "bg-(--vm-surface)",
                 "backdrop-blur-xl",
+                "shadow-(--vm-card-shadow)",
+
                 interactive
                     ? [
                         "transition-all duration-(--vm-animation-normal)",
                         "hover:-translate-y-1",
                         "hover:border-(--vm-border-strong)",
                         "hover:bg-(--vm-surface-2)",
+                        "hover:shadow-(--vm-card-shadow-hover)",
                     ].join(" ")
                     : "",
+
                 className,
-            ].join(" ")}
+            ]
+                .filter(Boolean)
+                .join(" ")}
         >
             {children}
         </div>
