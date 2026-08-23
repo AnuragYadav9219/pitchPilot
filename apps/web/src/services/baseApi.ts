@@ -5,191 +5,153 @@ import {
     type FetchArgs,
     type FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-
 import type { RootState } from "@/app/store/store";
-
-import {
-    clearCredentials,
-    setCredentials,
-} from "@/features/auth/authSlice";
-
-import {
-    authStorage,
-} from "@/features/auth/authStorage";
-
-import type {
-    AuthResponse,
-} from "@/features/auth/types";
+import { clearCredentials, setCredentials } from "@/features/auth/authSlice";
+import { authStorage } from "@/features/auth/authStorage";
+import type { AuthResponse } from "@/features/auth/types";
 import type { ApiResponse } from "./types";
 
+/* ============================================================
+   CONFIGURATION
+============================================================ */
+
 const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL ||
-    "http://localhost:8080";
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+
+/* ============================================================
+   RAW BASE QUERY
+============================================================ */
 
 const rawBaseQuery = fetchBaseQuery({
     baseUrl: API_BASE_URL,
+    prepareHeaders: (headers, { getState, arg }) => {
+        const state = getState() as RootState;
+        const url = typeof arg === "string" ? arg : arg.url;
+        const isRefreshRequest = url === "/api/auth/refresh";
 
-    prepareHeaders: (
-        headers,
-        { getState, arg },
-    ) => {
-        const state =
-            getState() as RootState;
-
-        const url =
-            typeof arg === "string"
-                ? arg
-                : arg.url;
-
-        const isRefreshRequest =
-            url === "/api/auth/refresh";
-
-        /*
-         * Never attach the old access token
-         * to the refresh request.
-         */
+        /* Never send the expired access token with the refresh request. */
         if (!isRefreshRequest) {
-            const token =
-                state.auth.accessToken;
-
-            if (token) {
-                headers.set(
-                    "Authorization",
-                    `Bearer ${token}`,
-                );
+            const accessToken = state.auth.accessToken;
+            if (accessToken) {
+                headers.set("Authorization", `Bearer ${accessToken}`);
             }
         }
 
-        headers.set(
-            "Content-Type",
-            "application/json",
-        );
+        /* Only set JSON content type when the request doesn't provide one. */
+        if (!headers.has("Content-Type")) {
+            headers.set("Content-Type", "application/json");
+        }
 
         return headers;
     },
 });
 
-const baseQueryWithReauth: BaseQueryFn<
-    string | FetchArgs,
-    unknown,
-    FetchBaseQueryError
-> = async (
-    args,
-    api,
-    extraOptions,
-) => {
-    let result =
-        await rawBaseQuery(
-            args,
-            api,
-            extraOptions,
-        );
+/* ============================================================
+   REFRESH LOCK
+============================================================ */
 
-    const url =
-        typeof args === "string"
-            ? args
-            : args.url;
+/*
+ * Prevents multiple simultaneous refresh requests when several
+ * API calls receive a 401 at the same time. Acts as an application-level lock.
+ */
+let refreshPromise: Promise<AuthResponse | null> | null = null;
 
-    const isRefreshRequest =
-        url === "/api/auth/refresh";
+/* ============================================================
+   REFRESH TOKEN
+============================================================ */
 
-    /*
-     * NEVER refresh the refresh request itself.
-     *
-     * This prevents:
-     *
-     * refresh → 401 → refresh → 401 → ...
-     */
-    if (
-        result.error?.status === 401 &&
-        !isRefreshRequest
-    ) {
-        const refreshToken =
-            authStorage.getRefreshToken();
+async function refreshAccessToken(
+    api: Parameters<BaseQueryFn>[1],
+    extraOptions: Parameters<BaseQueryFn>[2],
+): Promise<AuthResponse | null> {
+    const refreshToken = authStorage.getRefreshToken();
+    if (!refreshToken) return null;
 
-        if (!refreshToken) {
-            api.dispatch(
-                clearCredentials(),
-            );
+    /* If another request is already refreshing, wait for that promise. */
+    if (refreshPromise) {
+        return refreshPromise;
+    }
 
-            return result;
-        }
-
-        /*
-         * Use rawBaseQuery here.
-         *
-         * DO NOT use baseQueryWithReauth.
-         */
-        const refreshResult =
-            await rawBaseQuery(
+    refreshPromise = (async () => {
+        try {
+            const refreshResult = await rawBaseQuery(
                 {
                     url: "/api/auth/refresh",
                     method: "POST",
-                    body: {
-                        refreshToken,
-                    },
+                    body: { refreshToken },
                 },
                 api,
                 extraOptions,
             );
 
-        if (
-            refreshResult.data
-        ) {
-            const response =
-                refreshResult.data as ApiResponse<AuthResponse>;
+            if (!refreshResult.data) return null;
 
-            if (
-                response.success &&
-                response.data
-            ) {
-                /*
-                 * Update Redux + localStorage.
-                 */
-                api.dispatch(
-                    setCredentials(
-                        response.data,
-                    ),
-                );
+            const response = refreshResult.data as ApiResponse<AuthResponse>;
+            if (!response.success || !response.data) return null;
 
-                /*
-                 * Retry original request
-                 * using the new access token.
-                 */
-                result =
-                    await rawBaseQuery(
-                        args,
-                        api,
-                        extraOptions,
-                    );
-            } else {
-                authStorage.clear();
-
-                api.dispatch(
-                    clearCredentials(),
-                );
-            }
-        } else {
-            /*
-             * Refresh token is invalid/expired.
-             */
-            authStorage.clear();
-
-            api.dispatch(
-                clearCredentials(),
-            );
+            /* Store new access + refresh tokens. */
+            api.dispatch(setCredentials(response.data));
+            return response.data;
+        } catch {
+            return null;
+        } finally {
+            /* Always release the lock. */
+            refreshPromise = null;
         }
+    })();
+
+    return refreshPromise;
+}
+
+/* ============================================================
+   BASE QUERY WITH RE-AUTH
+============================================================ */
+
+const baseQueryWithReauth: BaseQueryFn<
+    string | FetchArgs,
+    unknown,
+    FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+    /* First attempt */
+    let result = await rawBaseQuery(args, api, extraOptions);
+
+    const url = typeof args === "string" ? args : args.url;
+    const isRefreshRequest = url === "/api/auth/refresh";
+
+    /* Only handle 401 for normal requests */
+    if (result.error?.status !== 401 || isRefreshRequest) {
+        return result;
+    }
+
+    /* Attempt to refresh the access token */
+    const refreshed = await refreshAccessToken(api, extraOptions);
+
+    /* Refresh failed */
+    if (!refreshed) {
+        authStorage.clear();
+        api.dispatch(clearCredentials());
+        return result;
+    }
+
+    /* Retry original request with the updated token from Redux */
+    result = await rawBaseQuery(args, api, extraOptions);
+
+    /* Prevent infinite loops if retry still returns 401 */
+    if (result.error?.status === 401) {
+        authStorage.clear();
+        api.dispatch(clearCredentials());
     }
 
     return result;
 };
 
+/* ============================================================
+   API
+============================================================ */
+
 export const baseApi = createApi({
     reducerPath: "api",
-
-    baseQuery:
-        baseQueryWithReauth,
-
+    baseQuery: baseQueryWithReauth,
     tagTypes: [
         "User",
         "Session",
@@ -201,6 +163,5 @@ export const baseApi = createApi({
         "Evaluation",
         "Feedback",
     ],
-
     endpoints: () => ({}),
 });

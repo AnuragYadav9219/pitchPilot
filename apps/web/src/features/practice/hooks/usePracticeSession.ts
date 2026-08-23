@@ -5,13 +5,10 @@ import {
     useSendMessageMutation,
 } from "@/features/conversation/conversationApi";
 import type {
+    Conversation,
     ConversationMessage,
     ConversationType,
 } from "@/features/conversation/types";
-
-/* ============================================================= */
-/* TYPES */
-/* ============================================================= */
 
 interface UsePracticeSessionOptions {
     title: string;
@@ -26,17 +23,14 @@ interface ApiError {
     };
 }
 
-/* ============================================================= */
-/* HOOK */
-/* ============================================================= */
-
 export function usePracticeSession({
     title,
     type,
     conversationId: existingConversationId,
 }: UsePracticeSessionOptions) {
-    /* API Mutations & Queries */
-    const [createConversation] = useCreateConversationMutation();
+
+    const [createConversation, { isLoading: isCreatingMutation }] = useCreateConversationMutation();
+
     const [sendMessage, { isLoading: isSendingMessage }] = useSendMessageMutation();
 
     const {
@@ -48,132 +42,102 @@ export function usePracticeSession({
         skip: !existingConversationId,
     });
 
-    /* State */
     const [conversationId, setConversationId] = useState<string | null>(
         existingConversationId ?? null
     );
+    const [conversation, setConversation] = useState<Conversation | null>(null);
     const [messages, setMessages] = useState<ConversationMessage[]>([]);
-    const [isCreating, setIsCreating] = useState(!existingConversationId);
+    const [isCreatingNew, setIsCreatingNew] = useState(!existingConversationId);
     const [error, setError] = useState<string | null>(null);
 
-    // Prevent duplicate creation requests
-    const creationKeyRef = useRef<string | null>(null);
+    // Track mounted state safely
+    const mountedRef = useRef(true);
+    useEffect(() => {
+        mountedRef.current = true;
+        return () => {
+            mountedRef.current = false;
+        };
+    }, []);
 
     /* ========================================================= */
-    /* EXISTING CONVERSATION — LOAD */
+    /* LOAD EXISTING CONVERSATION                                */
     /* ========================================================= */
 
     useEffect(() => {
-        if (!existingConversationId || !existingResponse?.data) {
-            return;
+        if (!existingConversationId) return;
+
+        setConversationId(existingConversationId);
+        setIsCreatingNew(false);
+
+        if (existingResponse?.data) {
+            setConversation(existingResponse.data.conversation);
+            setMessages(existingResponse.data.messages ?? []);
+            setError(null);
         }
-
-        const conversation = existingResponse.data.conversation;
-        const loadedMessages = existingResponse.data.messages ?? [];
-
-        console.log("Existing conversation loaded:", {
-            conversation,
-            messages: loadedMessages,
-        });
-
-        setConversationId(conversation.id);
-        setMessages(loadedMessages);
-        setError(null);
-        setIsCreating(false);
     }, [existingConversationId, existingResponse]);
 
-    /* ========================================================= */
-    /* EXISTING CONVERSATION — ERROR */
-    /* ========================================================= */
-
     useEffect(() => {
-        if (!existingConversationId || !existingError) {
-            return;
-        }
+        if (!existingConversationId || !existingError) return;
 
         console.error("Failed to load conversation:", existingError);
         setError(getConversationError(existingError));
-        setIsCreating(false);
+        setIsCreatingNew(false);
     }, [existingConversationId, existingError]);
 
-    /* ========================================================= */
-    /* CREATE NEW CONVERSATION */
-    /* ========================================================= */
+    const hasCreatedRef = useRef(false);
 
     useEffect(() => {
-        if (existingConversationId) {
-            setIsCreating(false);
-            return;
-        }
+        if (existingConversationId || hasCreatedRef.current) return;
+        hasCreatedRef.current = true;
 
-        const key = `${type}:${title}`;
-        if (creationKeyRef.current === key) {
-            return;
-        }
-        creationKeyRef.current = key;
+        setIsCreatingNew(true);
+        setError(null);
 
-        let cancelled = false;
-
-        async function create() {
-            try {
-                setIsCreating(true);
-                setError(null);
-
-                console.log("Creating NEW conversation:", { title, type });
-
-                const response = await createConversation({
-                    title,
-                    type,
-                }).unwrap();
-
-                if (cancelled) return;
+        createConversation({ title, type })
+            .unwrap()
+            .then((response) => {
+                if (!mountedRef.current) return;
 
                 const id = response.data?.id;
-                if (!id) {
-                    throw new Error("Conversation ID was not returned.");
-                }
-
-                console.log("NEW conversation created:", id);
+                if (!id) throw new Error("Conversation ID was not returned.");
 
                 setConversationId(id);
                 setMessages([]);
-                setIsCreating(false);
-            } catch (err) {
-                if (cancelled) return;
+                setError(null);
+            })
+            .catch((err) => {
+                if (!mountedRef.current) return;
 
                 console.error("Conversation creation failed:", err);
-                setConversationId(null);
                 setError(getConversationError(err));
-                setIsCreating(false);
-            }
-        }
-
-        void create();
-
-        return () => {
-            cancelled = true;
-        };
+            })
+            .finally(() => {
+                if (mountedRef.current) {
+                    setIsCreatingNew(false);
+                }
+            });
     }, [existingConversationId, title, type, createConversation]);
 
     /* ========================================================= */
-    /* SEND MESSAGE */
+    /* SEND MESSAGE                                              */
     /* ========================================================= */
 
     const send = useCallback(
         async (content: string) => {
             const trimmed = content.trim();
+            if (!trimmed) return;
 
             if (!conversationId) {
-                setError("Your practice session is still starting. Please wait a moment.");
+                setError(
+                    "Your practice session is still starting. Please wait a moment."
+                );
                 return;
             }
-
-            if (!trimmed) return;
 
             setError(null);
 
             const temporaryMessage: ConversationMessage = {
-                id: `temp-${Date.now()}`,
+                id: `temp-${Date.now()}-${Math.random().toString(36).slice(2)}`,
                 role: "USER",
                 content: trimmed,
                 model: null,
@@ -190,72 +154,62 @@ export function usePracticeSession({
 
                 const assistantMessage = response.data;
 
-                if (!assistantMessage) {
-                    throw new Error(
-                        "The server returned an empty message response.",
-                    );
-                }
-
-                if (response.data) {
+                if (assistantMessage) {
                     setMessages((current) => [...current, assistantMessage]);
                 }
             } catch (err) {
                 console.error("Failed to send message:", err);
 
+                // Rollback optimistic update
                 setMessages((current) =>
-                    current.filter((message) => message.id !== temporaryMessage.id)
+                    current.filter((msg) => msg.id !== temporaryMessage.id)
                 );
-
                 setError(getMessageError(err));
             }
         },
         [conversationId, sendMessage]
     );
 
-    /* ========================================================= */
-    /* LOADING & RETURN */
-    /* ========================================================= */
-
-    const isLoading = Boolean(existingConversationId)
+    const isLoading = existingConversationId
         ? isLoadingExisting || isFetchingExisting
-        : isCreating;
+        : isCreatingNew || isCreatingMutation;
 
     return {
         conversationId,
+        conversation,
         messages,
         isLoading,
+        isCreating: isCreatingNew,
         isSendingMessage,
         error,
         send,
     };
 }
 
-/* ============================================================= */
-/* ERRORS */
-/* ============================================================= */
-
 function parseApiError(error: unknown): ApiError | null {
-    if (typeof error === "object" && error !== null) {
-        return error as ApiError;
-    }
-    return null;
+    return typeof error === "object" && error !== null ? (error as ApiError) : null;
 }
 
 function getConversationError(error: unknown): string {
     const apiError = parseApiError(error);
-
     if (apiError?.data?.message) return apiError.data.message;
-    if (apiError?.status === 401) return "Your session has expired. Please sign in again.";
-    if (apiError?.status === 404) return "This practice session could not be found.";
 
+    const status = apiError?.status;
+    if (status === 401 || status === "401") {
+        return "Your session has expired. Please sign in again.";
+    }
+    if (status === 404 || status === "404") {
+        return "This practice session could not be found.";
+    }
     return "Unable to load the practice session.";
 }
 
 function getMessageError(error: unknown): string {
     const apiError = parseApiError(error);
-
     if (apiError?.data?.message) return apiError.data.message;
-    if (apiError?.status === 401) return "Your session has expired. Please sign in again.";
 
+    if (apiError?.status === 401 || apiError?.status === "401") {
+        return "Your session has expired. Please sign in again.";
+    }
     return "Unable to send your message.";
 }

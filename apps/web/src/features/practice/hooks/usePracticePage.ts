@@ -1,10 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { scenarios } from "@/features/scenario/data/scenarios";
-import { useGetConversationQuery } from "@/features/conversation/conversationApi";
 import type { ConversationType } from "@/features/conversation/types";
-
 import { usePracticeSession } from "./usePracticeSession";
 
 export function usePracticePage(
@@ -13,38 +10,23 @@ export function usePracticePage(
 ) {
     const navigate = useNavigate();
 
-    const scenario = useMemo(
-        () => scenarios.find((item) => item.id === scenarioId),
-        [scenarioId],
-    );
+    const scenario = useMemo(() => {
+        if (!scenarioId) return undefined;
+        return scenarios.find((item) => item.id === scenarioId);
+    }, [scenarioId]);
 
     const isExistingConversation = Boolean(conversationId);
 
-    const {
-        data: conversationResponse,
-        isLoading: isLoadingConversation,
-        error: conversationError,
-    } = useGetConversationQuery(conversationId ?? "", {
-        skip: !conversationId,
-    });
-
-    const conversation = conversationResponse?.data?.conversation;
-
-    const title =
-        scenario?.title ??
-        conversation?.title ??
-        "Practice Session";
-
-    const type: ConversationType =
-        conversation?.type ??
-        scenario?.conversationType ??
-        "INTERVIEW";
-
     const session = usePracticeSession({
-        title,
-        type,
+        title: scenario?.title ?? "Practice Session",
+        type: scenario?.conversationType ?? "INTERVIEW",
         conversationId,
     });
+
+    const conversation = session.conversation;
+    const title = conversation?.title ?? scenario?.title ?? "Practice Session";
+    const type: ConversationType =
+        conversation?.type ?? scenario?.conversationType ?? "INTERVIEW";
 
     const bottomRef = useRef<HTMLDivElement>(null);
     const [finishOpen, setFinishOpen] = useState(false);
@@ -65,10 +47,7 @@ export function usePracticePage(
         };
 
         window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     useEffect(() => {
@@ -82,8 +61,9 @@ export function usePracticePage(
         };
     }, [historyOpen]);
 
-    const hasUserMessages = session.messages.some(
-        (message) => message.role === "USER",
+    const hasUserMessages = useMemo(
+        () => session.messages.some((message) => message.role === "USER"),
+        [session.messages]
     );
 
     const canFinish =
@@ -92,58 +72,61 @@ export function usePracticePage(
         !session.isLoading &&
         !session.isSendingMessage;
 
+    const finish = useCallback(() => {
+        if (!canFinish) return;
+        setFinishOpen(true);
+    }, [canFinish]);
+
+    const confirmFinish = useCallback(() => {
+        const id = session.conversationId;
+        if (!id) return;
+
+        setFinishOpen(false);
+        navigate(`/practice/${id}/evaluation`);
+    }, [session.conversationId, navigate]);
+
     const showEmptyState =
         session.messages.length === 0 &&
         !session.isLoading &&
-        !session.isSendingMessage;
+        !session.isSendingMessage &&
+        !session.error;
 
-    const backPath = isExistingConversation
-        ? "/history"
-        : "/scenarios";
+    const backPath = isExistingConversation ? "/history" : "/scenarios";
 
-    const finish = () => {
-        if (canFinish) {
-            setFinishOpen(true);
-        }
-    };
-
-    const confirmFinish = () => {
-        if (!session.conversationId) return;
-
-        setFinishOpen(false);
-
-        navigate(
-            `/practice/${session.conversationId}/evaluation`,
-        );
-    };
+    const openHistory = useCallback(() => setHistoryOpen(true), []);
+    const closeHistory = useCallback(() => setHistoryOpen(false), []);
 
     return {
+        /* Scenario & Conversation Details */
         scenario,
         conversation,
         isExistingConversation,
-
         title,
         type,
         backPath,
 
-        conversationError,
-        isLoadingConversation,
+        /* Session State */
+        conversationId: session.conversationId,
+        messages: session.messages,
+        error: session.error,
+        isLoading: session.isLoading,
+        isSendingMessage: session.isSendingMessage,
+        send: session.send,
 
-        ...session,
+        /* Aliases for Existing Conversations */
+        isLoadingConversation: session.isLoading,
+        conversationError: session.error,
 
+        /* UI Controls & Refs */
         bottomRef,
-
         finishOpen,
         setFinishOpen,
-
-        historyOpen,
-        openHistory: () => setHistoryOpen(true),
-        closeHistory: () => setHistoryOpen(false),
-
         canFinish,
-        showEmptyState,
-
         finish,
         confirmFinish,
+        historyOpen,
+        openHistory,
+        closeHistory,
+        showEmptyState,
     };
 }

@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class DashboardServiceImpl
         implements DashboardService {
 
-    private static final int RECENT_SESSION_LIMIT = 5;
+    private static final int RECENT_SESSION_LIMIT = 3;
 
     private final SessionEvaluationRepository evaluationRepository;
     private final CurrentUserProvider currentUserProvider;

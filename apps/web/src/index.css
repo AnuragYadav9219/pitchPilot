@@ -152,3 +152,17 @@ body {
       width: 30%;
    }
 }
+
+@keyframes evaluation-progress {
+    0% {
+        transform: translateX(-150%);
+    }
+
+    50% {
+        transform: translateX(180%);
+    }
+
+    100% {
+        transform: translateX(450%);
+    }
+}

@@ -165,6 +165,7 @@ public class ConversationServiceImpl implements ConversationService {
         // =========================================================
 
         @Override
+        @Transactional
         public MessageResponse sendResponse(
                         UUID conversationId,
                         SendMessageRequest request) {
@@ -258,7 +259,7 @@ public class ConversationServiceImpl implements ConversationService {
                 // =====================================================
 
                 UserProfile profile = userProfileRepository
-                                .findByUserId(userId)
+                                .findByUserIdWithContext(userId)
                                 .orElse(null);
 
                 UserProfileContext profileContext = profileContextMapper.toContext(profile);
@@ -324,12 +325,6 @@ public class ConversationServiceImpl implements ConversationService {
                         // UPDATE LONG-TERM MEMORY
                         // =================================================
 
-                        /*
-                         * Memory is secondary to the actual AI response.
-                         *
-                         * If summarization fails, the user should still
-                         * receive the successful AI response.
-                         */
                         try {
 
                                 conversationSummaryService.updateSummary(conversation);

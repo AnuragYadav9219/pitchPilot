@@ -5,4 +5,3 @@ export { ProfessionalProfileCard } from "./ProfessionalProfileCard";
 export { SkillsInterestsCard } from "./SkillsInterestsCard";
 export { CustomSelect } from "./CustomSelect";
 export { ProfileLoading } from "./ProfileLoading";
-export { ProfileError } from "./ProfileError";

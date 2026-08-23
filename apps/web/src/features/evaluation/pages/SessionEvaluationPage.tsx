@@ -5,14 +5,13 @@ import {
     useGetEvaluationQuery,
 } from "../../conversation/conversationApi";
 import { Brand } from "@virtualmento/shared";
-import { SessionEvaluationCard } from "../components/SessionEvaluationCard";
+import { SessionEvaluationCard } from "../components";
 
 export default function SessionEvaluationPage() {
     const { conversationId } = useParams<{ conversationId: string }>();
     const navigate = useNavigate();
 
-    const [generateEvaluation, { isLoading: isGenerating, error: generationError }] =
-        useGenerateEvaluationMutation();
+    const [generateEvaluation, { isLoading: isGenerating, error: generationError }] = useGenerateEvaluationMutation();
 
     const {
         data,
@@ -27,9 +26,7 @@ export default function SessionEvaluationPage() {
         if (!conversationId) return;
 
         try {
-            console.log("Generating evaluation:", conversationId);
-            const response = await generateEvaluation(conversationId).unwrap();
-            console.log("Evaluation generated:", response);
+            await generateEvaluation(conversationId).unwrap();
         } catch (error) {
             console.error("Evaluation generation failed:", error);
         }
@@ -40,7 +37,13 @@ export default function SessionEvaluationPage() {
 
     // 1. Invalid ID Guard
     if (!conversationId) {
-        return <EvaluationError message="Conversation not found." onBack={handleHistory} />;
+        return (
+            <EvaluationError
+                title="Conversation not found"
+                message="We couldn't find the practice session you're looking for."
+                onBack={handleHistory}
+            />
+        );
     }
 
     // 2. Loading Guards
@@ -159,19 +162,42 @@ function getApiErrorMessage(error: unknown): string {
 
 function EvaluationLoading() {
     return (
+
         <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center px-4">
-            <div className="w-full max-w-md rounded-3xl border border-(--vm-border) bg-(--vm-surface) p-8 text-center shadow-sm">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-(--vm-primary)/10 text-(--vm-primary)">
-                    <LoaderCircle size={25} className="animate-spin" />
+            <div className="w-full max-w-md rounded-3xl border border-(--vm-border) bg-(--vm-surface) p-7 text-center shadow-(--vm-card-shadow) sm:p-8">
+                {/* Processing icon */}
+                <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-(--vm-primary)/10 text-(--vm-primary)" >
+                    <span className=" absolute inset-0 animate-ping rounded-2xl bg-(--vm-primary)/10" />
+
+                    <LoaderCircle
+                        size={24}
+                        strokeWidth={2}
+                        className="relative animate-spin"
+                    />
                 </div>
-                <h1 className="mt-5 text-xl font-semibold text-(--vm-text)">
+
+                {/* Heading */}
+                <h1
+                    className="mt-5 text-lg font-semibold tracking-tight text-(--vm-text) sm:text-xl">
                     Preparing your evaluation
                 </h1>
-                <p className="mt-2 text-sm leading-6 text-(--vm-muted)">
-                    {Brand.name} is analyzing your practice session.
+
+                {/* Description */}
+                <p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-(--vm-muted)">
+                    {Brand.name} is reviewing your practice session and preparing personalized feedback.
                 </p>
-                <div className="mt-6 h-1.5 overflow-hidden rounded-full bg-(--vm-surface-2)">
-                    <div className="h-full w-1/2 animate-pulse rounded-full bg-(--vm-primary)" />
+
+                {/* Processing indicator */}
+                <div className="mt-7">
+                    <div className="relative h-1.5 overflow-hidden rounded-full bg-(--vm-surface-2)">
+                        <div className="absolute inset-y-0 w-1/3 rounded-full bg-(--vm-primary) animate-[evaluation-progress_1.6s_ease-in-out_infinite]" />
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-center gap-2 text-[11px] font-medium text-(--vm-muted)">
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-(--vm-primary)" />
+
+                        Analyzing your responses...
+                    </div>
                 </div>
             </div>
         </div>

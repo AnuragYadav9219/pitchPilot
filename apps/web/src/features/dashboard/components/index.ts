@@ -1,4 +1,3 @@
-export { DashboardError } from "./DashboardError";
 export { DashboardHeader } from "./DashboardHeader";
 export { DashboardLoading } from "./DashboardLoading";
 export { QuickPractice } from "./QuickPractice";

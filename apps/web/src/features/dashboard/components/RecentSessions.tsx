@@ -26,7 +26,7 @@ export function RecentSessions({
                 </div>
 
                 <Link
-                    to="/history"
+                    to="/evaluations"
                     className="inline-flex items-center gap-1 text-xs font-medium text-(--vm-primary) hover:underline"
                 >
                     View all

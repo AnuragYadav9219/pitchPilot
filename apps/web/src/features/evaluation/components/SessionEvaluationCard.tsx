@@ -1,5 +1,4 @@
 import {
-    ArrowLeft,
     RotateCcw,
     Sparkles,
 } from "lucide-react";
@@ -26,15 +25,6 @@ export function SessionEvaluationCard({
             {/* Header */}
 
             <div className="mb-8">
-                <button
-                    type="button"
-                    onClick={onBackToHistory}
-                    className="mb-5 inline-flex items-center gap-2 border px-1 rounded-2xl cursor-pointer hover:scale-105 text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                >
-                    <ArrowLeft size={15} />
-                    Back to history
-                </button>
-
                 <div className="flex items-center gap-2 text-(--vm-primary)">
                     <Sparkles size={17} />
 

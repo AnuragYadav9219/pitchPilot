@@ -1,11 +1,13 @@
-import { Container } from "@/components/ui";
-import { DashboardError, DashboardHeader, DashboardLoading, QuickPractice, RecentSessions, SkillOverview, StatsGrid } from "../components";
+import { ApiErrorState, Container } from "@/components/ui";
+import { DashboardHeader, DashboardLoading, QuickPractice, RecentSessions, SkillOverview, StatsGrid } from "../components";
 import { useGetDashboardQuery } from "../dashboardApi";
 import { RecommendedScenarioCard } from "@/features/scenario/components";
+import { getApiErrorMessage } from "@/services/apiError";
 
 export default function DashboardPage() {
     const {
         data,
+        error,
         isLoading,
         isFetching,
         isError,
@@ -18,10 +20,24 @@ export default function DashboardPage() {
         return <DashboardLoading />;
     }
 
-    if (isError || !dashboard) {
+    if (isError) {
         return (
-            <DashboardError
+            <ApiErrorState
+                title="Unable to load your dashboard"
+                message={getApiErrorMessage(error)}
                 onRetry={() => void refetch()}
+                showHome
+            />
+        );
+    }
+
+    if (!dashboard) {
+        return (
+            <ApiErrorState
+                title="Dashboard data unavailable"
+                message="We couldn't find the information needed to display your dashboard."
+                onRetry={() => void refetch()}
+                showHome
             />
         );
     }

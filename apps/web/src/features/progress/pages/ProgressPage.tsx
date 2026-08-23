@@ -4,14 +4,16 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { Card, Container } from "@/components/ui";
+import { ApiErrorState, Card, Container } from "@/components/ui";
 
 import { useGetProgressQuery } from "../progressApi";
-import { OverallScore, ProgressChart, ProgressError, ProgressInsight, ProgressLoading, SkillScoreCard } from "../components";
+import { OverallScore, ProgressChart, ProgressInsight, ProgressLoading, SkillScoreCard } from "../components";
+import { getApiErrorMessage } from "@/services/apiError";
 
 export default function ProgressPage() {
     const {
         data,
+        error,
         isLoading,
         isFetching,
         isError,
@@ -22,10 +24,24 @@ export default function ProgressPage() {
         return <ProgressLoading />;
     }
 
-    if (isError || !data?.data) {
+    if (isError) {
         return (
-            <ProgressError
+            <ApiErrorState
+                title="Couldn't load your progress"
+                message={getApiErrorMessage(error)}
                 onRetry={() => void refetch()}
+                showHome
+            />
+        );
+    }
+
+    if (!data?.data) {
+        return (
+            <ApiErrorState
+                title="Progress unavailable"
+                message="We couldn't find the information needed to display your practice progress."
+                onRetry={() => void refetch()}
+                showHome
             />
         );
     }

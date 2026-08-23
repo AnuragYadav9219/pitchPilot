@@ -64,6 +64,13 @@ public class ConversationContextBuilder {
                 """);
 
         appendField(
+                instruction, 
+                "Name", 
+                profile != null
+                        ? profile.fullName()
+                        :null);
+
+        appendField(
                 instruction,
                 "Education",
                 profile != null

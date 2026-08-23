@@ -7,10 +7,11 @@ import {
     ProfessionalProfileCard,
     SkillsInterestsCard,
     ProfileLoading,
-    ProfileError,
 } from "../components";
 
 import { useProfilePage } from "../hooks/useProfilePage";
+import { ApiErrorState } from "@/components/ui";
+import { getApiErrorMessage } from "@/services/apiError";
 
 export default function ProfilePage() {
     const {
@@ -18,6 +19,7 @@ export default function ProfilePage() {
         profile,
         loading,
         error,
+        retry,
         userUpdating,
         profileUpdating,
         handleUserSave,
@@ -28,8 +30,26 @@ export default function ProfilePage() {
         return <ProfileLoading />;
     }
 
-    if (error || !user || !profile) {
-        return <ProfileError />;
+    if (error) {
+        return (
+            <ApiErrorState
+                title="Unable to load your profile"
+                message={getApiErrorMessage(error)}
+                onRetry={retry}
+                showHome
+            />
+        );
+    }
+
+    if (!user || !profile) {
+        return (
+            <ApiErrorState
+                title="Profile unavailable"
+                message="We couldn't find the information needed to display your profile."
+                onRetry={retry}
+                showHome
+            />
+        );
     }
 
     return (

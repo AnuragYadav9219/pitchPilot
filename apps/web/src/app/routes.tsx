@@ -28,6 +28,7 @@ const SessionEvaluationPage = lazy(() => import("@/features/evaluation/pages/Ses
 const ProgressPage = lazy(() => import("@/features/progress/pages/ProgressPage"));
 const ProfilePage = lazy(() => import("@/features/profile/pages/ProfilePage"));
 const SettingsPage = lazy(() => import("@/features/settings/pages/SettingsPage"));
+const EvaluationsPage = lazy(() => import("@/features/evaluation/pages/EvaluationsPage"));
 
 /* ============================================================= */
 /* ROOT LAYOUT                                                   */
@@ -70,6 +71,7 @@ export const router = createBrowserRouter([
                             { path: "/progress", element: <ProgressPage /> },
                             { path: "/profile", element: <ProfilePage /> },
                             { path: "/settings", element: <SettingsPage /> },
+                            { path: "/evaluations", element: <EvaluationsPage /> },
                             
                             { path: "/practice/scenario/:scenarioId", element: <PracticePage /> },
                             { path: "/practice/conversation/:conversationId", element: <PracticePage /> },

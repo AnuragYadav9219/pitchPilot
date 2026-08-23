@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.virtualmento.common.response.ApiResponse;
 import com.virtualmento.common.response.ResponseBuilder;
 import com.virtualmento.conversation.dto.DashboardResponse;
 import com.virtualmento.conversation.service.DashboardService;
@@ -20,7 +21,7 @@ public class DashboardController {
     private final ResponseBuilder responseBuilder;
 
     @GetMapping
-    public ResponseEntity<com.virtualmento.common.response.ApiResponse<DashboardResponse>> getDashboard() {
+    public ResponseEntity<ApiResponse<DashboardResponse>> getDashboard() {
 
         DashboardResponse dashboard = dashboardService.getDashboard();
 

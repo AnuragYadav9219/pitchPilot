@@ -116,7 +116,7 @@ export function RecommendedScenarioCard() {
 
                 {/* CTA */}
                 <Link
-                    to={`/practice/${scenario.id}`}
+                    to={`/practice/scenario/${scenario.id}`}
                     className="mt-5 inline-flex h-10 items-center gap-2 rounded-(--vm-radius-md) bg-(--vm-primary) px-4 text-xs font-medium text-white transition-all duration-200 hover:bg-(--vm-primary-pressed) hover:-translate-y-0.5 active:translate-y-0"
                 >
                     Start recommended practice

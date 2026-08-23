@@ -7,13 +7,14 @@ import {
     DangerZoneCard,
 } from "../components";
 
-import { SettingsError } from "../components/SettingsError";
 import { SettingsLoading } from "../components/SettingsLoading";
 
 import { useGetCurrentUserQuery } from "@/features/profile/profileApi";
 import { useSettingsPage } from "../hooks/useSettingsPage";
 import { Brand } from "@virtualmento/shared";
 import { ConfirmDialog } from "@/components/dialogs";
+import { ApiErrorState } from "@/components/ui";
+import { getApiErrorMessage } from "@/services/apiError";
 
 export default function SettingsPage() {
     const userQuery = useGetCurrentUserQuery();
@@ -32,15 +33,30 @@ export default function SettingsPage() {
         return <SettingsLoading />;
     }
 
-    if (
-        userQuery.isError ||
-        !userQuery.data?.data
-    ) {
+    if (userQuery.isError) {
         return (
-            <SettingsError
+            <ApiErrorState
+                title="Unable to load settings"
+                message={getApiErrorMessage(
+                    userQuery.error,
+                )}
                 onRetry={() =>
                     void userQuery.refetch()
                 }
+                showHome
+            />
+        );
+    }
+
+    if (!userQuery.data?.data) {
+        return (
+            <ApiErrorState
+                title="Settings unavailable"
+                message="We couldn't find the information needed to display your account settings."
+                onRetry={() =>
+                    void userQuery.refetch()
+                }
+                showHome
             />
         );
     }

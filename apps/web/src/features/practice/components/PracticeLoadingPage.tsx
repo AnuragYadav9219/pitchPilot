@@ -37,7 +37,8 @@ export function PracticeLoadingPage({
                 </h1>
 
                 <p className="mt-1.5 max-w-xs text-xs leading-5 text-(--vm-muted) sm:text-sm">
-                    {description}
+                    {description}<br />
+                    It will take just few minutes
                 </p>
 
                 {/* Minimal progress line */}

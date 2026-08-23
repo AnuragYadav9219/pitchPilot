@@ -70,6 +70,11 @@ export function useProfilePage() {
     const user = userQuery.data?.data;
     const profile = profileQuery.data?.data;
 
+    const retry = () => {
+        void userQuery.refetch();
+        void profileQuery.refetch();
+    }
+
     return {
         user,
         profile,
@@ -85,5 +90,7 @@ export function useProfilePage() {
 
         handleUserSave,
         handleProfileSave,
+
+        retry
     };
 }

@@ -1,14 +1,16 @@
 import { Navigate, useParams } from "react-router-dom";
-
 import { ChatMessage, TypingIndicator } from "@/features/conversation/components";
 import { Container } from "@/components/ui";
-
 import { usePracticePage } from "../hooks/usePracticePage";
-import { FinishDialog, PracticeComposer, PracticeEmptyState, PracticeErrorScreen, PracticeHeader, PracticeLoadingPage, PracticeSidebar } from "../components";
-
-/* ============================================================= */
-/* SUB-COMPONENTS                                                */
-/* ============================================================= */
+import {
+    FinishDialog,
+    PracticeComposer,
+    PracticeEmptyState,
+    PracticeErrorScreen,
+    PracticeHeader,
+    PracticeLoadingPage,
+    PracticeSidebar,
+} from "../components";
 
 function ErrorMessage({ message }: { message: string }) {
     return (
@@ -21,10 +23,6 @@ function ErrorMessage({ message }: { message: string }) {
     );
 }
 
-/* ============================================================= */
-/* MAIN COMPONENT                                                */
-/* ============================================================= */
-
 export default function PracticePage() {
     const { scenarioId, conversationId } = useParams<{
         scenarioId?: string;
@@ -33,7 +31,6 @@ export default function PracticePage() {
 
     const practice = usePracticePage(scenarioId, conversationId);
 
-    // Route Guards
     if (!scenarioId && !conversationId) {
         return <Navigate to="/scenarios" replace />;
     }
@@ -42,11 +39,11 @@ export default function PracticePage() {
         return <Navigate to="/scenarios" replace />;
     }
 
-    if (conversationId && practice.isLoadingConversation) {
-        return <PracticeLoadingPage existingConversation />;
-    }
-
-    if (conversationId && practice.conversationError) {
+    /*
+     * Existing conversation failed to load.
+     * Don't show the generic practice UI.
+     */
+    if (conversationId && practice.conversationError && !practice.isLoading) {
         return <PracticeErrorScreen />;
     }
 
@@ -67,18 +64,21 @@ export default function PracticePage() {
         send,
         finish,
         confirmFinish,
+        showEmptyState,
     } = practice;
 
     const hasMessages = messages.length > 0;
 
     return (
         <div className="flex h-dvh overflow-hidden bg-(--vm-background) text-(--vm-text)">
+            {/* SIDEBAR */}
             <PracticeSidebar
                 currentConversationId={conversationId ?? null}
                 mobileOpen={historyOpen}
                 onCloseMobile={closeHistory}
             />
 
+            {/* MAIN CONTENT SECTION */}
             <section className="flex min-w-0 flex-1 flex-col">
                 <PracticeHeader
                     title={title}
@@ -98,7 +98,7 @@ export default function PracticePage() {
                                     />
                                 )}
 
-                                {practice.showEmptyState && (
+                                {!isLoading && showEmptyState && (
                                     <PracticeEmptyState
                                         existingConversation={Boolean(conversationId)}
                                     />
@@ -114,13 +114,13 @@ export default function PracticePage() {
                                         ))}
 
                                         {isSendingMessage && <TypingIndicator />}
-
-                                        {error && <ErrorMessage message={error} />}
                                     </div>
                                 )}
 
-                                {!isLoading && !hasMessages && error && (
-                                    <ErrorMessage message={error} />
+                                {!isLoading && error && (
+                                    <div className="mt-4">
+                                        <ErrorMessage message={error} />
+                                    </div>
                                 )}
 
                                 <div ref={bottomRef} />
@@ -137,6 +137,7 @@ export default function PracticePage() {
                 </main>
             </section>
 
+            {/* FINISH DIALOG */}
             {finishOpen && (
                 <FinishDialog
                     onCancel={() => setFinishOpen(false)}

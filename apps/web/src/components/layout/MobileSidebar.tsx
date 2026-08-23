@@ -23,14 +23,14 @@ const practiceNavigation = [
         icon: MessageCircle,
     },
     {
-        label: "History",
-        href: "/history",
-        icon: History,
-    },
-    {
         label: "Progress",
         href: "/progress",
         icon: BarChart3,
+    },
+    {
+        label: "History",
+        href: "/history",
+        icon: History,
     },
 ];
 
