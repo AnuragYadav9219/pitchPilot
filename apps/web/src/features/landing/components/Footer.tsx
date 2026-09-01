@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import { Container } from "@/components/ui";
 
 export function Footer() {

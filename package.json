@@ -1,8 +1,8 @@
 {
-    "name": "virtualmento",
+    "name": "virtualmentor",
     "private": true,
     "version": "0.1.0",
-    "description": "VirtualMento - AI mentor for better conversations",
+    "description": "VirtualMentor - AI mentor for better conversations",
     "workspaces": [
         "apps/web",
         "apps/mobile",

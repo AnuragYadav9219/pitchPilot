@@ -1,5 +1,5 @@
 export const Brand = {
-    name: "VirtualMento",
+    name: "VirtualMentor",
     shortName: "VM",
 
     tagline: "Your AI mentor for better conversations.",
@@ -7,11 +7,11 @@ export const Brand = {
     description:
         "Practice interviews, presentations, negotiations, and difficult conversations with an AI mentor.",
 
-    domain: "virtualmentor.com",
+    domain: "virtualmentorr.com",
 
     logo: {
         symbol: "sparkles",
-        alt: "VirtualMento logo",
+        alt: "VirtualMentor logo",
     },
 
     social: {
@@ -20,10 +20,10 @@ export const Brand = {
         github: "",
     },
 
-    copyright: "VirtualMento",
+    copyright: "VirtualMentor",
 
     meta: {
-        title: "VirtualMento — Your AI Mentor",
+        title: "VirtualMentor — Your AI Mentor",
         description:
             "Practice real-world conversations and build confidence with your AI mentor.",
     },

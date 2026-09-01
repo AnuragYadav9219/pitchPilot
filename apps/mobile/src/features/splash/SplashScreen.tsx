@@ -22,7 +22,7 @@ import type { RootStackParamList } from "@/navigation/types";
 
 import { SplashLogo } from "./SplashLogo";
 import { SplashLoading } from "./SplashLoading";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 type SplashNavigationProp =
     NativeStackNavigationProp<

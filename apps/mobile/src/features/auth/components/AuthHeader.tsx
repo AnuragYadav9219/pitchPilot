@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 import { useTheme } from "@/theme/provider";
 

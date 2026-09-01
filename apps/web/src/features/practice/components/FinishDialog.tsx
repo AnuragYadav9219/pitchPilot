@@ -31,7 +31,7 @@ export function FinishDialog({
                 </h2>
 
                 <p className="mt-2 text-sm leading-6 text-(--vm-muted)">
-                    Your conversation will be saved and VirtualMento will
+                    Your conversation will be saved and VirtualMentor will
                     evaluate your performance.
                 </p>
 

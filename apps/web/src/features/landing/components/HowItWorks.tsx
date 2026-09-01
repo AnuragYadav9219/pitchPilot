@@ -8,7 +8,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 import { Container } from "@/components/ui";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 interface Step {
     number: string;

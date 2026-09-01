@@ -6,7 +6,7 @@ import { useLogoutMutation } from "@/features/auth/authApi";
 import { authStorage } from "@/features/auth/authStorage";
 import { appToast } from "@/lib/toast";
 import { ConfirmDialog } from "../dialogs";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 export function UserMenu() {
     const navigate = useNavigate();

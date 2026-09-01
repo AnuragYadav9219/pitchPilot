@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 type Status = "loading" | "success" | "error";
 
@@ -110,7 +110,7 @@ export default function PreRegistrationSuccess() {
                 setStatus("success");
 
                 setMessage(
-                    "Your email has been verified and you're officially on the VirtualMento early-access list.",
+                    "Your email has been verified and you're officially on the VirtualMentor early-access list.",
                 );
             } catch (error) {
                 console.error(

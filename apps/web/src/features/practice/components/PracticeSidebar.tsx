@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetConversationsQuery } from "@/features/conversation/conversationApi";
 import type { Conversation, ConversationType } from "@/features/conversation/types";
 import { Button } from "@/components/ui";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 /* ============================================================= */
 /* TYPES & CONSTANTS */

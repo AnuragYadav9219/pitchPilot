@@ -22,7 +22,7 @@ interface ApiError {
     };
 }
 
-const PENDING_EMAIL_KEY = "virtualmento.pendingVerificationEmail";
+const PENDING_EMAIL_KEY = "virtualmentor.pendingVerificationEmail";
 
 export function useRegister() {
     const navigate = useNavigate();

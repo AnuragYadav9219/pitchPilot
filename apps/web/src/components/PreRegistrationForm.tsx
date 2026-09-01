@@ -10,7 +10,7 @@ import { createPreRegistration } from "@/services/preRegistrationService";
 import {
     Radius,
     Typography,
-} from "@virtualmento/shared";
+} from "@virtualmentor/shared";
 
 type FormState = {
     name: string;
@@ -139,7 +139,7 @@ export default function PreRegistrationForm({
                         lineHeight: 1.7,
                     }}
                 >
-                    Thanks for joining the VirtualMento
+                    Thanks for joining the VirtualMentor
                     early-access community.
                 </p>
 

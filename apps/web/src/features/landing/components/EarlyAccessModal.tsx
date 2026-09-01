@@ -1,7 +1,7 @@
 import { Sparkles, X } from "lucide-react";
 
 import EarlyAccessForm from "@/features/landing/marketing/EarlyAccessForm";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 type EarlyAccessModalProps = {
     open: boolean;

@@ -1,4 +1,4 @@
-// const REFRESH_TOKEN_KEY = "virtualmento.refreshToken";
+// const REFRESH_TOKEN_KEY = "virtualmentor.refreshToken";
 
 // export const authStorage = {
 //     getRefreshToken(): string | null {
@@ -30,13 +30,13 @@
 
 
 const ACCESS_TOKEN_KEY =
-    "virtualmento_access_token";
+    "virtualmentor_access_token";
 
 const REFRESH_TOKEN_KEY =
-    "virtualmento_refresh_token";
+    "virtualmentor_refresh_token";
 
 const USER_KEY =
-    "virtualmento_user";
+    "virtualmentor_user";
 
 export const authStorage = {
     getAccessToken(): string | null {

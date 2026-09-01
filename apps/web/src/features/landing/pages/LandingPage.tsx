@@ -9,7 +9,7 @@ import { HowItWorks } from "@/features/landing/components/HowItWorks";
 import { Navbar } from "@/features/landing/components/Navbar";
 import { UseCases } from "@/features/landing/components/UseCases";
 
-import VirtualMentoLaunchAd from "@/features/landing/marketing/VirtualMentoLaunchAd";
+import VirtualMentorLaunchAd from "@/features/landing/marketing/VirtualMentorLaunchAd";
 import SocialProofStats from "../marketing/SocialProofStats";
 
 export default function LandingPage() {
@@ -52,7 +52,7 @@ export default function LandingPage() {
 
                 <UseCases />
 
-                <VirtualMentoLaunchAd
+                <VirtualMentorLaunchAd
                     onEarlyAccess={openEarlyAccess}
                 />
 

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
@@ -253,7 +253,7 @@ export default function AppComingSoon() {
                                     </div>
 
                                     <div className="rounded-full border border-(--vm-border) bg-(--vm-background) px-3 py-1 text-[9px] text-(--vm-muted)">
-                                        app.virtualmento
+                                        app.virtualmentor
                                     </div>
 
                                     <Sparkles

@@ -1,4 +1,4 @@
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import {
     BadgeCheck,
     Mail,

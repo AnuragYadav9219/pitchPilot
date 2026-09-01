@@ -5,7 +5,7 @@ import {
     Spacing,
     Typography,
     type ThemeMode,
-} from "@virtualmento/shared";
+} from "@virtualmentor/shared";
 
 export function applyTheme(mode: ThemeMode) {
     const root = document.documentElement;

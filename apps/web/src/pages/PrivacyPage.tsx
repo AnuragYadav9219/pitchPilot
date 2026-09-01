@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 export default function PrivacyPage() {
     return (

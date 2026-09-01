@@ -1,3 +1,3 @@
-export * from "@virtualmento/shared";
+export * from "@virtualmentor/shared";
 
 export * from "./tokens/shadow";

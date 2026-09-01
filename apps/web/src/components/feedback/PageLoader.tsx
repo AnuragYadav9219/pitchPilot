@@ -1,6 +1,6 @@
 import { Loader2 } from "lucide-react";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 interface PageLoaderProps {
     label?: string;

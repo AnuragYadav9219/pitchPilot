@@ -1,10 +1,10 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 import { Logo } from "@/components/branding/Logo";
-import authPanel from "@/assets/images/virtualmento-login-panel.webp";
+import authPanel from "@/assets/images/virtualmentor-login-panel.webp";
 
 import {
     AuthDivider,

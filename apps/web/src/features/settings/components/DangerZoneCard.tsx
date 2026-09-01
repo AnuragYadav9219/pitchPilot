@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 
 import { Button, Card } from "@/components/ui";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 interface DangerZoneCardProps {
     onLogout: () => void;

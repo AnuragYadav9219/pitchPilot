@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 
 import { Card, Container } from "@/components/ui";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 interface UseCase {
     icon: LucideIcon;

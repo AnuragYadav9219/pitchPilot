@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 
 import { Card } from "@/components/ui";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 interface AppearanceCardProps {
     mode: "light" | "dark";

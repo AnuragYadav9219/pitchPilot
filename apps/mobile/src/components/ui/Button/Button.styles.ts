@@ -1,4 +1,4 @@
-import type { ThemeColors } from "@virtualmento/shared";
+import type { ThemeColors } from "@virtualmentor/shared";
 
 export function createButtonVariants(
     colors: ThemeColors,

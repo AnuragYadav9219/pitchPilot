@@ -172,7 +172,7 @@ function RecommendationEmpty() {
                     </h2>
 
                     <p className="mt-1 text-xs leading-5 text-(--vm-muted)">
-                        Complete a practice session and finish its evaluation. VirtualMento will then recommend what you should practice next.
+                        Complete a practice session and finish its evaluation. VirtualMentor will then recommend what you should practice next.
                     </p>
                 </div>
             </div>

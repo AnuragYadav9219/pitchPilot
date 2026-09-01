@@ -1,6 +1,6 @@
 # Database Documentation
 
-This directory documents the database architecture and persistence strategy of VirtualMentor.
+This directory documents the database architecture and persistence strategy of VirtualMentorr.
 
 The database is responsible for storing durable application state that must survive application restarts and client changes.
 

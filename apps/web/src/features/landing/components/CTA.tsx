@@ -1,6 +1,6 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import { Container } from "@/components/ui";
 
 type CTAProps = {

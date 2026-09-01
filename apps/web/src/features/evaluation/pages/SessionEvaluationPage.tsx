@@ -4,7 +4,7 @@ import {
     useGenerateEvaluationMutation,
     useGetEvaluationQuery,
 } from "../../conversation/conversationApi";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import { SessionEvaluationCard } from "../components";
 
 export default function SessionEvaluationPage() {

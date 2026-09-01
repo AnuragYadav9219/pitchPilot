@@ -11,7 +11,7 @@ import {
     Brand,
     Radius,
     Typography,
-} from "@virtualmento/shared";
+} from "@virtualmentor/shared";
 
 import { getEarlyAccessCount } from "@/services/earlyAccessService";
 

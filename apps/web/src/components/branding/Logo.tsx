@@ -1,6 +1,6 @@
 import { Sparkles } from "lucide-react";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 interface LogoProps {
     size?: "sm" | "md" | "lg";

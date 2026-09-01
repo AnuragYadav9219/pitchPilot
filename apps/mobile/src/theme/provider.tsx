@@ -10,7 +10,7 @@ import {
     Colors,
     type ThemeColors,
     type ThemeMode,
-} from "@virtualmento/shared";
+} from "@virtualmentor/shared";
 
 export interface ThemeContextValue {
     mode: ThemeMode;

@@ -5,7 +5,7 @@ import {
 } from "../hooks";
 import { Logo } from "@/components/branding/Logo";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import { OtpVerificationForm } from "../components";
 
 interface VerifyOtpLocationState {

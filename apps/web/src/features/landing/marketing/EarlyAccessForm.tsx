@@ -8,7 +8,7 @@ import {
 
 import { createPreRegistration } from "@/services/preRegistrationService";
 
-import { Brand, Radius, Typography } from "@virtualmento/shared";
+import { Brand, Radius, Typography } from "@virtualmentor/shared";
 
 type FormState = {
     name: string;
@@ -274,7 +274,7 @@ export default function EarlyAccessForm({
                     }}
                 >
                     We'll use your email to keep you
-                    updated about VirtualMento's
+                    updated about VirtualMentor's
                     launch and early-access
                     availability.
                 </p>

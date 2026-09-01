@@ -11,7 +11,7 @@ import { SettingsLoading } from "../components/SettingsLoading";
 
 import { useGetCurrentUserQuery } from "@/features/profile/profileApi";
 import { useSettingsPage } from "../hooks/useSettingsPage";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import { ConfirmDialog } from "@/components/dialogs";
 import { ApiErrorState } from "@/components/ui";
 import { getApiErrorMessage } from "@/services/apiError";

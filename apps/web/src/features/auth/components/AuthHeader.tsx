@@ -1,5 +1,5 @@
 import { Logo } from "@/components/branding/Logo";
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 

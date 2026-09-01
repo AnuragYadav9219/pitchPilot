@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Database migrations provide a version-controlled history of changes to the VirtualMentor database schema.
+Database migrations provide a version-controlled history of changes to the VirtualMentorr database schema.
 
 Instead of manually changing production tables, schema changes should be represented as migrations.
 

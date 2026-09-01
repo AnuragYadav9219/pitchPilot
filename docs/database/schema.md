@@ -2,7 +2,7 @@
 
 ## Overview
 
-The VirtualMentor database is designed around a user-centric model.
+The VirtualMentorr database is designed around a user-centric model.
 
 The current MVP can be represented conceptually as:
 

@@ -11,7 +11,7 @@ import {
     Colors,
     type ThemeColors,
     type ThemeMode,
-} from "@virtualmento/shared";
+} from "@virtualmentor/shared";
 import { applyTheme } from "@/styles/theme";
 
 interface ThemeContextValue {

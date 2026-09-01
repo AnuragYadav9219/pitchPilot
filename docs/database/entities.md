@@ -1,6 +1,6 @@
 # Database Entities
 
-This document describes the entities currently required or planned for VirtualMentor.
+This document describes the entities currently required or planned for VirtualMentorr.
 
 The distinction between **Current MVP** and **Future** is intentional.
 
@@ -10,7 +10,7 @@ The distinction between **Current MVP** and **Future** is intentional.
 
 **Status:** Current MVP
 
-The User entity represents the core identity of a VirtualMentor account.
+The User entity represents the core identity of a VirtualMentorr account.
 
 ## Responsibility
 

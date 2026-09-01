@@ -1,8 +1,8 @@
-# VirtualMento
+# VirtualMentor
 
 > **AI-powered roleplay simulator for practicing real-world conversations.**
 
-VirtualMento is an AI-powered communication and roleplay platform designed to help users practice difficult, high-pressure, and real-world conversations in a safe and interactive environment.
+VirtualMentor is an AI-powered communication and roleplay platform designed to help users practice difficult, high-pressure, and real-world conversations in a safe and interactive environment.
 
 Instead of simply reading advice or watching tutorials, users can **practice conversations with AI**, receive feedback, identify weaknesses, and improve through repeated simulations.
 
@@ -10,7 +10,7 @@ The project is being developed as a cross-platform product with a **React web ap
 
 ---
 
-## ✨ Why VirtualMento?
+## ✨ Why VirtualMentor?
 
 Many communication skills cannot be learned effectively through theory alone.
 
@@ -27,7 +27,7 @@ Users often need to practice situations such as:
 * High-pressure questions
 * Other real-world communication scenarios
 
-VirtualMento provides an interactive environment where users can repeatedly practice these situations with an AI-powered roleplay partner.
+VirtualMentor provides an interactive environment where users can repeatedly practice these situations with an AI-powered roleplay partner.
 
 ### The core idea
 
@@ -53,7 +53,7 @@ Practice Again
 
 # 🎯 Project Goals
 
-VirtualMento aims to:
+VirtualMentor aims to:
 
 * Make communication practice accessible and interactive.
 * Provide realistic AI-powered roleplay experiences.
@@ -102,7 +102,7 @@ Instead of completing a static questionnaire, users interact with the AI dynamic
 
 ## AI Feedback
 
-After completing a roleplay session, VirtualMento can provide structured feedback to help users understand:
+After completing a roleplay session, VirtualMentor can provide structured feedback to help users understand:
 
 * What they did well
 * Where they struggled
@@ -117,11 +117,11 @@ The goal is not simply to provide a score, but to help the user understand **how
 
 ## Cross-Platform Experience
 
-VirtualMento is being developed for multiple platforms:
+VirtualMentor is being developed for multiple platforms:
 
 ### Web
 
-Built with React for users who prefer accessing VirtualMento from a desktop or browser.
+Built with React for users who prefer accessing VirtualMentor from a desktop or browser.
 
 ### Mobile
 
@@ -133,10 +133,10 @@ Both applications are designed around the same core product concepts.
 
 # 🏗️ Architecture
 
-VirtualMento follows a multi-application architecture.
+VirtualMentor follows a multi-application architecture.
 
                     ┌─────────────────────┐
-                    │      VirtualMento   │
+                    │      VirtualMentor   │
                     │       Platform      │
                     └──────────┬──────────┘
                                │
@@ -172,7 +172,7 @@ The architecture is intentionally designed so that web and mobile applications c
 
 The repository follows a monorepo-style structure:
 
-VirtualMento/
+VirtualMentor/
 │
 ├── apps/
 │   │
@@ -218,7 +218,7 @@ The exact structure may evolve as the application grows.
 
 ## AI
 
-VirtualMento uses AI to power conversational roleplay and feedback.
+VirtualMentor uses AI to power conversational roleplay and feedback.
 
 The AI layer is designed around:
 
@@ -293,7 +293,7 @@ Keeping these responsibilities conceptually separate makes the system easier to 
 
 # 🖥️ Web Application
 
-The web application provides the browser-based VirtualMento experience.
+The web application provides the browser-based VirtualMentor experience.
 
 Typical responsibilities include:
 
@@ -312,7 +312,7 @@ The web application is intended to provide a rich experience suitable for deskto
 
 # 📱 Mobile Application
 
-The mobile application brings the same core VirtualMento experience to mobile devices.
+The mobile application brings the same core VirtualMentor experience to mobile devices.
 
 The mobile application focuses on:
 
@@ -339,7 +339,7 @@ Mobile
  └── scenario definitions
 
 
-VirtualMento aims for:
+VirtualMentor aims for:
 
              Shared Package
              /             \
@@ -366,7 +366,7 @@ This approach helps reduce inconsistencies between platforms.
 
 ## Prerequisites
 
-Before developing VirtualMento, install the required development tools for the applications you intend to run.
+Before developing VirtualMentor, install the required development tools for the applications you intend to run.
 
 Recommended tools include:
 
@@ -383,7 +383,7 @@ Recommended tools include:
 ```bash
 git clone https://github.com/AnuragYadav9219/pitchPilot
 
-cd VirtualMento
+cd VirtualMentor
 ```
 
 ---
@@ -446,7 +446,7 @@ For the complete environment-variable reference, see:
 
 # 🧪 Testing
 
-Testing is an important part of maintaining VirtualMento as the project grows.
+Testing is an important part of maintaining VirtualMentor as the project grows.
 
 Testing should cover:
 
@@ -468,7 +468,7 @@ Detailed testing documentation will be maintained in:
 
 # 🚢 Deployment
 
-VirtualMento is designed to support independent deployment of its applications and backend infrastructure.
+VirtualMentor is designed to support independent deployment of its applications and backend infrastructure.
 
 The deployment architecture may include:
 
@@ -522,7 +522,7 @@ Detailed documentation is available inside the `docs/` directory.
 
 # 🗺️ Roadmap
 
-VirtualMento is being developed incrementally.
+VirtualMentor is being developed incrementally.
 
 ### Phase 1 — Foundation
 
@@ -566,7 +566,7 @@ VirtualMento is being developed incrementally.
 
 # 🏆 Beanstalk Challenge
 
-VirtualMento was approved for the **Beanstalk Challenge**, providing an opportunity to develop and present the project in a real-world product-building environment.
+VirtualMentor was approved for the **Beanstalk Challenge**, providing an opportunity to develop and present the project in a real-world product-building environment.
 
 The project is being developed with the goal of creating something beyond a simple AI chatbot: a structured platform focused on **practice, simulation, evaluation, and improvement**.
 
@@ -601,7 +601,7 @@ License information will be added when the project's licensing decision is final
 
 # 👨‍💻 Project
 
-**VirtualMento**
+**VirtualMentor**
 
 AI-powered roleplay and communication practice platform.
 

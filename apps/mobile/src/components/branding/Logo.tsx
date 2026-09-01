@@ -1,6 +1,6 @@
 import { Image, type ImageStyle } from "react-native";
 
-import { Brand } from "@virtualmento/shared";
+import { Brand } from "@virtualmentor/shared";
 
 import logo from "@/assets/images/logo.png";
 
