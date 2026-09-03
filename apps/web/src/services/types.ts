@@ -5,3 +5,8 @@ export interface ApiResponse<T> {
     errors?: unknown;
     timestamp: string;
 }
+
+export interface ApiErrorResponse {
+    code?: string;
+    message?: string;
+}

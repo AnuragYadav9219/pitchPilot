@@ -58,5 +58,10 @@ public class Conversation extends BaseEntity {
     @Builder.Default
     private Boolean archived = false;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    @Builder.Default
+    private InterviewMode mode = InterviewMode.TEXT;
+
     private Instant lastMessageAt;
 }

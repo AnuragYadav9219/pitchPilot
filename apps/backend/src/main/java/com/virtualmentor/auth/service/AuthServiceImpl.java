@@ -136,8 +136,7 @@ public class AuthServiceImpl implements AuthService {
                         throw new InvalidCredentialsException();
                 }
 
-                if (!Boolean.TRUE.equals(
-                                user.getEmailVerified())) {
+                if (!Boolean.TRUE.equals(user.getEmailVerified())) {
 
                         throw new EmailNotVerifiedException();
                 }

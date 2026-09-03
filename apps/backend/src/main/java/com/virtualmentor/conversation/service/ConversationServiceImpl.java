@@ -31,10 +31,15 @@ import com.virtualmentor.conversation.dto.MessageResponse;
 import com.virtualmentor.conversation.dto.SendMessageRequest;
 import com.virtualmentor.conversation.entity.Conversation;
 import com.virtualmentor.conversation.entity.ConversationMessage;
+import com.virtualmentor.conversation.entity.ConversationType;
+import com.virtualmentor.conversation.entity.InterviewMode;
 import com.virtualmentor.conversation.mapper.ConversationMapper;
 import com.virtualmentor.conversation.repository.ConversationMessageRepository;
 import com.virtualmentor.conversation.repository.ConversationRepository;
 import com.virtualmentor.evaluation.repository.SessionEvaluationRepository;
+import com.virtualmentor.subscription.service.EntitlementService;
+import com.virtualmentor.subscription.service.InterviewSubscriptionPolicy;
+import com.virtualmentor.subscription.service.SubscriptionLimitService;
 import com.virtualmentor.user.entity.User;
 import com.virtualmentor.user.entity.UserProfile;
 import com.virtualmentor.user.repository.UserProfileRepository;
@@ -68,14 +73,34 @@ public class ConversationServiceImpl implements ConversationService {
         private final ConversationSummaryService conversationSummaryService;
         private final ConversationTitleService conversationTitleService;
 
+        private final EntitlementService entitlementService;
+        private final SubscriptionLimitService subscriptionLimitService;
+        private final InterviewSubscriptionPolicy interviewSubscriptionPolicy;
+
         // =========================================================
         // CREATE CONVERSATION
         // =========================================================
 
         @Override
+        @Transactional
         public ConversationResponse create(CreateConversationRequest request) {
 
                 UUID userId = currentUserProvider.getUserId();
+
+                InterviewMode mode = request.mode() == null
+                                ? InterviewMode.TEXT
+                                : request.mode();
+
+                if (request.type() == ConversationType.INTERVIEW) {
+
+                        entitlementService.require(
+                                        userId,
+                                        interviewSubscriptionPolicy.entitlementFor(mode));
+
+                        subscriptionLimitService.consume(
+                                        userId,
+                                        interviewSubscriptionPolicy.limitFor(mode));
+                }
 
                 User user = userRepository
                                 .findById(userId)
@@ -94,6 +119,7 @@ public class ConversationServiceImpl implements ConversationService {
                                 .user(user)
                                 .title(title)
                                 .type(request.type())
+                                .mode(mode)
                                 .summary(null)
                                 .archived(false)
                                 .lastMessageAt(null)

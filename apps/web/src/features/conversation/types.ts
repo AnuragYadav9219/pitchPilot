@@ -1,3 +1,5 @@
+import type { InterviewMode } from "@virtualmentor/shared";
+
 export type ConversationType =
     | "GENERAL"
     | "INTERVIEW"
@@ -55,6 +57,7 @@ export interface ConversationDetail {
 export interface CreateConversationRequest {
     type: ConversationType;
     title?: string;
+    mode: InterviewMode;
 }
 
 export interface SendMessageRequest {

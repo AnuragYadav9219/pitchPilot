@@ -1,5 +1,5 @@
 import { Navigate, useParams } from "react-router-dom";
-import { ChatMessage, TypingIndicator } from "@/features/conversation/components";
+import { ChatMessage, SubscriptionLimitScreen, TypingIndicator } from "@/features/conversation/components";
 import { Container } from "@/components/ui";
 import { usePracticePage } from "../hooks/usePracticePage";
 import {
@@ -43,7 +43,7 @@ export default function PracticePage() {
      * Existing conversation failed to load.
      * Don't show the generic practice UI.
      */
-    if (conversationId && practice.conversationError && !practice.isLoading) {
+    if (conversationId && practice.conversationError && !practice.subscriptionLimitReached && !practice.isLoading) {
         return <PracticeErrorScreen />;
     }
 
@@ -53,6 +53,7 @@ export default function PracticePage() {
         backPath,
         messages,
         error,
+        subscriptionLimitReached,
         isLoading,
         isSendingMessage,
         historyOpen,
@@ -89,51 +90,63 @@ export default function PracticePage() {
                 />
 
                 <main className="relative min-h-0 flex-1 overflow-hidden">
-                    <div className="h-full overflow-y-auto scrollbar-thin">
-                        <Container className="h-full">
-                            <div className="mx-auto max-w-3xl pb-48 pt-6 sm:pb-52 sm:pt-8">
-                                {isLoading && (
-                                    <PracticeLoadingPage
-                                        existingConversation={Boolean(conversationId)}
-                                    />
-                                )}
-
-                                {!isLoading && showEmptyState && (
-                                    <PracticeEmptyState
-                                        existingConversation={Boolean(conversationId)}
-                                    />
-                                )}
-
-                                {!isLoading && hasMessages && (
-                                    <div className="space-y-5">
-                                        {messages.map((message) => (
-                                            <ChatMessage
-                                                key={message.id}
-                                                message={message}
+                    {subscriptionLimitReached ? (
+                        <div className="h-full overflow-y-auto scrollbar-thin">
+                            <Container className="h-full">
+                                <div className="mx-auto max-w-3xl pb-12 pt-6 sm:pt-8">
+                                    <SubscriptionLimitScreen />
+                                </div>
+                            </Container>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="h-full overflow-y-auto scrollbar-thin">
+                                <Container className="h-full">
+                                    <div className="mx-auto max-w-3xl pb-48 pt-6 sm:pb-52 sm:pt-8">
+                                        {isLoading && (
+                                            <PracticeLoadingPage
+                                                existingConversation={Boolean(conversationId)}
                                             />
-                                        ))}
+                                        )}
 
-                                        {isSendingMessage && <TypingIndicator />}
+                                        {!isLoading && showEmptyState && (
+                                            <PracticeEmptyState
+                                                existingConversation={Boolean(conversationId)}
+                                            />
+                                        )}
+
+                                        {!isLoading && hasMessages && (
+                                            <div className="space-y-5">
+                                                {messages.map((message) => (
+                                                    <ChatMessage
+                                                        key={message.id}
+                                                        message={message}
+                                                    />
+                                                ))}
+
+                                                {isSendingMessage && <TypingIndicator />}
+                                            </div>
+                                        )}
+
+                                        {!isLoading && error && (
+                                            <div className="mt-4">
+                                                <ErrorMessage message={error} />
+                                            </div>
+                                        )}
+
+                                        <div ref={bottomRef} />
                                     </div>
-                                )}
-
-                                {!isLoading && error && (
-                                    <div className="mt-4">
-                                        <ErrorMessage message={error} />
-                                    </div>
-                                )}
-
-                                <div ref={bottomRef} />
+                                </Container>
                             </div>
-                        </Container>
-                    </div>
 
-                    <PracticeComposer
-                        onSend={send}
-                        onFinish={finish}
-                        finishing={finishOpen}
-                        disabled={isLoading || isSendingMessage}
-                    />
+                            <PracticeComposer
+                                onSend={send}
+                                onFinish={finish}
+                                finishing={finishOpen}
+                                disabled={isLoading || isSendingMessage}
+                            />
+                        </>
+                    )}
                 </main>
             </section>
 

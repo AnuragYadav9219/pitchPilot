@@ -5,6 +5,8 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
 import saasGrid from "@/assets/backgrounds/saas-grid.svg";
+import { HeroBackground } from "@/assets/backgrounds/HeroBackground";
+import { useTheme } from "@/app/theme/ThemeProvider";
 
 type HeroProps = {
     onEarlyAccess: () => void;
@@ -13,8 +15,12 @@ type HeroProps = {
 export function Hero({
     onEarlyAccess,
 }: HeroProps) {
+    const { colors } = useTheme();
+
     return (
         <section className="relative isolate overflow-hidden">
+            <HeroBackground />
+
             {/* SaaS background grid */}
             <div
                 aria-hidden="true"
@@ -67,14 +73,6 @@ export function Hero({
                         </p>
 
                         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                            {/* <Button size="lg">
-                                Start Learning
-
-                                <ArrowRight
-                                    size={18}
-                                    aria-hidden="true"
-                                />
-                            </Button> */}
 
                             <Button
                                 size="lg"
@@ -124,108 +122,116 @@ export function Hero({
 
                     {/* AI preview */}
                     <div className="relative z-10">
+                        {/* Warm ambient glow */}
                         <div
                             aria-hidden="true"
-                            className="absolute inset-8 rounded-(--vm-radius-xl) bg-(--vm-glow-purple) opacity-20 blur-[80px]"
+                            className="absolute inset-8 rounded-(--vm-radius-xl) blur-[80px]"
+                            style={{ backgroundColor: colors.glowCoral, opacity: 0.3 }}
                         />
 
-                        <div className="relative overflow-hidden rounded-(--vm-radius-xl) border border-(--vm-border-strong) bg-(--vm-surface) p-5 shadow-2xl backdrop-blur-md transition-transform duration-500 hover:-translate-y-1">
+                        {/* Glass window */}
+                        <div
+                            className="relative overflow-hidden rounded-(--vm-radius-xl) border p-5 shadow-2xl backdrop-blur-xl transition-transform duration-500 hover:-translate-y-1"
+                            style={{ backgroundColor: colors.surface, borderColor: colors.borderStrong }}
+                        >
+                            {/* Glass highlight */}
+                            <div
+                                aria-hidden="true"
+                                className="pointer-events-none absolute inset-0"
+                                style={{
+                                    background: `linear-gradient(135deg, rgba(255, 255, 255, 0.10), transparent 45%, ${colors.glowCoral})`,
+                                }}
+                            />
+
                             {/* Window header */}
-                            <div className="mb-5 flex items-center justify-between">
+                            <div className="relative z-10 mb-5 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <div className="flex gap-1.5">
-                                        <span className="h-2.5 w-2.5 rounded-full bg-(--vm-danger)/60" />
-                                        <span className="h-2.5 w-2.5 rounded-full bg-(--vm-warning)/60" />
-                                        <span className="h-2.5 w-2.5 rounded-full bg-(--vm-success)/60" />
+                                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colors.danger, opacity: 0.6 }} />
+                                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colors.warning, opacity: 0.6 }} />
+                                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: colors.success, opacity: 0.6 }} />
                                     </div>
 
                                     <div>
-                                        <p className="text-sm font-semibold text-(--vm-text)">
-                                            {Brand.name}
-                                        </p>
-
-                                        <p className="text-xs text-(--vm-muted)">
-                                            Interview practice
-                                        </p>
+                                        <p className="text-sm font-semibold" style={{ color: colors.text }}>{Brand.name}</p>
+                                        <p className="text-xs" style={{ color: colors.muted }}>Interview practice</p>
                                     </div>
                                 </div>
 
-                                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-(--vm-border) bg-(--vm-primary)/10">
-                                    <Sparkles
-                                        size={18}
-                                        className="text-(--vm-primary)"
-                                        aria-hidden="true"
-                                    />
+                                <div
+                                    className="flex h-9 w-9 items-center justify-center rounded-full border"
+                                    style={{ borderColor: colors.border, backgroundColor: colors.glowCoral }}
+                                >
+                                    <Sparkles size={18} style={{ color: colors.primary }} aria-hidden="true" />
                                 </div>
                             </div>
 
                             {/* Conversation */}
-                            <div className="space-y-4">
+                            <div className="relative z-10 space-y-4">
                                 {/* User message */}
-                                <div className="ml-auto max-w-[82%] rounded-2xl rounded-br-md bg-(--vm-primary) p-4 text-sm font-medium leading-6 text-white shadow-(--vm-glow-purple)">
-                                    How would you answer:
-                                    <br />
-                                    "Tell me about yourself?"
+                                <div
+                                    className="ml-auto max-w-[82%] rounded-2xl rounded-br-md p-4 text-sm font-medium leading-6 text-white shadow-lg"
+                                    style={{
+                                        background: `linear-gradient(90deg, ${colors.gradientStart}, ${colors.gradientMiddle}, ${colors.gradientEnd})`,
+                                        boxShadow: `0 12px 30px ${colors.glowCoral}`,
+                                    }}
+                                >
+                                    How would you answer:<br />"Tell me about yourself?"
                                 </div>
 
                                 {/* AI response */}
-                                <div className="max-w-[88%] rounded-2xl rounded-bl-md border border-(--vm-border) bg-(--vm-surface-2) p-4 text-sm leading-6 text-(--vm-text-secondary)">
-                                    Start with your current role or education,
-                                    highlight relevant strengths, then connect
-                                    them to what you want to accomplish next.
+                                <div
+                                    className="max-w-[88%] rounded-2xl rounded-bl-md border p-4 text-sm leading-6 backdrop-blur-md"
+                                    style={{ backgroundColor: colors.surface2, borderColor: colors.border, color: colors.textSecondary }}
+                                >
+                                    Start with your current role or education, highlight relevant strengths, then connect them to what you want to accomplish next.
                                 </div>
 
                                 {/* Feedback */}
-                                <div className="rounded-xl border border-(--vm-border) bg-(--vm-background) p-4">
+                                <div
+                                    className="rounded-xl border p-4 backdrop-blur-md"
+                                    style={{ backgroundColor: colors.surface2, borderColor: colors.border }}
+                                >
                                     <div className="mb-3 flex items-center justify-between">
-                                        <span className="text-xs font-semibold text-(--vm-text)">
-                                            AI Feedback
-                                        </span>
-
-                                        <span className="flex items-center gap-1.5 text-xs font-semibold text-(--vm-success)">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-(--vm-success)" />
+                                        <span className="text-xs font-semibold" style={{ color: colors.text }}>AI Feedback</span>
+                                        <span className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: colors.success }}>
+                                            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: colors.success }} />
                                             Strong
                                         </span>
                                     </div>
 
-                                    <div className="h-2 overflow-hidden rounded-full bg-(--vm-surface-3)">
-                                        <div className="h-full w-[82%] rounded-full bg-linear-to-r from-(--vm-secondary) to-(--vm-success)" />
+                                    <div className="h-2 overflow-hidden rounded-full" style={{ backgroundColor: colors.surface3 }}>
+                                        <div
+                                            className="h-full w-[82%] rounded-full"
+                                            style={{ background: `linear-gradient(90deg, ${colors.gradientStart}, ${colors.gradientMiddle}, ${colors.gradientEnd})` }}
+                                        />
                                     </div>
 
                                     <div className="mt-3 flex items-center justify-between">
-                                        <p className="text-xs text-(--vm-muted)">
-                                            Response quality
-                                        </p>
-
-                                        <p className="text-xs font-semibold text-(--vm-text-secondary)">
-                                            82%
-                                        </p>
+                                        <p className="text-xs" style={{ color: colors.muted }}>Response quality</p>
+                                        <p className="text-xs font-semibold" style={{ color: colors.textSecondary }}>82%</p>
                                     </div>
 
-                                    <p className="mt-3 text-xs leading-5 text-(--vm-muted)">
-                                        Good structure. Try adding one concrete
-                                        achievement to make your answer more
-                                        memorable.
+                                    <p className="mt-3 text-xs leading-5" style={{ color: colors.muted }}>
+                                        Good structure. Try adding one concrete achievement to make your answer more memorable.
                                     </p>
                                 </div>
                             </div>
 
                             {/* Bottom status */}
-                            <div className="mt-5 flex items-center justify-between border-t border-(--vm-border) pt-4">
+                            <div
+                                className="relative z-10 mt-5 flex items-center justify-between border-t pt-4"
+                                style={{ borderColor: colors.border }}
+                            >
                                 <div className="flex items-center gap-2">
                                     <span className="relative flex h-2 w-2">
-                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-(--vm-success) opacity-50" />
-                                        <span className="relative inline-flex h-2 w-2 rounded-full bg-(--vm-success)" />
+                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-50" style={{ backgroundColor: colors.success }} />
+                                        <span className="relative inline-flex h-2 w-2 rounded-full" style={{ backgroundColor: colors.success }} />
                                     </span>
-
-                                    <span className="text-xs text-(--vm-muted)">
-                                        AI mentor ready
-                                    </span>
+                                    <span className="text-xs" style={{ color: colors.muted }}>AI mentor ready</span>
                                 </div>
 
-                                <span className="text-xs text-(--vm-muted)">
-                                    Personalized session
-                                </span>
+                                <span className="text-xs" style={{ color: colors.muted }}>Personalized session</span>
                             </div>
                         </div>
                     </div>

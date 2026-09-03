@@ -13,9 +13,18 @@ export function applyTheme(mode: ThemeMode) {
 
     root.dataset.theme = mode;
 
+    // ─────────────────────────────────────────────
+    // Backgrounds
+    // ─────────────────────────────────────────────
+
     root.style.setProperty(
         "--vm-background",
         colors.background,
+    );
+
+    root.style.setProperty(
+        "--vm-background-alt",
+        colors.backgroundAlt,
     );
 
     root.style.setProperty(
@@ -38,6 +47,10 @@ export function applyTheme(mode: ThemeMode) {
         colors.surfaceSolid,
     );
 
+    // ─────────────────────────────────────────────
+    // Borders
+    // ─────────────────────────────────────────────
+
     root.style.setProperty(
         "--vm-border",
         colors.border,
@@ -47,6 +60,10 @@ export function applyTheme(mode: ThemeMode) {
         "--vm-border-strong",
         colors.borderStrong,
     );
+
+    // ─────────────────────────────────────────────
+    // Brand colors
+    // ─────────────────────────────────────────────
 
     root.style.setProperty(
         "--vm-primary",
@@ -59,6 +76,30 @@ export function applyTheme(mode: ThemeMode) {
     );
 
     root.style.setProperty(
+        "--vm-coral",
+        colors.coral,
+    );
+
+    root.style.setProperty(
+        "--vm-orange",
+        colors.orange,
+    );
+
+    root.style.setProperty(
+        "--vm-peach",
+        colors.peach,
+    );
+
+    root.style.setProperty(
+        "--vm-terracotta",
+        colors.terracotta,
+    );
+
+    // ─────────────────────────────────────────────
+    // Supporting colors
+    // ─────────────────────────────────────────────
+
+    root.style.setProperty(
         "--vm-secondary",
         colors.secondary,
     );
@@ -68,20 +109,52 @@ export function applyTheme(mode: ThemeMode) {
         colors.accent,
     );
 
+    // ─────────────────────────────────────────────
+    // Brand gradients
+    // ─────────────────────────────────────────────
+
     root.style.setProperty(
-        "--vm-glow-purple",
-        colors.glowPurple,
+        "--vm-gradient-start",
+        colors.gradientStart,
     );
 
     root.style.setProperty(
-        "--vm-glow-green",
-        colors.glowGreen,
+        "--vm-gradient-middle",
+        colors.gradientMiddle,
+    );
+
+    root.style.setProperty(
+        "--vm-gradient-end",
+        colors.gradientEnd,
+    );
+
+    // ─────────────────────────────────────────────
+    // Glows
+    // ─────────────────────────────────────────────
+
+    root.style.setProperty(
+        "--vm-glow-coral",
+        colors.glowCoral,
     );
 
     root.style.setProperty(
         "--vm-glow-orange",
         colors.glowOrange,
     );
+
+    root.style.setProperty(
+        "--vm-glow-peach",
+        colors.glowPeach,
+    );
+
+    root.style.setProperty(
+        "--vm-glow-amber",
+        colors.glowAmber,
+    );
+
+    // ─────────────────────────────────────────────
+    // Typography colors
+    // ─────────────────────────────────────────────
 
     root.style.setProperty(
         "--vm-text",
@@ -99,6 +172,15 @@ export function applyTheme(mode: ThemeMode) {
     );
 
     root.style.setProperty(
+        "--vm-placeholder",
+        colors.placeholder,
+    );
+
+    // ─────────────────────────────────────────────
+    // Semantic colors
+    // ─────────────────────────────────────────────
+
+    root.style.setProperty(
         "--vm-success",
         colors.success,
     );
@@ -114,11 +196,24 @@ export function applyTheme(mode: ThemeMode) {
     );
 
     root.style.setProperty(
+        "--vm-info",
+        colors.info,
+    );
+
+    root.style.setProperty(
         "--vm-white",
         colors.white,
     );
 
+    root.style.setProperty(
+        "--vm-black",
+        colors.black,
+    );
+
+    // ─────────────────────────────────────────────
     // Spacing
+    // ─────────────────────────────────────────────
+
     root.style.setProperty(
         "--vm-space-xs",
         `${Spacing.xs}px`,
@@ -149,7 +244,10 @@ export function applyTheme(mode: ThemeMode) {
         `${Spacing.xxl}px`,
     );
 
+    // ─────────────────────────────────────────────
     // Radius
+    // ─────────────────────────────────────────────
+
     root.style.setProperty(
         "--vm-radius-sm",
         `${Radius.sm}px`,
@@ -175,7 +273,10 @@ export function applyTheme(mode: ThemeMode) {
         `${Radius.full}px`,
     );
 
+    // ─────────────────────────────────────────────
     // Typography
+    // ─────────────────────────────────────────────
+
     root.style.setProperty(
         "--vm-font-hero",
         `${Typography.hero}px`,
@@ -211,7 +312,10 @@ export function applyTheme(mode: ThemeMode) {
         `${Typography.tiny}px`,
     );
 
+    // ─────────────────────────────────────────────
     // Animation
+    // ─────────────────────────────────────────────
+
     root.style.setProperty(
         "--vm-animation-fast",
         `${Animation.fast}ms`,
@@ -227,5 +331,6 @@ export function applyTheme(mode: ThemeMode) {
         `${Animation.slow}ms`,
     );
 
+    // Let browser-native elements follow the active theme.
     root.style.colorScheme = mode;
 }

@@ -19,6 +19,7 @@ import com.virtualmentor.otp.exception.InvalidOtpException;
 import com.virtualmentor.otp.exception.OtpExpiredException;
 import com.virtualmentor.otp.exception.OtpLockedException;
 import com.virtualmentor.otp.exception.OtpRateLimitException;
+import com.virtualmentor.subscription.exception.SubscriptionLimitExceededException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -168,5 +169,16 @@ public class GlobalExceptionHandler {
                                 .body(ApiResponse.fail(
                                                 "AI service is temporarily unavailable. Please try again later.",
                                                 null));
+        }
+
+        @ExceptionHandler(SubscriptionLimitExceededException.class)
+        public ResponseEntity<ApiResponse<Void>> handleSubscriptionLimitExceeded(
+                        SubscriptionLimitExceededException ex) {
+
+                return ResponseEntity
+                                .status(HttpStatus.TOO_MANY_REQUESTS)
+                                .body(ApiResponse.fail(
+                                                "SUBSCRIPTION_LIMIT_REACHED",
+                                                ex.getMessage()));
         }
 }

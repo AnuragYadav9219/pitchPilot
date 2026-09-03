@@ -1,10 +1,12 @@
 package com.virtualmentor.subscription.dto;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import com.virtualmentor.subscription.entity.Entitlement;
+import com.virtualmentor.subscription.entity.SubscriptionLimit;
 import com.virtualmentor.subscription.entity.SubscriptionPlan;
 import com.virtualmentor.subscription.entity.SubscriptionStatus;
 
@@ -22,6 +24,8 @@ public record SubscriptionResponse(
 
         Instant expiresAt,
 
-        boolean autoRenew) {
+        boolean autoRenew,
+        
+        Map<SubscriptionLimit, SubscriptionLimitResponse> limits) {
 
 }

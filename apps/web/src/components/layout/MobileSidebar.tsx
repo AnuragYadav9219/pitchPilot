@@ -1,5 +1,6 @@
 import {
     BarChart3,
+    CreditCard,
     History,
     LayoutDashboard,
     MessageCircle,
@@ -44,6 +45,11 @@ const accountNavigation = [
         label: "Settings",
         href: "/settings",
         icon: Settings,
+    },
+    {
+        label: "Subscription",
+        href: "/subscription",
+        icon: CreditCard,
     },
 ];
 

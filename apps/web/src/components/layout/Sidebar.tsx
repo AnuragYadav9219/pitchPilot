@@ -1,5 +1,6 @@
 import {
     BarChart3,
+    CreditCard,
     History,
     LayoutDashboard,
     MessageCircle,
@@ -19,6 +20,7 @@ const navigation = [
 const accountNavigation = [
     { label: "Profile", href: "/profile", icon: UserRound },
     { label: "Settings", href: "/settings", icon: Settings },
+    { label: "Subscription", href: "/subscription", icon: CreditCard },
 ];
 
 interface NavItem {
@@ -84,9 +86,7 @@ function NavSection({ title, items }: NavSectionProps) {
                             key={item.href}
                             to={item.href}
                             className={({ isActive }) => `
-                                group relative flex w-full min-w-0 items-center gap-3
-                                rounded-(--vm-radius-md) px-3 py-2.5 text-sm font-medium
-                                transition-all duration-(--vm-animation-fast)
+                                group relative flex w-full min-w-0 items-center gap-3 rounded-(--vm-radius-md) px-3 py-2.5 text-sm font-medium transition-all duration-(--vm-animation-fast)
                                 ${isActive
                                     ? "bg-(--vm-primary)/10 text-(--vm-primary)"
                                     : "text-(--vm-muted) hover:bg-(--vm-surface-2) hover:text-(--vm-text)"
