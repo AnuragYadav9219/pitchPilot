@@ -25,7 +25,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "email_verification_tokens", indexes = {
         @Index(name = "idx_email_verification_user", columnList = "user_id"),
-        @Index(name = "idx-email-verification_expires", columnList = "expires_at")
+        @Index(name = "idx_email_verification_expires", columnList = "expires_at")
 })
 @Getter
 @Setter

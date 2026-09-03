@@ -47,8 +47,7 @@ public class SecurityConfig {
                 http
                                 .csrf(csrf -> csrf.disable())
 
-                                .cors(cors -> {
-                                })
+                                .cors(cors -> {})
 
                                 .sessionManagement(session -> session.sessionCreationPolicy(
                                                 SessionCreationPolicy.STATELESS))
@@ -84,6 +83,7 @@ public class SecurityConfig {
                                                 .authenticated()
 
                                                 .requestMatchers(
+                                                                "/",
                                                                 "/api/health",
                                                                 "/actuator/health")
                                                 .permitAll()
@@ -109,4 +109,6 @@ public class SecurityConfig {
 
                 return http.build();
         }
+
+        
 }
