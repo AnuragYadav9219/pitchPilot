@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Brand } from "@virtualmentor/shared";
 
 import { Logo } from "@/components/branding/Logo";
-import authPanel from "@/assets/images/virtualmentor-login-panel.webp";
+import authPanel from "@/assets/images/authpanel.webp";
 
 import {
     AuthDivider,
@@ -15,111 +15,170 @@ import {
 export function RegisterPage() {
     return (
         <main className="relative min-h-screen overflow-hidden bg-(--vm-background)">
-            {/* Background */}
+            {/* ========================================================= */}
+            {/* AMBIENT BACKGROUND */}
+            {/* ========================================================= */}
+
             <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-0 overflow-hidden"
+                className="pointer-events-none fixed inset-0 overflow-hidden"
             >
-                <div className="absolute left-1/2 top-[-25%] h-150 w-150 -translate-x-1/2 rounded-full bg-(--vm-glow-purple) opacity-25 blur-[150px]" />
+                <div className="absolute left-[10%] top-[-20%] h-100 w-100 rounded-full bg-(--vm-glow-orange) opacity-20 blur-[130px]" />
 
-                <div className="absolute bottom-[-20%] right-[-10%] h-125 w-125 rounded-full bg-(--vm-glow-green) opacity-15 blur-[150px]" />
+                <div className="absolute bottom-[-20%] right-[5%] h-100 w-100 rounded-full bg-(--vm-glow-coral) opacity-15 blur-[130px]" />
             </div>
 
-            {/* Header */}
-            <header className="relative z-20 flex items-center justify-between px-5 py-5 sm:px-8">
-                <Logo size="sm" />
+            {/* ========================================================= */}
+            {/* SPLIT LAYOUT */}
+            {/* ========================================================= */}
 
-                <Link
-                    to="/"
-                    aria-label="Back to home"
-                    className="group inline-flex items-center gap-1.5 rounded-full border border-(--vm-border) bg-(--vm-surface) px-3 py-1.5 text-xs font-medium text-(--vm-muted) transition-colors hover:border-(--vm-border-strong) hover:bg-(--vm-surface-2) hover:text-(--vm-text)"
-                >
-                    <ArrowLeft
-                        size={14}
-                        className="transition-transform group-hover:-translate-x-0.5"
-                        aria-hidden="true"
+            <div className="relative z-10 min-h-screen lg:grid lg:grid-cols-2">
+                {/* ===================================================== */}
+                {/* LEFT — ILLUSTRATION */}
+                {/* ===================================================== */}
+
+                <section className="relative hidden min-h-screen overflow-hidden lg:block">
+                    <img
+                        src={authPanel}
+                        alt={`${Brand.name} AI mentoring`}
+                        width={890}
+                        height={1200}
+                        fetchPriority="high"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full object-cover"
                     />
 
-                    Back
-                </Link>
-            </header>
+                    <div
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-(--vm-background)/10"
+                    />
 
-            {/* Main */}
-            <div className="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] w-full max-w-7xl items-center px-4 pb-10 pt-4 sm:px-6 lg:px-8">
-                <div className="grid w-full overflow-hidden rounded-(--vm-radius-xl) border border-(--vm-border) bg-(--vm-surface)/60 shadow-2xl backdrop-blur-xl lg:grid-cols-2">
-                    {/* Left image */}
-                    <section className="relative hidden min-h-170 overflow-hidden lg:block">
-                        <img
-                            src={authPanel}
-                            alt={`${Brand.name} AI mentoring`}
-                            width={890}
-                            height={1200}
-                            fetchPriority="high"
-                            decoding="async"
-                            className="absolute inset-0 h-full w-full object-cover"
-                        />
+                    <div
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-linear-to-br from-(--vm-primary)/8 via-transparent to-(--vm-glow-orange)/15"
+                    />
 
-                        <div
-                            aria-hidden="true"
-                            className="absolute inset-0 bg-linear-to-r from-transparent to-(--vm-background)/20"
-                        />
+                    <div
+                        aria-hidden="true"
+                        className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-black/25 to-transparent"
+                    />
 
-                        <div
-                            aria-hidden="true"
-                            className="absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-black/40 to-transparent"
-                        />
-                    </section>
+                    <div className="absolute left-7 top-7 z-10">
+                        <Logo size="md" />
+                    </div>
+                </section>
 
-                    {/* Right form */}
-                    <section className="flex min-h-170 items-center p-6 sm:p-10 lg:p-12 xl:p-16">
-                        <div className="mx-auto w-full max-w-md">
+                {/* ===================================================== */}
+                {/* RIGHT — REGISTER */}
+                {/* ===================================================== */}
+
+                <section className="relative flex min-h-screen items-center justify-center px-5 py-5 sm:px-8 lg:px-10 xl:px-16">
+                    {/* Ambient glow */}
+
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-(--vm-glow-orange) opacity-10 blur-[120px]"
+                    />
+
+                    <div className="relative w-full max-w-md">
+                        {/* ================================================= */}
+                        {/* TOP */}
+                        {/* ================================================= */}
+
+                        <div className="mb-6 flex items-center justify-between">
                             {/* Mobile logo */}
-                            <div className="mb-8 lg:hidden">
+
+                            <div className="lg:hidden">
                                 <Logo size="md" />
                             </div>
 
-                            {/* Heading */}
-                            <div>
-                                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-(--vm-primary)">
-                                    Get started
-                                </p>
+                            <Link
+                                to="/"
+                                aria-label="Back to home"
+                                className={[
+                                    "group ml-auto inline-flex items-center gap-1.5",
+                                    "rounded-full",
+                                    "border border-(--vm-border)",
+                                    "bg-(--vm-surface)",
+                                    "px-3 py-1.5",
+                                    "text-xs font-medium",
+                                    "text-(--vm-muted)",
+                                    "transition-all duration-(--vm-animation-fast)",
+                                    "hover:border-(--vm-border-strong)",
+                                    "hover:bg-(--vm-surface-2)",
+                                    "hover:text-(--vm-text)",
+                                ].join(" ")}
+                            >
+                                <ArrowLeft
+                                    size={14}
+                                    className="transition-transform duration-200 group-hover:-translate-x-0.5"
+                                    aria-hidden="true"
+                                />
 
-                                <h1 className="text-3xl font-bold tracking-tight text-(--vm-text) sm:text-4xl">
-                                    Create your account.
-                                </h1>
+                                Back
+                            </Link>
+                        </div>
 
-                                <p className="mt-3 text-sm leading-6 text-(--vm-muted)">
-                                    Create your {Brand.name} account and start
-                                    building real-world confidence.
-                                </p>
-                            </div>
+                        {/* ================================================= */}
+                        {/* HEADING */}
+                        {/* ================================================= */}
 
-                            {/* Form */}
-                            <div className="mt-8">
-                                <RegisterForm />
-                            </div>
-
-                            <AuthDivider />
-
-                            <SocialLogin />
-
-                            <p className="mt-7 text-center text-sm text-(--vm-muted)">
-                                Already have an account?{" "}
-                                <Link
-                                    to="/login"
-                                    className="font-semibold text-(--vm-primary) transition-colors hover:text-(--vm-primary-pressed)"
-                                >
-                                    Log in
-                                </Link>
+                        <div>
+                            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--vm-primary)">
+                                Get started
                             </p>
 
-                            <p className="mt-8 text-center text-[11px] leading-5 text-(--vm-muted)">
-                                By creating an account, you agree to the terms
-                                and policies of {Brand.name}.
+                            <h1 className="text-2xl font-bold tracking-tight text-(--vm-text) sm:text-3xl">
+                                Create your account.
+                            </h1>
+
+                            <p className="mt-2 max-w-md text-sm leading-5 text-(--vm-muted)">
+                                Create your {Brand.name} account and start
+                                building real-world confidence.
                             </p>
                         </div>
-                    </section>
-                </div>
+
+                        {/* ================================================= */}
+                        {/* REGISTER FORM */}
+                        {/* ================================================= */}
+
+                        <div className="mt-6">
+                            <RegisterForm />
+                        </div>
+
+                        {/* ================================================= */}
+                        {/* SOCIAL */}
+                        {/* ================================================= */}
+
+                        <div className="my-5">
+                            <AuthDivider />
+                        </div>
+
+                        <SocialLogin />
+
+                        {/* ================================================= */}
+                        {/* LOGIN */}
+                        {/* ================================================= */}
+
+                        <p className="mt-5 text-center text-sm text-(--vm-muted)">
+                            Already have an account?{" "}
+                            <Link
+                                to="/login"
+                                className="font-semibold text-(--vm-primary) transition-colors hover:text-(--vm-primary-pressed)"
+                            >
+                                Log in
+                            </Link>
+                        </p>
+
+                        {/* ================================================= */}
+                        {/* TERMS */}
+                        {/* ================================================= */}
+
+                        <p className="mt-5 text-center text-[10px] leading-4 text-(--vm-muted)/70">
+                            By creating an account, you agree to the terms and policies of {Brand.name}.
+                        </p>
+                    </div>
+                </section>
             </div>
         </main>
     );

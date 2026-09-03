@@ -12,6 +12,7 @@ import com.virtualmentor.user.service.UserIdentityService;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -67,6 +68,10 @@ public class AuthServiceImpl implements AuthService {
 
                 String email = request.email();
 
+                if (!request.acceptedTerms()) {
+                        throw new IllegalArgumentException("You must accept the terms and conditions");
+                }
+
                 if (userRepository.existsByEmail(email)) {
                         throw new ResourceAlreadyExistsException(
                                         "An account with this email already exists");
@@ -77,13 +82,18 @@ public class AuthServiceImpl implements AuthService {
                                 .email(email)
                                 .password(passwordEncoder.encode(request.password()))
                                 .role(Role.USER)
-                                .enabled(true)
+                                .enabled(false)
                                 .build();
 
-                User savedUser = userRepository.save(user);
-                emailVerificationService.sendVerificationEmail(user);
+                try {
+                        User savedUser = userRepository.save(user);
+                        emailVerificationService.sendVerificationEmail(savedUser);
 
-                return userMapper.toResponse(savedUser);
+                        return userMapper.toResponse(savedUser);
+
+                } catch (DataIntegrityViolationException ex) {
+                        throw new ResourceAlreadyExistsException("An account with this email already exists");
+                }
         }
 
         // =========================================================

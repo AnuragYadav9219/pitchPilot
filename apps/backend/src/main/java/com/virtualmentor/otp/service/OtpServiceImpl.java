@@ -133,8 +133,7 @@ public class OtpServiceImpl implements OtpService {
                         OtpChannel channel,
                         String otp) {
 
-                if (otp == null ||
-                                !otp.matches("\\d{6}")) {
+                if (otp == null || !otp.matches("\\d{6}")) {
 
                         throw new InvalidOtpException();
                 }
@@ -191,6 +190,7 @@ public class OtpServiceImpl implements OtpService {
                 if (purpose == OtpPurpose.EMAIL_VERIFICATION && channel == OtpChannel.EMAIL) {
 
                         user.setEmailVerified(true);
+                        user.setEnabled(true);
 
                         userRepository.save(user);
                 }
