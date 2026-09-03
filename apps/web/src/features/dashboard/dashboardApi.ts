@@ -3,7 +3,7 @@ import { baseApi } from "@/services/baseApi";
 import type {
     DashboardResponse,
 } from "./types";
-import type { ApiResponse } from "@/services/types";
+import type { ApiResponse } from "@/types/types";
 
 export const dashboardApi =
     baseApi.injectEndpoints({

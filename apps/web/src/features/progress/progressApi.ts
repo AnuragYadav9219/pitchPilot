@@ -3,7 +3,7 @@ import { baseApi } from "@/services/baseApi";
 import type {
     ProgressResponse,
 } from "./types";
-import type { ApiResponse } from "@/services/types";
+import type { ApiResponse } from "@/types/types";
 
 export const progressApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({

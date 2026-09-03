@@ -1,4 +1,4 @@
-import type { ApiResponse } from "@/services/types";
+import type { ApiResponse } from "@/types/types";
 import type {
     AuthResponse,
 } from "./types";

@@ -1,6 +1,6 @@
 package com.virtualmentor.subscription.dto.razorpay;
 
-import com.virtualmentor.subscription.entity.SubscriptionPlan;;
+import com.virtualmentor.subscription.entity.SubscriptionPlan;
 
 public record RazorpayCreateSubscriptionResponse(
     String subscriptionId,

@@ -15,7 +15,7 @@ import type {
     SendOtpRequest,
     VerifyOtpRequest,
 } from "./types";
-import type { ApiResponse } from "@/services/types";
+import type { ApiResponse } from "@/types/types";
 
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({

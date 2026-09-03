@@ -3,15 +3,24 @@ import { Button } from "@/components/ui";
 import { CurrentPlanCard } from "../components/CurrentPlanCard";
 import { PlanComparison } from "../components/PlanComparison";
 import {
+  useCreateRazorpaySubscriptionMutation,
   useGetMySubscriptionQuery,
   useSyncSubscriptionMutation,
+  useVerifyRazorpayPaymentMutation,
 } from "../subscriptionApi";
-import type { PaidSubscriptionPlan } from "@virtualmentor/shared";
+import { Brand, type PaidSubscriptionPlan } from "@virtualmentor/shared";
 import { useState } from "react";
+import { useTheme } from "@/app/theme/ThemeProvider";
+import { loadRazorpay } from "@/services/razorpayLoader";
 
 export default function SubscriptionPage() {
+  const { colors } = useTheme();
+
   const { data, isLoading, isError, refetch } = useGetMySubscriptionQuery();
   const [syncSubscription, { isLoading: isSyncing }] = useSyncSubscriptionMutation();
+  const [createRazorpaySubscription, { isLoading: isCreatingSubscription }] = useCreateRazorpaySubscriptionMutation();
+  const [verifyRazorpayPayment, { isLoading: isVerifyingPayment }] = useVerifyRazorpayPaymentMutation();
+
   const [selectedPlan, setSelectedPlan] = useState<PaidSubscriptionPlan | null>(null);
 
   if (isLoading) {
@@ -39,13 +48,79 @@ export default function SubscriptionPage() {
   const subscription = data.data;
 
   const handleSync = async () => {
-    await syncSubscription().unwrap();
+    try {
+      await syncSubscription().unwrap();
+    } catch (error) {
+      console.error(
+        "Failed to sync subscription:",
+        error,
+      );
+    }
   };
 
-  const handleUpgrade = (plan: PaidSubscriptionPlan) => {
-    setSelectedPlan(plan);
+  const handleUpgrade = async (plan: PaidSubscriptionPlan) => {
+    if (isCreatingSubscription || isVerifyingPayment) {
+      return;
+    }
 
-    console.log("Upgrade requested:", plan);
+    try {
+      setSelectedPlan(plan);
+      await loadRazorpay();
+
+      const response = await createRazorpaySubscription({ plan }).unwrap();
+      const razorpaySubscription = response.data;
+
+      if (!razorpaySubscription?.subscriptionId || !razorpaySubscription?.keyId) {
+        throw new Error("Invalid Razorpay subscription response");
+      }
+
+      const razorpay = new window.Razorpay({
+        key: razorpaySubscription?.keyId,
+        subscription_id: razorpaySubscription?.subscriptionId,
+        name: Brand.name,
+        description:
+          plan === "PRO"
+            ? `${Brand.name} Pro Subscription`
+            : `${Brand.name} Premium Subscription`,
+
+        handler: async (paymentResponse) => {
+          try {
+            console.log("Razorpay payment completed:", paymentResponse);
+
+            await verifyRazorpayPayment({
+              razorpayPaymentId: paymentResponse.razorpay_payment_id,
+              razorpaySubscriptionId: paymentResponse.razorpay_subscription_id,
+              razorpaySignature: paymentResponse.razorpay_signature,
+            }).unwrap();
+
+            await refetch();
+
+            setSelectedPlan(null);
+
+          } catch (error) {
+            console.error("Razorpay payment verification failed:", error);
+            setSelectedPlan(null);
+          }
+        },
+
+        modal: {
+          ondismiss: () => {
+            console.log("Razorpay checkout cancelled");
+            setSelectedPlan(null);
+          },
+        },
+
+        theme: {
+          color: colors.primary,
+        },
+      });
+
+      razorpay.open();
+
+    } catch (error) {
+      console.error("Failed to start Razorpay checkout:", error);
+      setSelectedPlan(null);
+    }
   };
 
   return (
@@ -106,7 +181,10 @@ export default function SubscriptionPage() {
       {/* Plans */}
       <section className="mt-10">
         <div className="mb-5">
-          <h2 className="text-lg font-semibold text-(--vm-text)">Plans</h2>
+          <h2 className="text-lg font-semibold text-(--vm-text)">
+            Plans
+          </h2>
+
           <p className="mt-1 text-sm text-(--vm-muted)">
             Choose the level of interview practice that works for you.
           </p>
@@ -117,15 +195,25 @@ export default function SubscriptionPage() {
           onUpgrade={handleUpgrade}
         />
 
-        {selectedPlan && (
+        {selectedPlan && (isCreatingSubscription || isVerifyingPayment) && (
           <div className="mt-6 rounded-xl border border-(--vm-border) bg-(--vm-surface) p-5">
-            <p className="text-sm font-medium text-(--vm-text)">
-              {selectedPlan} selected
-            </p>
+            <div className="flex items-center gap-3">
+              <RefreshCw className="h-4 w-4 animate-spin text-(--vm-primary)" />
 
-            <p className="mt-1 text-sm text-(--vm-muted)">
-              Payment setup will be connected here.
-            </p>
+              <div>
+                <p className="text-sm font-medium text-(--vm-text)">
+                  {isVerifyingPayment
+                    ? "Verifying payment..."
+                    : `Preparing ${selectedPlan}...`}
+                </p>
+
+                <p className="mt-1 text-sm text-(--vm-muted)">
+                  {isVerifyingPayment
+                    ? "Confirming your subscription securely. Please don't close this page."
+                    : "Securely preparing your Razorpay subscription."}
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </section>

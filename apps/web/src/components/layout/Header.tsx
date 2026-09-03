@@ -1,4 +1,4 @@
-import { Bell, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { UserMenu } from "./UserMenu";
 
 interface HeaderProps {
@@ -28,7 +28,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             {/* Right actions */}
             <div className="ml-auto flex h-16 min-h-16 shrink-0 items-center gap-1 sm:gap-2">
                 {/* Notifications */}
-                <button
+                {/* <button
                     type="button"
                     aria-label="Notifications"
                     className="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-(--vm-muted) transition-colors hover:bg-(--vm-surface-2) hover:text-(--vm-text)"
@@ -38,7 +38,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                         aria-hidden="true"
                         className="pointer-events-none absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-(--vm-primary)"
                     />
-                </button>
+                </button> */}
 
                 {/* User menu */}
                 <UserMenu />

@@ -9,7 +9,7 @@ import type { RootState } from "@/app/store/store";
 import { clearCredentials, setCredentials } from "@/features/auth/authSlice";
 import { authStorage } from "@/features/auth/authStorage";
 import type { AuthResponse } from "@/features/auth/types";
-import type { ApiResponse } from "./types";
+import type { ApiResponse } from "../types/types";
 
 /* ============================================================
    CONFIGURATION

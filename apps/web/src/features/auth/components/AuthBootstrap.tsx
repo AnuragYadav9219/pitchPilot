@@ -20,7 +20,7 @@ import { useRefreshMutation } from "../authApi";
 import type {
     AuthResponse,
 } from "../types";
-import type { ApiResponse } from "@/services/types";
+import type { ApiResponse } from "@/types/types";
 
 interface AuthBootstrapProps {
     children: ReactNode;

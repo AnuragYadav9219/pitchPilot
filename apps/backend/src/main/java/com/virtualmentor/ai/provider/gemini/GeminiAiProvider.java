@@ -42,6 +42,20 @@ public class GeminiAiProvider implements AiProvider {
                                                 ? request.model()
                                                 : properties.getModel();
 
+                if (actualModel == null || actualModel.isBlank()) {
+                        throw new AiProviderException(
+                                        "Gemini model is not configured. " +
+                                                        "Set virtualmentor.ai.gemini.model or GEMINI_MODEL.");
+                }
+
+                System.out.println("Gemini model = " + actualModel);
+System.out.println(
+        "Gemini base URL = " + properties.getBaseUrl()
+);
+
+                actualModel = actualModel
+                                .replaceFirst("^models/", "");
+
                 RestClient client = restClientBuilder
                                 .baseUrl(properties.getBaseUrl())
                                 .build();

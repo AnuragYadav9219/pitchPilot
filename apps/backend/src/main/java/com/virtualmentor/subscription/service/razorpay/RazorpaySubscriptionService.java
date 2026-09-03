@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.razorpay.RazorpayException;
 import com.virtualmentor.config.properties.RazorpayProperties;
@@ -76,6 +77,7 @@ public class RazorpaySubscriptionService {
     }
 
     // ================== VERIFY PAYMENT =====================
+    @Transactional
     public RazorpayVerifyResponse verifyPayment(
             UUID userId,
             RazorpayVerifyRequest request) {
@@ -85,7 +87,7 @@ public class RazorpaySubscriptionService {
             razorpayClient.verifySubscriptionPayment(
                     request.razorpayPaymentId(),
                     request.razorpaySubscriptionId(),
-                    request.razorpaySubscriptionId());
+                    request.razorpaySignature());
 
         } catch (RazorpayException ex) {
 
@@ -102,11 +104,20 @@ public class RazorpaySubscriptionService {
             throw new IllegalArgumentException("Subscription does not belong to the current user");
         }
 
+        SubscriptionPlan plan = resolvePlanFromProduct(subscription.getProductId());
+
+        if (plan == SubscriptionPlan.FREE) {
+            throw new IllegalStateException("Unable to determine subscription plan");
+        }
+
         subscription.setProvider(BillingProvider.RAZORPAY);
         subscription.setPlan(resolvePlanFromProduct(subscription.getProductId()));
         subscription.setStatus(SubscriptionStatus.ACTIVE);
         subscription.setAutoRenew(true);
-        subscription.setStartedAt(Instant.now());
+
+        if (subscription.getStartedAt() == null) {
+            subscription.setStartedAt(Instant.now());
+        }
 
         subscriptionRepository.save(subscription);
 
