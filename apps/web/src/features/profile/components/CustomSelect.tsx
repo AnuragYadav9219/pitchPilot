@@ -27,7 +27,6 @@ export function CustomSelect({
   const [dropUp, setDropUp] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const generatedId = useId();
   const labelId = `select-label-${generatedId}`;
@@ -35,34 +34,56 @@ export function CustomSelect({
   const selected = options.find((option) => option.value === value);
 
   /*
-   * Decide whether the dropdown should open upward
-   * or downward based on the available viewport space.
+   * Estimate the dropdown height.
+   */
+  const getDropdownHeight = () => Math.min(options.length * 42 + 12, 256);
+
+  /*
+   * Decide whether the dropdown should open upward or downward.
    */
   const updateDropdownPosition = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    const rect = container.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
+    const selectRect = container.getBoundingClientRect();
+    const dropdownHeight = getDropdownHeight();
 
-    // Approximate dropdown height before it is rendered.
-    const estimatedDropdownHeight = Math.min(options.length * 42 + 12, 260);
-    const spaceBelow = viewportHeight - rect.bottom;
-    const spaceAbove = rect.top;
+    const form = container.closest("form");
 
-    setDropUp(spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow);
+    if (form) {
+      const formRect = form.getBoundingClientRect();
+      const spaceBelow = formRect.bottom - selectRect.bottom;
+      const spaceAbove = selectRect.top - formRect.top;
+
+      if (spaceBelow < dropdownHeight && spaceAbove >= dropdownHeight) {
+        setDropUp(true);
+        return;
+      }
+
+      if (spaceBelow < dropdownHeight && spaceAbove < dropdownHeight) {
+        setDropUp(spaceAbove > spaceBelow);
+        return;
+      }
+
+      setDropUp(false);
+      return;
+    }
+
+    const spaceBelow = window.innerHeight - selectRect.bottom;
+    const spaceAbove = selectRect.top;
+
+    setDropUp(spaceBelow < dropdownHeight && spaceAbove > spaceBelow);
   };
 
   /*
-   * Calculate position immediately when the dropdown opens.
+   * Calculate placement before the dropdown paints.
    */
   useLayoutEffect(() => {
     if (open) updateDropdownPosition();
   }, [open, options.length]);
 
   /*
-   * Recalculate position while the user scrolls or
-   * resizes the browser window.
+   * Recalculate if the user scrolls or resizes.
    */
   useEffect(() => {
     if (!open) return;
@@ -79,7 +100,7 @@ export function CustomSelect({
   }, [open, options.length]);
 
   /*
-   * Close dropdown when clicking outside.
+   * Close when clicking outside.
    */
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -96,7 +117,7 @@ export function CustomSelect({
   }, []);
 
   /*
-   * Close dropdown when disabled.
+   * Close automatically when disabled.
    */
   useEffect(() => {
     if (disabled) setOpen(false);
@@ -137,7 +158,6 @@ export function CustomSelect({
       {/* Dropdown */}
       {open && !disabled && (
         <div
-          ref={dropdownRef}
           role="listbox"
           aria-labelledby={labelId}
           className={`absolute left-0 right-0 z-100 max-h-64 overflow-y-auto rounded-xl border border-(--vm-border) bg-(--vm-surface-solid) p-1.5 shadow-[0_18px_45px_rgba(0,0,0,0.18)] ${
