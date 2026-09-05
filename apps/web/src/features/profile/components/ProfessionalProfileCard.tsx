@@ -55,7 +55,7 @@ export function ProfessionalProfileCard({
     });
 
     return (
-        <Card className="overflow-visible">
+        <Card className="overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-(--vm-border) px-5 py-4 sm:px-6">
                 <div>

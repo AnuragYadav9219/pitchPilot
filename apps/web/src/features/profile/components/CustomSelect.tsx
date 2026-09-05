@@ -1,110 +1,175 @@
 import { Check, ChevronDown } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
 interface SelectOption {
-    value: string;
-    label: string;
+  value: string;
+  label: string;
 }
 
 interface CustomSelectProps {
-    label: string;
-    value: string;
-    options: SelectOption[];
-    onChange: (value: string) => void;
-    placeholder?: string;
-    disabled?: boolean;
+  label: string;
+  value: string;
+  options: SelectOption[];
+  onChange: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
 }
 
 export function CustomSelect({
-    label,
-    value,
-    options,
-    onChange,
-    placeholder = "Select...",
-    disabled = false,
+  label,
+  value,
+  options,
+  onChange,
+  placeholder = "Select...",
+  disabled = false,
 }: CustomSelectProps) {
-    const [open, setOpen] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const labelId = useRef(`select-label-${Math.random().toString(36).substring(2, 9)}`).current;
+  const [open, setOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
 
-    const selected = options.find((option) => option.value === value);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (
-                containerRef.current &&
-                !containerRef.current.contains(event.target as Node)
-            ) {
-                setOpen(false);
-            }
-        }
+  const generatedId = useId();
+  const labelId = `select-label-${generatedId}`;
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+  const selected = options.find((option) => option.value === value);
 
-    return (
-        <div ref={containerRef} className="relative">
-            <label id={labelId} className="mb-2 block text-xs font-medium text-(--vm-text)">
-                {label}
-            </label>
+  /*
+   * Decide whether the dropdown should open upward
+   * or downward based on the available viewport space.
+   */
+  const updateDropdownPosition = () => {
+    const container = containerRef.current;
+    if (!container) return;
 
-            <button
+    const rect = container.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+
+    // Approximate dropdown height before it is rendered.
+    const estimatedDropdownHeight = Math.min(options.length * 42 + 12, 260);
+    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    setDropUp(spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow);
+  };
+
+  /*
+   * Calculate position immediately when the dropdown opens.
+   */
+  useLayoutEffect(() => {
+    if (open) updateDropdownPosition();
+  }, [open, options.length]);
+
+  /*
+   * Recalculate position while the user scrolls or
+   * resizes the browser window.
+   */
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePositionChange = () => updateDropdownPosition();
+
+    window.addEventListener("resize", handlePositionChange);
+    window.addEventListener("scroll", handlePositionChange, true);
+
+    return () => {
+      window.removeEventListener("resize", handlePositionChange);
+      window.removeEventListener("scroll", handlePositionChange, true);
+    };
+  }, [open, options.length]);
+
+  /*
+   * Close dropdown when clicking outside.
+   */
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  /*
+   * Close dropdown when disabled.
+   */
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
+
+  return (
+    <div ref={containerRef} className="relative">
+      {/* Label */}
+      <label
+        id={labelId}
+        className="mb-2 block text-xs font-medium text-(--vm-text)"
+      >
+        {label}
+      </label>
+
+      {/* Select button */}
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={() => !disabled && setOpen((current) => !current)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-labelledby={labelId}
+        className="flex h-10 w-full items-center justify-between gap-3 rounded-xl border border-(--vm-border) bg-(--vm-background) px-3 text-sm text-(--vm-text) outline-none transition hover:border-(--vm-border-strong) focus:border-(--vm-primary) disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <span className={selected ? "text-(--vm-text)" : "text-(--vm-muted)"}>
+          {selected?.label || placeholder}
+        </span>
+
+        <ChevronDown
+          size={15}
+          className={`shrink-0 text-(--vm-muted) transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {/* Dropdown */}
+      {open && !disabled && (
+        <div
+          ref={dropdownRef}
+          role="listbox"
+          aria-labelledby={labelId}
+          className={`absolute left-0 right-0 z-100 max-h-64 overflow-y-auto rounded-xl border border-(--vm-border) bg-(--vm-surface-solid) p-1.5 shadow-[0_18px_45px_rgba(0,0,0,0.18)] ${
+            dropUp ? "bottom-[calc(100%+6px)]" : "top-[calc(100%+6px)]"
+          }`}
+        >
+          {options.map((option) => {
+            const active = option.value === value;
+
+            return (
+              <button
+                key={option.value}
                 type="button"
-                disabled={disabled}
-                onClick={() => setOpen((current) => !current)}
-                aria-haspopup="listbox"
-                aria-expanded={open}
-                aria-labelledby={labelId}
-                className="flex h-10 w-full items-center justify-between gap-3 rounded-xl border border-(--vm-border) bg-(--vm-background) px-3 text-sm transition outline-none hover:border-(--vm-border-strong) focus:border-(--vm-primary)"
-            >
-                <span className={selected ? "text-(--vm-text)" : "text-(--vm-muted)"}>
-                    {selected?.label || placeholder}
-                </span>
-
-                <ChevronDown
-                    size={15}
-                    className={`shrink-0 text-(--vm-muted) transition-transform ${open ? "rotate-180" : ""
-                        }`}
-                />
-            </button>
-
-            {open && !disabled && (
-                <div
-                    role="listbox"
-                    aria-labelledby={labelId}
-                    className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 overflow-hidden rounded-xl border border-(--vm-border) bg-(--vm-surface-solid) p-1.5 shadow-[0_18px_45px_rgba(0,0,0,0.18)]"
-                >
-                    {options.map((option) => {
-                        const active = option.value === value;
-
-                        return (
-                            <button
-                                key={option.value}
-                                role="option"
-                                aria-selected={active}
-                                type="button"
-                                onClick={() => {
-                                    onChange(option.value);
-                                    setOpen(false);
-                                }}
-                                className={`
-                                    flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-xs font-medium transition
-                                    ${active
-                                        ? "bg-(--vm-primary)/10 text-(--vm-primary)"
-                                        : "text-(--vm-text) hover:bg-(--vm-surface-2)"
-                                    }
-                                `}
-                            >
-                                <span>{option.label}</span>
-                                {active && <Check size={14} />}
-                            </button>
-                        );
-                    })}
-                </div>
-            )}
+                role="option"
+                aria-selected={active}
+                onClick={() => {
+                  onChange(option.value);
+                  setOpen(false);
+                }}
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-xs font-medium transition ${
+                  active
+                    ? "bg-(--vm-primary)/10 text-(--vm-primary)"
+                    : "text-(--vm-text) hover:bg-(--vm-surface-2)"
+                }`}
+              >
+                <span>{option.label}</span>
+                {active && <Check size={14} />}
+              </button>
+            );
+          })}
         </div>
-    );
+      )}
+    </div>
+  );
 }
