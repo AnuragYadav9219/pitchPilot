@@ -281,9 +281,11 @@ public class AuthServiceImpl implements AuthService {
         }
 
         @Override
+        @Transactional
         public void resetPassword(String identifier, OtpChannel channel, String otp, String newPassword) {
 
-                User user = userIdentityService.findForChannel(identifier, channel)
+                User user = userIdentityService
+                                .findForChannel(identifier, channel)
                                 .orElseThrow(InvalidOtpException::new);
 
                 otpService.verify(
@@ -292,7 +294,11 @@ public class AuthServiceImpl implements AuthService {
                                 channel,
                                 otp);
 
-                user.setPassword(passwordEncoder.encode(newPassword));
+                String encodedPassword = passwordEncoder.encode(newPassword);
+
+                user.setPassword(encodedPassword);
+
+                userRepository.save(user);
 
                 refreshTokenService.revokeAllByUserId(user.getId());
 

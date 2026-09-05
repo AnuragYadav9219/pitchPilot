@@ -13,9 +13,9 @@ export function applyTheme(mode: ThemeMode) {
 
     root.dataset.theme = mode;
 
-    // ─────────────────────────────────────────────
-    // Backgrounds
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Backgrounds
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-background",
@@ -47,9 +47,9 @@ export function applyTheme(mode: ThemeMode) {
         colors.surfaceSolid,
     );
 
-    // ─────────────────────────────────────────────
-    // Borders
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Borders
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-border",
@@ -61,9 +61,9 @@ export function applyTheme(mode: ThemeMode) {
         colors.borderStrong,
     );
 
-    // ─────────────────────────────────────────────
-    // Brand colors
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Brand colors
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-primary",
@@ -95,9 +95,9 @@ export function applyTheme(mode: ThemeMode) {
         colors.terracotta,
     );
 
-    // ─────────────────────────────────────────────
-    // Supporting colors
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Supporting colors
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-secondary",
@@ -109,9 +109,9 @@ export function applyTheme(mode: ThemeMode) {
         colors.accent,
     );
 
-    // ─────────────────────────────────────────────
-    // Brand gradients
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Brand gradients
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-gradient-start",
@@ -128,9 +128,9 @@ export function applyTheme(mode: ThemeMode) {
         colors.gradientEnd,
     );
 
-    // ─────────────────────────────────────────────
-    // Glows
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Brand glows
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-glow-coral",
@@ -152,9 +152,9 @@ export function applyTheme(mode: ThemeMode) {
         colors.glowAmber,
     );
 
-    // ─────────────────────────────────────────────
-    // Typography colors
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Typography colors
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-text",
@@ -176,9 +176,9 @@ export function applyTheme(mode: ThemeMode) {
         colors.placeholder,
     );
 
-    // ─────────────────────────────────────────────
-    // Semantic colors
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Semantic colors
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-success",
@@ -210,9 +210,18 @@ export function applyTheme(mode: ThemeMode) {
         colors.black,
     );
 
-    // ─────────────────────────────────────────────
-    // Spacing
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Transparent
+    ───────────────────────────────────────────── */
+
+    root.style.setProperty(
+        "--vm-transparent",
+        colors.transparent,
+    );
+
+    /* ─────────────────────────────────────────────
+       Spacing
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-space-xs",
@@ -244,9 +253,9 @@ export function applyTheme(mode: ThemeMode) {
         `${Spacing.xxl}px`,
     );
 
-    // ─────────────────────────────────────────────
-    // Radius
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Radius
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-radius-sm",
@@ -273,9 +282,9 @@ export function applyTheme(mode: ThemeMode) {
         `${Radius.full}px`,
     );
 
-    // ─────────────────────────────────────────────
-    // Typography
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Typography
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-font-hero",
@@ -312,9 +321,9 @@ export function applyTheme(mode: ThemeMode) {
         `${Typography.tiny}px`,
     );
 
-    // ─────────────────────────────────────────────
-    // Animation
-    // ─────────────────────────────────────────────
+    /* ─────────────────────────────────────────────
+       Animation
+    ───────────────────────────────────────────── */
 
     root.style.setProperty(
         "--vm-animation-fast",
@@ -331,6 +340,9 @@ export function applyTheme(mode: ThemeMode) {
         `${Animation.slow}ms`,
     );
 
-    // Let browser-native elements follow the active theme.
+    /* ─────────────────────────────────────────────
+       Browser native theme
+    ───────────────────────────────────────────── */
+
     root.style.colorScheme = mode;
 }

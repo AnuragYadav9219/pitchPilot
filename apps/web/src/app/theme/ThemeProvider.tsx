@@ -51,8 +51,7 @@ function getInitialTheme(): ThemeMode {
 export function ThemeProvider({
     children,
 }: ThemeProviderProps) {
-    const [mode, setMode] =
-        useState<ThemeMode>(getInitialTheme);
+    const [mode, setMode] = useState<ThemeMode>(getInitialTheme);
 
     const colors = Colors[mode];
 
@@ -93,8 +92,7 @@ export function ThemeProvider({
 }
 
 export function useTheme(): ThemeContextValue {
-    const context =
-        useContext(ThemeContext);
+    const context = useContext(ThemeContext);
 
     if (!context) {
         throw new Error(

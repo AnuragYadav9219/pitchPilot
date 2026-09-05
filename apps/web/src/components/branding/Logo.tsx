@@ -1,53 +1,52 @@
-import { Sparkles } from "lucide-react";
-
+import { branding } from "@/config/branding";
 import { Brand } from "@virtualmentor/shared";
 
 interface LogoProps {
     size?: "sm" | "md" | "lg";
     showName?: boolean;
     href?: string;
+    className?: string;
 }
 
 const sizes = {
     sm: {
-        icon: 16,
+        image: 32,
         text: "text-base",
+        gap: "gap-2",
     },
     md: {
-        icon: 20,
+        image: 40,
         text: "text-xl",
+        gap: "gap-2.5",
     },
     lg: {
-        icon: 26,
+        image: 52,
         text: "text-2xl",
+        gap: "gap-3",
     },
 } as const;
 
 export function Logo({
     size = "md",
-    showName = true,
+    showName = false,
     href = "/",
+    className = "",
 }: LogoProps) {
     const config = sizes[size];
 
     return (
         <a
             href={href}
-            className="inline-flex items-center gap-2"
+            className={`inline-flex items-center ${config.gap} ${className}`}
             aria-label={`${Brand.name} home`}
         >
-            <span
-                className="flex items-center justify-center rounded-(--vm-radius-sm) bg-(--vm-primary)/15 text-(--vm-primary)"
-                style={{
-                    width: config.icon + 12,
-                    height: config.icon + 12,
-                }}
-            >
-                <Sparkles
-                    size={config.icon}
-                    aria-hidden="true"
-                />
-            </span>
+            <img
+                src={branding.logo}
+                alt={`${Brand.name} logo`}
+                width={config.image}
+                height={config.image}
+                className="block shrink-0 rounded-3xl object-contain"
+            />
 
             {showName && (
                 <span

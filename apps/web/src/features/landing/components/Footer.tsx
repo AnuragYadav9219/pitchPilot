@@ -1,89 +1,139 @@
+import { ArrowUp } from "lucide-react";
 import { Link } from "react-router-dom";
-
-import { Brand } from "@virtualmentor/shared";
 import { Container } from "@/components/ui";
+import type { useTheme } from "@/app/theme/ThemeProvider";
+import { Brand } from "@virtualmentor/shared";
+import { Logo } from "@/components/branding/Logo";
 
-export function Footer() {
-    return (
-        <footer className="border-t border-(--vm-border) bg-(--vm-background)">
-            <Container>
-                <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
-                    <div className="sm:col-span-2">
-                        <Link
-                            to="/"
-                            className="text-xl font-bold tracking-tight text-(--vm-text)"
-                        >
-                            {Brand.name}
-                        </Link>
+type ThemeColors = ReturnType<typeof useTheme>["colors"];
 
-                        <p className="mt-4 max-w-md text-sm leading-6 text-(--vm-muted)">
-                            {Brand.description}
-                        </p>
-                    </div>
+const productLinks = [
+  { label: "Features", href: "#features" },
+  { label: "How It Works", href: "#how-it-works" },
+  { label: "Use Cases", href: "#use-cases" },
+];
 
-                    <div>
-                        <h3 className="text-sm font-semibold text-(--vm-text)">
-                            Product
-                        </h3>
+const accountLinks = [
+  { label: "Sign In", to: "/login" },
+  { label: "Create Account", to: "/register" },
+];
 
-                        <div className="mt-4 flex flex-col gap-3">
-                            <a
-                                href="#features"
-                                className="text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                            >
-                                Features
-                            </a>
+export function Footer({ colors }: { colors: ThemeColors }) {
+  return (
+    <footer
+      className="relative overflow-hidden border-t"
+      style={{
+        borderColor: colors.border,
+        backgroundColor: colors.surface,
+      }}
+    >
+      {/* SUBTLE BACKGROUND */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div
+          className="footer-ambient absolute -right-32 -top-32 h-65 w-65 rounded-full blur-[110px]"
+          style={{
+            background: `color-mix(in srgb, ${colors.primary} 3%, transparent)`,
+          }}
+        />
+      </div>
 
-                            <a
-                                href="#how-it-works"
-                                className="text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                            >
-                                How It Works
-                            </a>
+      <Container className="relative z-10">
+        {/* MAIN FOOTER */}
+        <div className="grid gap-8 py-9 sm:py-10 md:grid-cols-[minmax(0,1.5fr)_minmax(140px,.7fr)_minmax(140px,.7fr)] md:gap-12">
+          {/* BRAND */}
+          <div className="min-w-0">
+            <Link
+              to="/"
+              className="group inline-flex items-center gap-2.5"
+            >
+              <Logo showName size="sm" />
+            </Link>
 
-                            <a
-                                href="#use-cases"
-                                className="text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                            >
-                                Use Cases
-                            </a>
-                        </div>
-                    </div>
+            <p
+              className="mt-3 max-w-sm text-xs leading-5 sm:text-sm"
+              style={{ color: colors.muted }}
+            >
+              Your AI mentor for realistic interview practice,
+              personalized feedback, and career growth.
+            </p>
+          </div>
 
-                    <div>
-                        <h3 className="text-sm font-semibold text-(--vm-text)">
-                            Account
-                        </h3>
+          {/* PRODUCT */}
+          <div>
+            <p
+              className="text-[10px] font-semibold uppercase tracking-[0.15em]"
+              style={{ color: colors.text }}
+            >
+              Product
+            </p>
 
-                        <div className="mt-4 flex flex-col gap-3">
-                            <Link
-                                to="/login"
-                                className="text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                            >
-                                Log in
-                            </Link>
+            <nav className="mt-3 flex flex-col gap-2">
+              {productLinks.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="footer-link w-fit text-xs sm:text-sm"
+                  style={{ color: colors.muted }}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+          </div>
 
-                            <Link
-                                to="/login"
-                                className="text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                            >
-                                Get Started
-                            </Link>
-                        </div>
-                    </div>
-                </div>
+          {/* ACCOUNT */}
+          <div>
+            <p
+              className="text-[10px] font-semibold uppercase tracking-[0.15em]"
+              style={{ color: colors.text }}
+            >
+              Account
+            </p>
 
-                <div className="flex flex-col gap-3 border-t border-(--vm-border) py-6 text-xs text-(--vm-muted) sm:flex-row sm:items-center sm:justify-between">
-                    <p>
-                        © {new Date().getFullYear()} {Brand.name}. All rights
-                        reserved.
-                    </p>
+            <nav className="mt-3 flex flex-col gap-2">
+              {accountLinks.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="footer-link w-fit text-xs sm:text-sm"
+                  style={{ color: colors.muted }}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
 
-                    <p>
-                        Built for better conversations.
-                    </p>
-                </div>
-            </Container>
-        </footer>
-    );
+        {/* BOTTOM BAR */}
+        <div
+          className="flex flex-col gap-3 border-t py-5 sm:flex-row sm:items-center sm:justify-between"
+          style={{ borderColor: colors.border }}
+        >
+          <p className="text-[11px]" style={{ color: colors.muted }}>
+            © {new Date().getFullYear()} {Brand.name}. All rights
+            reserved.
+          </p>
+
+          <button
+            type="button"
+            onClick={() =>
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              })
+            }
+            className="group flex w-fit items-center gap-1.5 text-[11px] transition-colors duration-200"
+            style={{ color: colors.muted }}
+          >
+            Back to top
+            <ArrowUp className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5" />
+          </button>
+        </div>
+      </Container>
+    </footer>
+  );
 }

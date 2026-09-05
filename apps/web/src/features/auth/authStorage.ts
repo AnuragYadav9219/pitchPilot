@@ -1,33 +1,4 @@
-// const REFRESH_TOKEN_KEY = "virtualmentor.refreshToken";
-
-// export const authStorage = {
-//     getRefreshToken(): string | null {
-//         return sessionStorage.getItem(
-//             REFRESH_TOKEN_KEY,
-//         );
-//     },
-
-//     setRefreshToken(
-//         refreshToken: string,
-//     ): void {
-//         sessionStorage.setItem(
-//             REFRESH_TOKEN_KEY,
-//             refreshToken,
-//         );
-//     },
-
-//     clear(): void {
-//         sessionStorage.removeItem(
-//             REFRESH_TOKEN_KEY,
-//         );
-//     },
-// };
-
-
-
-
-
-
+import type { User } from "./types";
 
 const ACCESS_TOKEN_KEY =
     "virtualmentor_access_token";
@@ -51,9 +22,26 @@ export const authStorage = {
         );
     },
 
-    getUser(): string | null {
-        return localStorage.getItem(
+    getUser(): User | null {
+        const user = localStorage.getItem(
             USER_KEY,
+        );
+
+        if (!user) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(user) as User;
+        } catch {
+            return null;
+        }
+    },
+
+    setUser(user: User): void {
+        localStorage.setItem(
+            USER_KEY,
+            JSON.stringify(user),
         );
     },
 
@@ -64,8 +52,8 @@ export const authStorage = {
     }: {
         accessToken: string;
         refreshToken: string;
-        user: unknown;
-    }) {
+        user: User;
+    }): void {
         localStorage.setItem(
             ACCESS_TOKEN_KEY,
             accessToken,
@@ -82,7 +70,7 @@ export const authStorage = {
         );
     },
 
-    clear() {
+    clear(): void {
         localStorage.removeItem(
             ACCESS_TOKEN_KEY,
         );

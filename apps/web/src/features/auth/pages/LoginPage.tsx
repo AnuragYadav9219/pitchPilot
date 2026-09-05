@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Brand } from "@virtualmentor/shared";
 import loginPanel from "@/assets/images/authpanel.webp";
-import { AuthDivider, LoginForm, SocialLogin } from "../components";
+import { LoginForm } from "../components";
 import { Logo } from "@/components/branding/Logo";
 
 export function LoginPage() {
@@ -34,7 +34,7 @@ export function LoginPage() {
           <div aria-hidden="true" className="absolute -right-24 top-[-10%] h-[120%] w-48 rounded-[50%] bg-(--vm-background) blur-[1px]" />
 
           <div className="absolute left-8 top-8 z-10">
-            <Logo size="md" />
+            <Logo showName size="md" />
           </div>
         </section>
 
@@ -46,7 +46,7 @@ export function LoginPage() {
             {/* Header / Back Link */}
             <div className="mb-10 flex items-center justify-between lg:mb-12">
               <div className="lg:hidden">
-                <Logo size="md" />
+                <Logo showName size="md" />
               </div>
 
               <Link
@@ -80,12 +80,6 @@ export function LoginPage() {
             <div className="mt-8">
               <LoginForm />
             </div>
-
-            {/* Social Auth */}
-            <div className="my-7">
-              <AuthDivider />
-            </div>
-            <SocialLogin />
 
             {/* Footer Navigation */}
             <p className="mt-7 text-center text-sm text-(--vm-muted)">

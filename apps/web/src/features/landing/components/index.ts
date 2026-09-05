@@ -1,0 +1,12 @@
+export { Hero } from "./Hero";
+export { Footer } from "./Footer";
+export { Features } from "./Features";
+export { AudienceSection } from "./AudienceSection";
+export { EarlyAccessSection } from "./EarlyAccessSection";
+export { FeedbackSection } from "./FeedbackSection";
+export { FinalCTA } from "./FinalCTA";
+export { HowItWorksSection } from "./HowItWorks";
+export { InterviewExperience } from "./InterviewExperience";
+export { ProblemSolution } from "./ProblemSolution";
+export { UseCasesSection } from "./UseCasesSection";
+export { Navbar } from "./Navbar";

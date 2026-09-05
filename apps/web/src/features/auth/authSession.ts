@@ -3,25 +3,28 @@ import type {
     AuthResponse,
 } from "./types";
 
-let refreshPromise: Promise<ApiResponse<AuthResponse>> | null = null;
+type RefreshRequest = {
+    refreshToken: string;
+};
+
+type RefreshFunction = (
+    request: RefreshRequest,
+) => Promise<ApiResponse<AuthResponse>>;
+
+let refreshPromise:
+    Promise<ApiResponse<AuthResponse>> | null = null;
 
 export function getRefreshPromise(
-    refresh: (
-        request: {
-            refreshToken: string;
-        },
-    ) => Promise<
-        ApiResponse<AuthResponse>
-    >,
+    refresh: RefreshFunction,
     refreshToken: string,
-) {
+): Promise<ApiResponse<AuthResponse>> {
+
     if (!refreshPromise) {
-        refreshPromise =
-            refresh({
-                refreshToken,
-            }).finally(() => {
-                refreshPromise = null;
-            });
+        refreshPromise = refresh({
+            refreshToken,
+        }).finally(() => {
+            refreshPromise = null;
+        });
     }
 
     return refreshPromise;

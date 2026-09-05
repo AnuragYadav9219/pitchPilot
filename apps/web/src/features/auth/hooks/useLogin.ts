@@ -1,18 +1,7 @@
-import {
-    useCallback,
-    useState,
-    type FormEvent,
-} from "react";
-
-import {
-    useLocation,
-    useNavigate,
-} from "react-router-dom";
-
+import { useCallback, useState, type FormEvent } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../authApi";
 import { setCredentials } from "../authSlice";
-import { authStorage } from "../authStorage";
-
 import { useAppDispatch } from "@/app/store/hooks";
 import { appToast } from "@/lib/toast";
 
@@ -43,36 +32,24 @@ export function useLogin() {
     const location = useLocation();
     const dispatch = useAppDispatch();
 
-    const [
-        login,
-        { isLoading },
-    ] = useLoginMutation();
+    const [login, { isLoading }] = useLoginMutation();
 
-    const locationState =
-        location.state as
-        | LoginLocationState
-        | null;
+    const locationState = location.state as LoginLocationState | null;
 
-    const [form, setForm] =
-        useState<LoginFormData>({
-            email:
-                locationState?.email ?? "",
-            password: "",
-        });
+    const [form, setForm] = useState<LoginFormData>({
+        email: locationState?.email ?? "",
+        password: "",
+    });
 
-    const [
-        showPassword,
-        setShowPassword,
-    ] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
 
-    const [error, setError] =
-        useState("");
+    // =========================
+    // UPDATE FIELD
+    // =========================
 
     const updateField = useCallback(
-        (
-            field: keyof LoginFormData,
-            value: string,
-        ) => {
+        (field: keyof LoginFormData, value: string) => {
             setForm((current) => ({
                 ...current,
                 [field]: value,
@@ -80,44 +57,48 @@ export function useLogin() {
 
             setError("");
         },
-        [],
+        []
     );
 
-    const togglePassword =
-        useCallback(() => {
-            setShowPassword(
-                (current) => !current,
-            );
-        }, []);
+    // =========================
+    // TOGGLE PASSWORD
+    // =========================
+
+    const togglePassword = useCallback(() => {
+        setShowPassword((current) => !current);
+    }, []);
+
+    // =========================
+    // SUBMIT
+    // =========================
 
     const submit = useCallback(
-        async (
-            event: FormEvent<HTMLFormElement>,
-        ) => {
+        async (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
             setError("");
 
-            const email =
-                form.email
-                    .trim()
-                    .toLowerCase();
+            const email = form.email.trim().toLowerCase();
+
+            // -------------------------
+            // VALIDATION
+            // -------------------------
 
             if (!email) {
-                setError(
-                    "Please enter your email address.",
-                );
+                setError("Please enter your email address.");
                 return;
             }
 
             if (!form.password) {
-                setError(
-                    "Please enter your password.",
-                );
+                setError("Please enter your password.");
                 return;
             }
 
             try {
+                // -------------------------
+                // LOGIN API
+                // -------------------------
+
                 const response = await login({
                     email,
                     password: form.password,
@@ -125,142 +106,91 @@ export function useLogin() {
 
                 if (!response.data) {
                     throw new Error(
-                        "The server did not return authentication data.",
+                        "The server did not return authentication data."
                     );
                 }
 
-                dispatch(
-                    setCredentials(
-                        response.data,
-                    ),
-                );
+                // -------------------------
+                // STORE AUTHENTICATION
+                // -------------------------
 
-                authStorage.setSession({
-                    accessToken:
-                        response.data.accessToken,
+                dispatch(setCredentials(response.data));
 
-                    refreshToken:
-                        response.data.refreshToken,
+                // -------------------------
+                // SUCCESS
+                // -------------------------
 
-                    user:
-                        response.data.user,
-                });
-
-                appToast.success(
-                    "Welcome back!",
-                );
+                appToast.success("Welcome back!");
 
                 navigate("/dashboard", {
                     replace: true,
                 });
             } catch (caughtError) {
-                console.error(
-                    "LOGIN FAILED:",
-                    caughtError,
-                );
+                console.error("LOGIN FAILED:", caughtError);
 
-                const apiError =
-                    caughtError as ApiError;
+                const apiError = caughtError as ApiError;
 
-                /*
-                 * Extract the backend message
-                 * regardless of the response shape.
-                 */
+                // -------------------------
+                // EXTRACT API MESSAGE
+                // -------------------------
+
                 let message = "";
 
-                if (
-                    typeof apiError.data ===
-                    "string"
-                ) {
-                    message =
-                        apiError.data;
+                if (typeof apiError.data === "string") {
+                    message = apiError.data;
                 } else {
                     message =
-                        apiError.data
-                            ?.message ||
+                        apiError.data?.message ||
                         apiError.error ||
                         "";
                 }
 
-                /*
-                 * If this was our own Error,
-                 * don't hide its message.
-                 */
-                if (
-                    !message &&
-                    caughtError instanceof Error
-                ) {
-                    message =
-                        caughtError.message;
+                // -------------------------
+                // FALLBACK ERROR MESSAGE
+                // -------------------------
+
+                if (!message && caughtError instanceof Error) {
+                    message = caughtError.message;
                 }
 
-                const normalizedMessage =
-                    message
-                        .toLowerCase()
-                        .trim();
+                const normalizedMessage = message.toLowerCase().trim();
 
-                /*
-                 * Email verification flow.
-                 *
-                 * Handles common backend messages
-                 * without depending on one exact
-                 * capitalization.
-                 */
+                // -------------------------
+                // EMAIL NOT VERIFIED
+                // -------------------------
+
                 const emailNotVerified =
-                    normalizedMessage.includes(
-                        "email not verified",
-                    ) ||
-                    normalizedMessage.includes(
-                        "email is not verified",
-                    ) ||
-                    normalizedMessage.includes(
-                        "email verification",
-                    ) ||
-                    normalizedMessage.includes(
-                        "verify your email",
-                    ) ||
-                    normalizedMessage.includes(
-                        "verify email",
-                    );
+                    normalizedMessage.includes("email not verified") ||
+                    normalizedMessage.includes("email is not verified") ||
+                    normalizedMessage.includes("email verification") ||
+                    normalizedMessage.includes("verify your email") ||
+                    normalizedMessage.includes("verify email");
 
                 if (emailNotVerified) {
-                    appToast.info(
-                        "Please verify your email first.",
-                    );
+                    appToast.info("Please verify your email first.");
 
-                    navigate(
-                        "/verify-otp",
-                        {
-                            replace: true,
-                            state: {
-                                email,
-                                purpose:
-                                    "EMAIL_VERIFICATION",
-                            },
+                    navigate("/verify-otp", {
+                        replace: true,
+                        state: {
+                            email,
+                            purpose: "EMAIL_VERIFICATION",
                         },
-                    );
+                    });
 
                     return;
                 }
 
-                /*
-                 * Show the actual backend message
-                 * instead of hiding it behind the
-                 * generic error.
-                 */
+                // -------------------------
+                // DISPLAY ERROR
+                // -------------------------
+
                 setError(
                     message ||
-                    "Unable to sign in right now. Please check your credentials and try again.",
+                    "Unable to sign in right now. Please check your credentials and try again."
                 );
             }
         },
-        [
-            form.email,
-            form.password,
-            login,
-            dispatch,
-            navigate,
-        ],
+        [form.email, form.password, login, dispatch, navigate]
     );
 
     return {
@@ -268,7 +198,6 @@ export function useLogin() {
         error,
         isLoading,
         showPassword,
-
         updateField,
         togglePassword,
         submit,

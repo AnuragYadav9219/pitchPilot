@@ -43,7 +43,7 @@ export function Sidebar() {
         <div className="flex h-full w-full min-w-0 flex-col overflow-hidden bg-(--vm-surface)">
             {/* Logo */}
             <div className="flex h-16 shrink-0 items-center border-b border-(--vm-border) px-6">
-                <Logo size="md" />
+                <Logo showName size="md" />
             </div>
 
             {/* Navigation */}

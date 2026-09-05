@@ -103,15 +103,22 @@ export function LoginForm() {
                     <button
                         type="button"
                         onClick={togglePassword}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-(--vm-muted) hover:text-(--vm-text)"
+                        aria-label={
+                            showPassword
+                                ? "Hide password"
+                                : "Show password"
+                        }
+                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-(--vm-muted) transition-colors hover:text-(--vm-text) focus:outline-none cursor-pointer"
                     >
                         {showPassword ? (
                             <EyeOff
                                 size={18}
+                                aria-hidden="true"
                             />
                         ) : (
                             <Eye
                                 size={18}
+                                aria-hidden="true"
                             />
                         )}
                     </button>

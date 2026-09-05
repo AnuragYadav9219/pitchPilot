@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 import { Button, Container, ThemeToggle } from "@/components/ui";
@@ -13,67 +13,91 @@ interface NavigationItem {
 const navigationItems: NavigationItem[] = [
     {
         label: "Features",
-        href: "/#features",
+        href: "#features",
     },
     {
         label: "How It Works",
-        href: "/#how-it-works",
+        href: "#how-it-works",
     },
     {
         label: "Use Cases",
-        href: "/#use-cases",
+        href: "#use-cases",
     },
 ];
 
 export function Navbar() {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const location = useLocation();
 
     const closeMobileMenu = () => {
         setMobileOpen(false);
     };
 
+    useEffect(() => {
+        setMobileOpen(false);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? "hidden" : "";
+
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [mobileOpen]);
+
     return (
-        <header className="sticky top-0 z-50 border-b border-(--vm-border) bg-(--vm-background)/80 backdrop-blur-xl">
+        <header className="sticky top-0 z-50 border-b border-(--vm-border) bg-(--vm-background)/85 backdrop-blur-2xl">
             <Container>
                 <nav
-                    className="flex h-16 items-center justify-between"
+                    className="relative flex h-18 items-center justify-between"
                     aria-label="Main navigation"
                 >
-                    {/* Brand */}
-                    <Logo />
+                    {/* Logo */}
+                    <Link
+                        to="/"
+                        aria-label="VirtualMentor home"
+                        className="relative z-10 shrink-0 transition-opacity duration-200 hover:opacity-80"
+                    >
+                        <Logo showName />
+                    </Link>
 
-                    {/* Desktop navigation */}
-                    <div className="hidden items-center gap-8 md:flex">
-                        {navigationItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                to={item.href}
-                                className="text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
+                    {/* Center Navigation */}
+                    <div className="absolute left-1/2 hidden -translate-x-1/2 items-center md:flex">
+                        <div className="flex items-center gap-1 rounded-full border border-(--vm-border) bg-(--vm-surface)/50 p-1 shadow-sm">
+                            {navigationItems.map((item) => (
+                                <a
+                                    key={item.href}
+                                    href={item.href}
+                                    className="rounded-full px-5 py-2 text-[13px] font-medium text-(--vm-muted) transition-all duration-200 hover:bg-(--vm-surface) hover:text-(--vm-text)"
+                                >
+                                    {item.label}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
 
+                    {/* Right Actions */}
+                    <div className="hidden items-center gap-2.5 md:flex">
                         <ThemeToggle />
 
                         <Link
                             to="/login"
-                            className="text-sm text-(--vm-muted) transition-colors hover:text-(--vm-text)"
+                            className="rounded-lg px-3.5 py-2 text-sm font-medium text-(--vm-muted) transition-colors hover:text-(--vm-text)"
                         >
                             Log in
                         </Link>
 
                         <Link to="/register">
-                            <Button size="sm">
+                            <Button size="sm" className="min-w-28 shadow-sm">
                                 Get Started
                             </Button>
                         </Link>
                     </div>
 
-                    {/* Mobile menu button */}
+                    {/* Mobile Trigger */}
                     <button
                         type="button"
-                        className="rounded-(--vm-radius-sm) p-2 text-(--vm-text) transition-colors hover:bg-(--vm-surface) md:hidden"
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-(--vm-border) bg-(--vm-surface)/50 text-(--vm-text) transition-all duration-200 hover:bg-(--vm-surface) md:hidden"
                         aria-label={
                             mobileOpen
                                 ? "Close navigation menu"
@@ -84,39 +108,33 @@ export function Navbar() {
                         onClick={() => setMobileOpen((open) => !open)}
                     >
                         {mobileOpen ? (
-                            <X
-                                size={22}
-                                aria-hidden="true"
-                            />
+                            <X size={20} strokeWidth={1.8} aria-hidden="true" />
                         ) : (
-                            <Menu
-                                size={22}
-                                aria-hidden="true"
-                            />
+                            <Menu size={20} strokeWidth={1.8} aria-hidden="true" />
                         )}
                     </button>
                 </nav>
 
-                {/* Mobile navigation */}
+                {/* Mobile Menu */}
                 {mobileOpen && (
                     <div
                         id="mobile-navigation"
-                        className="border-t border-(--vm-border) py-4 md:hidden"
+                        className="border-t border-(--vm-border) py-5 md:hidden"
                     >
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-1">
                             {navigationItems.map((item) => (
-                                <Link
+                                <a
                                     key={item.href}
-                                    to={item.href}
+                                    href={item.href}
                                     onClick={closeMobileMenu}
-                                    className="rounded-lg px-3 py-3 text-sm text-(--vm-text-secondary) transition-colors hover:bg-(--vm-surface) hover:text-(--vm-text)"
+                                    className="rounded-xl px-4 py-3 text-sm font-medium text-(--vm-text-secondary) transition-colors hover:bg-(--vm-surface) hover:text-(--vm-text)"
                                 >
                                     {item.label}
-                                </Link>
+                                </a>
                             ))}
 
-                            <div className="flex items-center justify-between px-3 py-3">
-                                <span className="text-sm text-(--vm-text-secondary)">
+                            <div className="my-2 flex items-center justify-between rounded-xl border border-(--vm-border) bg-(--vm-surface)/40 px-4 py-3">
+                                <span className="text-sm font-medium text-(--vm-text-secondary)">
                                     Appearance
                                 </span>
 
@@ -126,7 +144,7 @@ export function Navbar() {
                             <Link
                                 to="/login"
                                 onClick={closeMobileMenu}
-                                className="rounded-lg px-3 py-3 text-sm text-(--vm-text-secondary) transition-colors hover:bg-(--vm-surface) hover:text-(--vm-text)"
+                                className="rounded-xl px-4 py-3 text-sm font-medium text-(--vm-text-secondary) transition-colors hover:bg-(--vm-surface) hover:text-(--vm-text)"
                             >
                                 Log in
                             </Link>
@@ -136,7 +154,7 @@ export function Navbar() {
                                 onClick={closeMobileMenu}
                                 className="mt-2"
                             >
-                                <Button className="w-full">
+                                <Button className="h-11 w-full">
                                     Get Started
                                 </Button>
                             </Link>

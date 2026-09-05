@@ -52,3 +52,17 @@ export interface Session {
     id: string;
     [key: string]: unknown;
 }
+
+export type OtpChannel = "EMAIL" | "PHONE";
+
+export interface ForgotPasswordRequest {
+    identifier: string;
+    channel: OtpChannel;
+}
+
+export interface ResetPasswordRequest {
+    identifier: string;
+    channel: OtpChannel;
+    otp: string;
+    newPassword: string;
+} 

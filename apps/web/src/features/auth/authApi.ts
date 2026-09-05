@@ -14,6 +14,8 @@ import type {
     User,
     SendOtpRequest,
     VerifyOtpRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest,
 } from "./types";
 import type { ApiResponse } from "@/types/types";
 
@@ -94,6 +96,22 @@ export const authApi = baseApi.injectEndpoints({
                 body,
             }),
         }),
+
+        forgotPassword: builder.mutation<ApiResponse<null>, ForgotPasswordRequest>({
+            query: (body) => ({
+                url: "/api/auth/forgot-password",
+                method: "POST",
+                body,
+            }),
+        }),
+
+        resetPassword: builder.mutation<ApiResponse<null>, ResetPasswordRequest>({
+            query: (body) => ({
+                url: "/api/auth/reset-password",
+                method: "POST",
+                body,
+            }),
+        }),
     }),
 });
 
@@ -101,6 +119,10 @@ export const {
     useRegisterMutation,
     useLoginMutation,
     useRefreshMutation,
+
+    useForgotPasswordMutation,
+    useResetPasswordMutation,
+
     useSendOtpMutation,
     useVerifyOtpMutation,
     useLogoutMutation,

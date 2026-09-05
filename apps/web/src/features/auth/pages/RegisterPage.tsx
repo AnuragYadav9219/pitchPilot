@@ -7,9 +7,7 @@ import { Logo } from "@/components/branding/Logo";
 import authPanel from "@/assets/images/authpanel.webp";
 
 import {
-    AuthDivider,
     RegisterForm,
-    SocialLogin,
 } from "../components";
 
 export function RegisterPage() {
@@ -64,7 +62,7 @@ export function RegisterPage() {
                     />
 
                     <div className="absolute left-7 top-7 z-10">
-                        <Logo size="md" />
+                        <Logo showName size="md" />
                     </div>
                 </section>
 
@@ -89,7 +87,7 @@ export function RegisterPage() {
                             {/* Mobile logo */}
 
                             <div className="lg:hidden">
-                                <Logo size="md" />
+                                <Logo showName size="md" />
                             </div>
 
                             <Link
@@ -133,8 +131,7 @@ export function RegisterPage() {
                             </h1>
 
                             <p className="mt-2 max-w-md text-sm leading-5 text-(--vm-muted)">
-                                Create your {Brand.name} account and start
-                                building real-world confidence.
+                                Create your {Brand.name} account and start building real-world confidence.
                             </p>
                         </div>
 
@@ -145,16 +142,6 @@ export function RegisterPage() {
                         <div className="mt-6">
                             <RegisterForm />
                         </div>
-
-                        {/* ================================================= */}
-                        {/* SOCIAL */}
-                        {/* ================================================= */}
-
-                        <div className="my-5">
-                            <AuthDivider />
-                        </div>
-
-                        <SocialLogin />
 
                         {/* ================================================= */}
                         {/* LOGIN */}

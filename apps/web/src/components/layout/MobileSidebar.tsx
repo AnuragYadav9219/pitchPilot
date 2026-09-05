@@ -84,7 +84,7 @@ export function MobileSidebar({
             >
                 {/* Header */}
                 <div className="flex h-16 shrink-0 items-center justify-between border-b border-(--vm-border) px-5">
-                    <Logo size="md" />
+                    <Logo showName size="md" />
 
                     <button
                         type="button"
