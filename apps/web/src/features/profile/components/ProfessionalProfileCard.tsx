@@ -55,7 +55,7 @@ export function ProfessionalProfileCard({
     });
 
     return (
-        <Card className="overflow-hidden">
+        <Card className="overflow-visible">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-(--vm-border) px-5 py-4 sm:px-6">
                 <div>
@@ -86,9 +86,9 @@ export function ProfessionalProfileCard({
                 <form
                     onSubmit={(event) => {
                         event.preventDefault();
-                        save();
+                        void save();
                     }}
-                    className="space-y-5 p-5 sm:p-6"
+                    className="relative space-y-5 p-5 sm:p-6"
                 >
 
                     {loading && (

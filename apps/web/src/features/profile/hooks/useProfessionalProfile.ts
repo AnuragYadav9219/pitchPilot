@@ -53,8 +53,8 @@ export function useProfessionalProfile({
         setLearningStyle("");
     }
 
-    function save() {
-        onSave({
+    async function save() {
+        await onSave({
             bio: bio.trim(),
             education: education.trim(),
             experienceLevel,
