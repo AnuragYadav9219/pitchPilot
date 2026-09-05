@@ -21,13 +21,11 @@ export function useProfilePage() {
         try {
             await updateUser(data).unwrap();
 
-            appToast.success(
-                "Personal information updated.",
-            );
+            appToast.success("Personal information updated.");
         } catch {
-            appToast.error(
-                "Unable to update your information.",
-            );
+            appToast.error("Unable to update your information.");
+
+            throw new Error("Unable to update your information.");
         }
     }
 
@@ -57,13 +55,11 @@ export function useProfilePage() {
                 interests: data.interests ?? profile.interests,
             }).unwrap();
 
-            appToast.success(
-                "Professional profile updated.",
-            );
+            appToast.success("Professional profile updated.");
         } catch {
-            appToast.error(
-                "Unable to update your profile.",
-            );
+            appToast.error("Unable to update your profile.");
+
+            throw new Error("Unable to update your profile.");
         }
     }
 

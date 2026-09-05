@@ -94,8 +94,8 @@ export default function ProfilePage() {
                         skills={profile.skills}
                         interests={profile.interests}
                         loading={profileUpdating}
-                        onSave={(data) =>
-                            handleProfileSave({
+                        onSave={async (data) =>
+                            await handleProfileSave({
                                 bio: profile.bio ?? "",
                                 education: profile.education ?? "",
                                 experienceLevel: profile.experienceLevel ?? "",

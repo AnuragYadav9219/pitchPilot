@@ -6,7 +6,7 @@ interface UseSkillsInterestsProps {
     onSave: (data: {
         skills: string[];
         interests: string[];
-    }) => void;
+    }) => Promise<void>;
 }
 
 export function useSkillsInterests({
@@ -23,6 +23,8 @@ export function useSkillsInterests({
     function startEditing() {
         setLocalSkills(skills);
         setLocalInterests(interests);
+        setSkillInput("");
+        setInterestInput("");
         setEditing(true);
     }
 
@@ -68,8 +70,8 @@ export function useSkillsInterests({
         );
     }
 
-    function save() {
-        onSave({
+    async function save() {
+        await onSave({
             skills: localSkills,
             interests: localInterests,
         });

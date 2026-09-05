@@ -16,7 +16,7 @@ interface UseProfessionalProfileProps {
         experienceLevel: string;
         careerGoal: string;
         learningStyle: string;
-    }) => void;
+    }) => Promise<void>;
 }
 
 export function useProfessionalProfile({
@@ -27,11 +27,9 @@ export function useProfessionalProfile({
 
     const [bio, setBio] = useState("");
     const [education, setEducation] = useState("");
-    const [experienceLevel, setExperienceLevel] =
-        useState("");
+    const [experienceLevel, setExperienceLevel] = useState("");
     const [careerGoal, setCareerGoal] = useState("");
-    const [learningStyle, setLearningStyle] =
-        useState("");
+    const [learningStyle, setLearningStyle] = useState("");
 
     function startEditing() {
         setBio(profile.bio ?? "");

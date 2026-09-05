@@ -8,7 +8,7 @@ interface PersonalInformationCardProps {
     fullName: string;
     phoneNumber: string | null;
     loading: boolean;
-    onSave: (data: { fullName: string; phoneNumber: string }) => void;
+    onSave: (data: { fullName: string; phoneNumber: string }) => Promise<void>;
 }
 
 interface FormState {
@@ -48,10 +48,10 @@ export function PersonalInformationCard({
         setEditing(false);
     }
 
-    function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
-        onSave({
+        await onSave({
             fullName: formState.fullName.trim(),
             phoneNumber: formState.phoneNumber.trim(),
         });
@@ -91,6 +91,21 @@ export function PersonalInformationCard({
 
             {editing ? (
                 <form onSubmit={handleSubmit} className="p-5 sm:p-6">
+                    {loading && (
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-(--vm-background)/70 backdrop-blur-[2px]">
+                            <div className="flex items-center gap-2.5 rounded-xl border border-(--vm-border) bg-(--vm-surface) px-4 py-2.5 shadow-sm">
+                                <span
+                                    className="h-4 w-4 animate-spin rounded-full border-2 border-(--vm-primary)/25 border-t-(--vm-primary)"
+                                    aria-hidden="true"
+                                />
+
+                                <span className="text-sm font-medium text-(--vm-text)">
+                                    Saving changes...
+                                </span>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="grid gap-5 sm:grid-cols-2">
                         <InputField
                             label="Full name"

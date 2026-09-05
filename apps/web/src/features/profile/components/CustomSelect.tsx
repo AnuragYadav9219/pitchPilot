@@ -12,6 +12,7 @@ interface CustomSelectProps {
     options: SelectOption[];
     onChange: (value: string) => void;
     placeholder?: string;
+    disabled?: boolean;
 }
 
 export function CustomSelect({
@@ -20,6 +21,7 @@ export function CustomSelect({
     options,
     onChange,
     placeholder = "Select...",
+    disabled = false,
 }: CustomSelectProps) {
     const [open, setOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -51,6 +53,7 @@ export function CustomSelect({
 
             <button
                 type="button"
+                disabled={disabled}
                 onClick={() => setOpen((current) => !current)}
                 aria-haspopup="listbox"
                 aria-expanded={open}
@@ -68,7 +71,7 @@ export function CustomSelect({
                 />
             </button>
 
-            {open && (
+            {open && !disabled && (
                 <div
                     role="listbox"
                     aria-labelledby={labelId}

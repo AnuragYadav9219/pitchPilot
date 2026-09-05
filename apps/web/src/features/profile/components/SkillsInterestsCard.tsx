@@ -16,7 +16,7 @@ interface SkillsInterestsCardProps {
     onSave: (data: {
         skills: string[];
         interests: string[];
-    }) => void;
+    }) => Promise<void>;
 }
 
 export function SkillsInterestsCard({
@@ -71,12 +71,28 @@ export function SkillsInterestsCard({
                 )}
             </div>
 
-            <div className="grid gap-6 p-5 sm:grid-cols-2 sm:p-6">
+            <div className="relative grid gap-6 p-5 sm:grid-cols-2 sm:p-6">
+                {loading && (
+                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-(--vm-background)/70 backdrop-blur-[2px]">
+                        <div className="flex items-center gap-2.5 rounded-xl border border-(--vm-border) bg-(--vm-surface) px-4 py-2.5 shadow-sm">
+                            <span
+                                className="h-4 w-4 animate-spin rounded-full border-2 border-(--vm-primary)/25 border-t-(--vm-primary)"
+                                aria-hidden="true"
+                            />
+
+                            <span className="text-sm font-medium text-(--vm-text)">
+                                Saving changes...
+                            </span>
+                        </div>
+                    </div>
+                )}
+
                 <TagGroup
                     title="Skills"
                     icon={<Plus size={14} />}
                     items={editing ? localSkills : skills}
                     editing={editing}
+                    loading={loading}
                     input={skillInput}
                     onInputChange={setSkillInput}
                     onAdd={addSkill}
@@ -88,6 +104,7 @@ export function SkillsInterestsCard({
                     icon={<Heart size={14} />}
                     items={editing ? localInterests : interests}
                     editing={editing}
+                    loading={loading}
                     input={interestInput}
                     onInputChange={setInterestInput}
                     onAdd={addInterest}
@@ -114,6 +131,7 @@ export function SkillsInterestsCard({
                         size="xs"
                         onClick={save}
                         loading={loading}
+                        disabled={loading}
                     >
                         <Check size={13} />
                         {loading ? "Saving..." : "Save"}
@@ -129,6 +147,7 @@ interface TagGroupProps {
     icon: React.ReactNode;
     items: string[];
     editing: boolean;
+    loading: boolean;
     input: string;
     onInputChange: (value: string) => void;
     onAdd: () => void;
@@ -140,6 +159,7 @@ function TagGroup({
     icon,
     items,
     editing,
+    loading,
     input,
     onInputChange,
     onAdd,
@@ -169,6 +189,7 @@ function TagGroup({
                                 onAdd();
                             }
                         }}
+                        disabled={loading}
                         placeholder={`Add ${singularTitle}...`}
                         className="h-9 min-w-0 flex-1 rounded-lg border border-(--vm-border) bg-(--vm-background) px-3 text-xs text-(--vm-text) outline-none placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/20"
                     />
@@ -177,6 +198,7 @@ function TagGroup({
                         type="button"
                         variant="primary"
                         size="xs"
+                        disabled={loading}
                         onClick={onAdd}
                         className="h-9 w-9 shrink-0 px-0"
                         aria-label={`Add ${title}`}
@@ -197,6 +219,7 @@ function TagGroup({
                             {editing && (
                                 <button
                                     type="button"
+                                    disabled={loading}
                                     onClick={() => onRemove(item)}
                                     aria-label={`Remove ${item}`}
                                     className="cursor-pointer text-(--vm-muted) transition-colors hover:text-(--vm-danger)"

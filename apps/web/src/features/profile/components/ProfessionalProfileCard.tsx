@@ -19,13 +19,14 @@ interface ProfessionalProfileCardProps {
         learningStyle: string | null;
     };
     loading: boolean;
+
     onSave: (data: {
         bio: string;
         education: string;
         experienceLevel: string;
         careerGoal: string;
         learningStyle: string;
-    }) => void;
+    }) => Promise<void>;
 }
 
 export function ProfessionalProfileCard({
@@ -89,6 +90,22 @@ export function ProfessionalProfileCard({
                     }}
                     className="space-y-5 p-5 sm:p-6"
                 >
+
+                    {loading && (
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-(--vm-background)/70 backdrop-blur-[2px]">
+                            <div className="flex items-center gap-2.5 rounded-xl border border-(--vm-border) bg-(--vm-surface) px-4 py-2.5 shadow-sm">
+                                <span
+                                    className="h-4 w-4 animate-spin rounded-full border-2 border-(--vm-primary)/25 border-t-(--vm-primary)"
+                                    aria-hidden="true"
+                                />
+
+                                <span className="text-sm font-medium text-(--vm-text)">
+                                    Saving changes...
+                                </span>
+                            </div>
+                        </div>
+                    )}
+
                     {/* About */}
                     <div>
                         <label
@@ -101,6 +118,7 @@ export function ProfessionalProfileCard({
                         <textarea
                             id="profile-bio"
                             value={bio}
+                            disabled={loading}
                             onChange={(event) =>
                                 setBio(event.target.value)
                             }
@@ -118,6 +136,7 @@ export function ProfessionalProfileCard({
                             value={education}
                             onChange={setEducation}
                             icon={<GraduationCap size={15} />}
+                            disabled={loading}
                         />
 
                         <Input
@@ -125,6 +144,7 @@ export function ProfessionalProfileCard({
                             value={careerGoal}
                             onChange={setCareerGoal}
                             icon={<Target size={15} />}
+                            disabled={loading}
                         />
                     </div>
 
@@ -134,6 +154,7 @@ export function ProfessionalProfileCard({
                             label="Experience level"
                             value={experienceLevel}
                             onChange={setExperienceLevel}
+                            disabled={loading}
                             options={[
                                 { value: "BEGINNER", label: "Beginner", },
                                 { value: "INTERMEDIATE", label: "Intermediate", },
@@ -145,6 +166,7 @@ export function ProfessionalProfileCard({
                             label="Learning style"
                             value={learningStyle}
                             onChange={setLearningStyle}
+                            disabled={loading}
                             options={[
                                 { value: "PRACTICAL", label: "Practical", },
                                 { value: "VISUAL", label: "Visual", },
@@ -251,11 +273,13 @@ function Input({
     value,
     onChange,
     icon,
+    disabled,
 }: {
     label: string;
     value: string;
     onChange: (value: string) => void;
     icon: React.ReactNode;
+    disabled?: boolean;
 }) {
     return (
         <div>
@@ -273,6 +297,7 @@ function Input({
                     onChange={(event) =>
                         onChange(event.target.value)
                     }
+                    disabled={disabled}
                     className="h-10 w-full rounded-xl border border-(--vm-border) bg-(--vm-background) pl-9 pr-3 text-sm text-(--vm-text) outline-none transition placeholder:text-(--vm-muted) focus:border-(--vm-primary) focus:ring-2 focus:ring-(--vm-primary)/15"
                 />
             </div>
