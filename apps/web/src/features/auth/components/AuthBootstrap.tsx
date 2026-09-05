@@ -56,10 +56,6 @@ export function AuthBootstrap({
         let cancelled = false;
 
         async function restoreSession() {
-            console.log(
-                "AuthBootstrap: restoring session...",
-            );
-
             const refreshToken =
                 authStorage.getRefreshToken();
 
@@ -83,27 +79,14 @@ export function AuthBootstrap({
                 if (
                     !restoreSessionPromise
                 ) {
-                    console.log(
-                        "AuthBootstrap: starting refresh request...",
-                    );
-
-                    restoreSessionPromise =
-                        refresh({
-                            refreshToken,
-                        }).unwrap();
+                    restoreSessionPromise = refresh({
+                        refreshToken,
+                    }).unwrap();
                 } else {
-                    console.log(
-                        "AuthBootstrap: waiting for existing refresh request...",
-                    );
+
                 }
 
-                const response =
-                    await restoreSessionPromise;
-
-                console.log(
-                    "AuthBootstrap: refresh response:",
-                    response,
-                );
+                const response = await restoreSessionPromise;
 
                 if (
                     !response.success ||
@@ -111,7 +94,7 @@ export function AuthBootstrap({
                 ) {
                     throw new Error(
                         response.message ||
-                            "Invalid refresh response.",
+                        "Invalid refresh response.",
                     );
                 }
 
@@ -127,14 +110,7 @@ export function AuthBootstrap({
                     ),
                 );
 
-                console.log(
-                    "AuthBootstrap: session restored.",
-                );
             } catch (error) {
-                console.error(
-                    "AuthBootstrap: session restoration failed:",
-                    error,
-                );
 
                 /*
                  * Only clear the session when the

@@ -9,11 +9,6 @@ export function ProtectedRoute() {
                 state.auth.isAuthenticated,
         );
 
-    console.log(
-        "ProtectedRoute:",
-        isAuthenticated,
-    );
-
     if (!isAuthenticated) {
         return (
             <Navigate
