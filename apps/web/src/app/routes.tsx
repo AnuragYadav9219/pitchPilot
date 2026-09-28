@@ -4,7 +4,6 @@ import { createBrowserRouter, Navigate, Outlet, useParams } from "react-router-d
 import { PageLoader } from "@/components/feedback";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
-import VoiceInterviewPage from "@/features/interview/pages/VoiceInterviewPage";
 
 /* ============================================================= */
 /* PUBLIC PAGES                                                  */
@@ -32,6 +31,7 @@ const EvaluationPage = lazy(() => import("@/features/evaluation/pages/Evaluation
 const CareerPage = lazy(() => import("@/features/career/pages/CareerPage"));
 const ProgressPage = lazy(() => import("@/features/progress/pages/ProgressPage"));
 const HistoryPage = lazy(() => import("@/features/history/pages/HistoryPage"));
+const VoiceInterviewPage = lazy(() => import("@/features/interview/pages/VoiceInterviewPage"));
 
 /* ============================================================= */
 /* ROOT LAYOUT                                                   */

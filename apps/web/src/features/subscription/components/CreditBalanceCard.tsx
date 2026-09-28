@@ -1,6 +1,6 @@
 import { Coins, LockKeyhole, Sparkles } from "lucide-react";
-import type { CreditBalanceResponse } from "../creditApi";
 import { CreditInfo } from "./CreditInfo";
+import type { CreditBalanceResponse } from "../types";
 
 interface CreditBalanceCardProps {
     balance: CreditBalanceResponse;
