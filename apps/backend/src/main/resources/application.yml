@@ -1,0 +1,124 @@
+spring:
+  jackson:
+    time-zone: Asia/Kolkata
+
+  application:
+    name: virtualmentor
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/pitchpilot}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    open-in-view: false
+    show-sql: false
+
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+jwt:
+  issuer: ${JWT_ISSUER:virtualmentor-api}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900}
+  public-key: ${JWT_PUBLIC_KEY:}
+  private-key: ${JWT_PRIVATE_KEY:}
+
+security:
+  otp:
+    expiration-seconds: ${OTP_EXPIRATION_SECONDS:300}
+    max-attempts: ${OTP_MAX_ATTEMPTS:5}
+    resend-cooldown-seconds: ${OTP_RESEND_COOLDOWN_SECONDS:60}
+
+  email-verification:
+    expiration-seconds: ${EMAIL_VERIFICATION_EXPIRATION_SECONDS:900}
+
+revenuecat:
+  base-url: ${REVENUECAT_BASE_URL:https://api.revenuecat.com/v2}
+  project-id: ${REVENUECAT_PROJECT_ID:}
+  secret-key: ${REVENUECAT_SECRET_KEY:}
+  webhook-secret: ${REVENUECAT_WEBHOOK_SECRET:}
+
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:}
+  key-secret: ${RAZORPAY_KEY_SECRET:}
+  webhook-secret: ${RAZORPAY_WEBHOOK_SECRET:}
+  pro-plan-id: ${RAZORPAY_PRO_PLAN_ID:}
+  premium-plan-id: ${RAZORPAY_PREMIUM_PLAN_ID:}
+
+virtualmentor:
+  ai:
+    default-provider: ${AI_DEFAULT_PROVIDER:GEMINI}
+
+    context:
+      recent-message-count: ${AI_RECENT_MESSAGE_COUNT:20}
+
+    memory:
+      summary-threshold: ${AI_MEMORY_SUMMARY_THRESHOLD:30}
+      summary-max-output-tokens: ${AI_MEMORY_SUMMARY_MAX_OUTPUT_TOKENS:500}
+
+    retry:
+      max-attempts: ${AI_RETRY_MAX_ATTEMPTS:2}
+      backoff-ms: ${AI_RETRY_BACKOFF_MS:500}
+
+    gemini:
+      api-key: ${GEMINI_API_KEY:}
+      model: ${GEMINI_MODEL:gemini-3.5-flash}
+      live-model: ${GEMINI_LIVE_MODEL:gemini-3.1-flash-live-preview}
+      base-url: ${GEMINI_BASE_URL:https://generativelanguage.googleapis.com}
+      temperature: ${GEMINI_TEMPERATURE:0.7}
+      max-output-tokens: ${GEMINI_MAX_OUTPUT_TOKENS:2048}
+
+  serpapi:
+    api-key: ${SERPAPI_API_KEY:}
+    base-url: ${SERPAPI_BASE_URL:https://serpapi.com}
+
+  pricing:
+    credit-price-in-rupees: ${CREDIT_PRICE_IN_RUPEES:0.20}
+
+  credits:
+    packages:
+      - code: CREDITS_100
+        credits: 100
+      - code: CREDITS_250
+        credits: 250
+      - code: CREDITS_500
+        credits: 500
+
+  features:
+    voice-interview:
+      credits: ${VOICE_INTERVIEW_CREDITS:15}
+    resume-analysis:
+      credits: ${RESUME_ANALYSIS_CREDITS:10}
+    job-analysis:
+      credits: ${JOB_ANALYSIS_CREDITS:5}
+
+  subscriptions:
+    free:
+      monthly-credits: ${FREE_MONTHLY_CREDITS:30}
+    pro:
+      monthly-credits: ${PRO_MONTHLY_CREDITS:300}
+    premium:
+      monthly-credits: ${PREMIUM_MONTHLY_CREDITS:1000}
