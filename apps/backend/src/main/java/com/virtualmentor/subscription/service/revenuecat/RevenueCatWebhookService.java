@@ -13,6 +13,7 @@ import com.virtualmentor.subscription.entity.SubscriptionStatus;
 import com.virtualmentor.subscription.repository.ProcessedWebhookRepository;
 import com.virtualmentor.subscription.repository.SubscriptionRepository;
 import com.virtualmentor.subscription.service.SubscriptionService;
+import com.virtualmentor.subscription.service.credit.SubscriptionCreditService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,7 @@ public class RevenueCatWebhookService {
     private final SubscriptionRepository subscriptionRepository;
     private final ProcessedWebhookRepository processedWebhookRepository;
     private final SubscriptionService subscriptionService;
+    private final SubscriptionCreditService subscriptionCreditService;
 
     @Transactional
     public void process(RevenueCatWebhookEvent event) {
@@ -37,8 +39,7 @@ public class RevenueCatWebhookService {
 
         Subscription subscription = subscriptionRepository
                 .findByUserId(userId)
-                .orElseGet(
-                        () -> createFreeSubscription(userId));
+                .orElseGet(() -> createFreeSubscription(userId));
 
         if (subscription.getProviderCustomerId() == null) {
 
@@ -49,10 +50,33 @@ public class RevenueCatWebhookService {
 
         subscriptionService.sync(userId);
 
+        Subscription updatedSubscription = subscriptionRepository
+                .findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("Subscription not found after sync"));
+
+        if (shouldGrantCredits(event)) {
+
+            subscriptionCreditService.grantMonthlyCredits(
+                    userId,
+                    updatedSubscription.getId(),
+                    event.id());
+        }
+
         processedWebhookRepository.save(
                 ProcessedWebhook.builder()
                         .eventId(event.id())
                         .build());
+    }
+
+    private boolean shouldGrantCredits(RevenueCatWebhookEvent event) {
+
+        return switch (event.type()) {
+
+            case "INITIAL_PURCHASE",
+                    "RENEWAL"-> true;
+
+            default -> false;
+        };
     }
 
     private void validate(RevenueCatWebhookEvent event) {
@@ -63,6 +87,10 @@ public class RevenueCatWebhookService {
 
         if (event.id() == null || event.id().isBlank()) {
             throw new IllegalArgumentException("Webhook event ID is required");
+        }
+
+        if (event.type() == null || event.type().isBlank()) {
+            throw new IllegalArgumentException("RevenueCat webhook event type is required");
         }
 
         if (event.appUserId() == null || event.appUserId().isBlank()) {

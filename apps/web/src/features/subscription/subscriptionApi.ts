@@ -1,12 +1,7 @@
 import { baseApi } from "@/services/baseApi";
 import type { ApiResponse } from "@/types/types";
 import type { SubscriptionPlan, SubscriptionResponse } from "@virtualmentor/shared";
-
-export interface RazorpayCreateSubscriptionResponse {
-    subscriptionId: string;
-    keyId: string;
-    plan: SubscriptionPlan;
-}
+import type { RazorpayCreateSubscriptionResponse } from "./types";
 
 export const subscriptionApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -20,6 +15,8 @@ export const subscriptionApi = baseApi.injectEndpoints({
             providesTags: [
                 { type: "Subscription", id: "ME" },
             ],
+
+            keepUnusedDataFor: 0,
         }),
 
         syncSubscription: builder.mutation<ApiResponse<SubscriptionResponse>, void>({
@@ -30,6 +27,7 @@ export const subscriptionApi = baseApi.injectEndpoints({
 
             invalidatesTags: [
                 { type: "Subscription", id: "ME" },
+                { type: "Credits", id: "BALANCE" },
             ],
         }),
 
@@ -61,7 +59,10 @@ export const subscriptionApi = baseApi.injectEndpoints({
                 body,
             }),
 
-            invalidatesTags: [{ type: "Subscription", id: "ME" }],
+            invalidatesTags: [
+                { type: "Subscription", id: "ME" },
+                { type: "Credits", id: "BALANCE" },
+            ],
         })
 
     }),

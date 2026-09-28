@@ -1,25 +1,37 @@
-import type { ApiResponse } from "@/types/types";
+export interface DashboardStats {
+    totalInterviews: number;
+    completedInterviews: number;
+    averageScore: number;
+    currentStreak: number;
+    longestStreak: number;
+    completionRate: number;
+    highestScore: number;
+    totalPracticeMinutes: number;
+}
 
-export interface RecentSession {
-    conversationId: string;
-    title: string;
+export interface DashboardSkillScore {
+    name: string;
+    score: number;
+}
+
+export interface DashboardActivity {
+    date: string;
+    count: number;
+}
+
+export interface RecentInterview {
+    id: number;
+    role: string;
     type: string;
-    score: number | null;
+    difficulty: string;
+    score: number;
+    status: string;
     completedAt: string | null;
 }
 
 export interface DashboardResponse {
-    totalSessions: number;
-    completedSessions: number;
-    averageScore: number | null;
-    bestScore: number | null;
-
-    averageCommunicationScore: number | null;
-    averageClarityScore: number | null;
-    averageConfidenceScore: number | null;
-    averageRelevanceScore: number | null;
-
-    recentSessions: RecentSession[];
+    stats: DashboardStats;
+    skills: DashboardSkillScore[];
+    activity: DashboardActivity[];
+    recentInterviews: RecentInterview[];
 }
-
-export type DashboardApiResponse = ApiResponse<DashboardResponse>;

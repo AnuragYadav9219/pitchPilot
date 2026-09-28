@@ -1,26 +1,25 @@
 package com.virtualmentor.conversation.repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.virtualmentor.conversation.entity.ConversationMessage;
 
-public interface ConversationMessageRepository extends JpaRepository<ConversationMessage, UUID> {
+public interface ConversationMessageRepository
+        extends JpaRepository<ConversationMessage, UUID> {
 
-        List<ConversationMessage> findByConversationIdOrderByCreatedAtAsc(
-                        UUID conversationId);
+    List<ConversationMessage> findByInterviewIdAndUserIdAndDeletedFalseOrderBySequenceNumberAsc(
+            Long interviewId,
+            UUID userId);
 
-        List<ConversationMessage> findByConversationIdOrderByCreatedAtDesc(
-                        UUID conversationId,
-                        Pageable pageable);
+    long countByInterviewIdAndUserIdAndDeletedFalse(
+            Long interviewId,
+            UUID userId);
 
-        Optional<ConversationMessage> findByIdAndConversationId(UUID messageId, UUID conversationId);
-
-        void deleteByConversationId(UUID conversationId);
-
-        long countByConversationId(UUID conversationId);
+    boolean existsByInterviewIdAndUserIdAndSequenceNumber(
+            Long interviewId,
+            UUID userId,
+            Integer sequenceNumber);
 }

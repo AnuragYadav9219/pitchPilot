@@ -12,20 +12,23 @@ import com.virtualmentor.subscription.entity.SubscriptionStatus;
 
 public record SubscriptionResponse(
 
-        UUID id,
+                UUID id,
 
-        SubscriptionPlan plan,
+                SubscriptionPlan plan,
 
-        SubscriptionStatus status,
+                SubscriptionStatus status,
 
-        Set<Entitlement> entitlements,
+                Set<Entitlement> entitlements,
 
-        Instant startedAt,
+                Instant startedAt,
 
-        Instant expiresAt,
+                Instant expiresAt,
 
-        boolean autoRenew,
-        
-        Map<SubscriptionLimit, SubscriptionLimitResponse> limits) {
+                boolean autoRenew,
 
+                Map<SubscriptionLimit, SubscriptionLimitResponse> limits,
+
+                long monthlyCredits,
+
+                long monthlyCreditValueInPaise) {
 }

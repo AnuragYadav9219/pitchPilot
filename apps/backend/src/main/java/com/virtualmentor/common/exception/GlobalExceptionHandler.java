@@ -9,8 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.virtualmentor.ai.exception.AiProviderRateLimitException;
-import com.virtualmentor.ai.exception.AiProviderUnavailableException;
 import com.virtualmentor.common.response.ApiResponse;
 import com.virtualmentor.common.response.ResponseBuilder;
 import com.virtualmentor.notification.exception.EmailNotVerifiedException;
@@ -101,10 +99,7 @@ public class GlobalExceptionHandler {
 
                 return ResponseEntity
                                 .status(HttpStatus.FORBIDDEN)
-                                .body(
-                                                ApiResponse.fail(
-                                                                ex.getMessage(),
-                                                                null));
+                                .body(ApiResponse.fail(ex.getMessage(), null));
         }
 
         @ExceptionHandler(InvalidOtpException.class)
@@ -122,63 +117,40 @@ public class GlobalExceptionHandler {
 
                 return ResponseEntity
                                 .status(HttpStatus.BAD_REQUEST)
-                                .body(ApiResponse.fail(
-                                                ex.getMessage(),
-                                                null));
+                                .body(ApiResponse.fail(ex.getMessage(), null));
         }
 
         @ExceptionHandler(OtpLockedException.class)
-        public ResponseEntity<ApiResponse<Void>> handleOtpLocked(
-                        OtpLockedException ex) {
+        public ResponseEntity<ApiResponse<Void>> handleOtpLocked(OtpLockedException ex) {
 
                 return ResponseEntity
                                 .status(HttpStatus.TOO_MANY_REQUESTS)
-                                .body(
-                                                ApiResponse.fail(
-                                                                ex.getMessage(),
-                                                                null));
+                                .body(ApiResponse.fail(ex.getMessage(), null));
         }
 
         @ExceptionHandler(OtpRateLimitException.class)
-        public ResponseEntity<ApiResponse<Void>> handleOtpRateLimit(
-                        OtpRateLimitException ex) {
+        public ResponseEntity<ApiResponse<Void>> handleOtpRateLimit(OtpRateLimitException ex) {
 
                 return ResponseEntity
                                 .status(HttpStatus.TOO_MANY_REQUESTS)
-                                .body(
-                                                ApiResponse.fail(
-                                                                ex.getMessage(),
-                                                                null));
-        }
-
-        @ExceptionHandler(AiProviderRateLimitException.class)
-        public ResponseEntity<ApiResponse<Void>> handleAiRateLimit(AiProviderRateLimitException ex) {
-
-                return ResponseEntity
-                                .status(HttpStatus.TOO_MANY_REQUESTS)
-                                .body(ApiResponse.fail(
-                                                "AI service is temporarily busy. Please try again.",
-                                                null));
-        }
-
-        @ExceptionHandler(AiProviderUnavailableException.class)
-        public ResponseEntity<ApiResponse<Void>> handleAiUnavailable(AiProviderUnavailableException ex) {
-
-                return ResponseEntity
-                                .status(HttpStatus.SERVICE_UNAVAILABLE)
-                                .body(ApiResponse.fail(
-                                                "AI service is temporarily unavailable. Please try again later.",
-                                                null));
+                                .body(ApiResponse.fail(ex.getMessage(), null));
         }
 
         @ExceptionHandler(SubscriptionLimitExceededException.class)
-        public ResponseEntity<ApiResponse<Void>> handleSubscriptionLimitExceeded(
-                        SubscriptionLimitExceededException ex) {
+        public ResponseEntity<ApiResponse<Void>> handleSubscriptionLimitExceeded(SubscriptionLimitExceededException ex) {
 
                 return ResponseEntity
                                 .status(HttpStatus.TOO_MANY_REQUESTS)
                                 .body(ApiResponse.fail(
                                                 "SUBSCRIPTION_LIMIT_REACHED",
                                                 ex.getMessage()));
+        }
+
+        @ExceptionHandler(ResourceNotFoundException.class)
+        public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(ResourceNotFoundException ex) {
+
+                return ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .body(ApiResponse.fail(ex.getMessage()));
         }
 }

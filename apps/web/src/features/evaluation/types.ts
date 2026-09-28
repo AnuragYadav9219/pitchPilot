@@ -1,27 +1,37 @@
-export interface EvaluationSummary {
-    conversationId: string;
-    conversationTitle: string;
-    conversationType: string;
-
-    overallScore: number | null;
-
-    communicationScore: number | null;
-    clarityScore: number | null;
-    confidenceScore: number | null;
-    relevanceScore: number | null;
-
-    completedAt: string;
+export interface EvaluationQuestion {
+    id: string;
+    questionNumber: number;
+    question: string;
+    userAnswer: string;
+    score: number;
+    feedback: string;
 }
 
-export interface EvaluationPage {
-    content: EvaluationSummary[];
+export type EvaluationStatus =
+    | "PENDING"
+    | "EVALUATING"
+    | "COMPLETED"
+    | "FAILED";
 
-    page: number;
-    size: number;
+export interface Evaluation {
+    id: string;
+    interviewId: number;
+    status: "PENDING" | "EVALUATING" | "COMPLETED" | "FAILED";
 
-    totalElements: number;
-    totalPages: number;
+    overallScore: number | null;
+    technicalScore: number | null;
+    communicationScore: number | null;
+    problemSolvingScore: number | null;
+    confidenceScore: number | null;
 
-    first: boolean;
-    last: boolean;
+    summary: string | null;
+
+    strengths: string[];
+    areasToImprove: string[];
+    recommendations: string[];
+
+    questions: EvaluationQuestion[];
+
+    createdAt: string;
+    completedAt: string | null;
 }

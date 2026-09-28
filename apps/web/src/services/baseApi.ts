@@ -163,6 +163,13 @@ export const baseApi = createApi({
         "Evaluation",
         "Feedback",
         "Subscription",
+        "Voice",
+        "Interview",
+        "History",
+        "Credits",
+        "CreditBalance",
+        "CreditTransactions",
+        "CreditPackages",
     ],
     endpoints: () => ({}),
 });

@@ -14,7 +14,7 @@
     "@supabase/supabase-js": "^2.109.0",
     "@tailwindcss/vite": "^4.3.3",
     "@virtualmentor/shared": "*",
-    "framer-motion": "^13.0.0",
+    "framer-motion": "^13.4.0",
     "lucide-react": "^1.30.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",

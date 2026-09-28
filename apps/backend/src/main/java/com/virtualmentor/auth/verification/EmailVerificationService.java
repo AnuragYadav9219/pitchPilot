@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.virtualmentor.common.security.SecureTokenGenerator;
 import com.virtualmentor.common.security.TokenHasher;
-import com.virtualmentor.config.EmailVerificationProperties;
+import com.virtualmentor.config.configurations.EmailVerificationProperties;
 import com.virtualmentor.config.properties.AppProperties;
 import com.virtualmentor.notification.email.EmailSender;
 import com.virtualmentor.notification.exception.InvalidEmailVerificationTokenException;

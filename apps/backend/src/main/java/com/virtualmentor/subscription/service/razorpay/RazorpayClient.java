@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import com.razorpay.Order;
 import com.razorpay.RazorpayException;
 import com.razorpay.Subscription;
 import com.razorpay.Utils;
@@ -60,5 +61,39 @@ public class RazorpayClient {
         attributes.put("razorpay_signature", signature);
 
         Utils.verifySubscription(attributes, properties.keySecret());
+    }
+
+    public Order createCreditOrder(
+            long amountInPaise,
+            UUID userId,
+            UUID purchaseId) throws RazorpayException {
+
+        JSONObject request = new JSONObject();
+
+        request.put("amount", amountInPaise);
+        request.put("currency", "INR");
+        request.put("receipt", purchaseId.toString());
+
+        JSONObject notes = new JSONObject();
+        notes.put("user_id", userId.toString());
+        notes.put("purchase_id", purchaseId.toString());
+
+        request.put("notes", notes);
+
+        return client().orders.create(request);
+    }
+
+    public void verifyCreditPayment(
+            String orderId,
+            String paymentId,
+            String signature) throws RazorpayException {
+
+        JSONObject attributes = new JSONObject();
+
+        attributes.put("razorpay_order_id", orderId);
+        attributes.put("razorpay_payment_id", paymentId);
+        attributes.put("razorpay_signature", signature);
+
+        Utils.verifyPaymentSignature(attributes, properties.keySecret());
     }
 }

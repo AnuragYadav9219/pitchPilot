@@ -46,7 +46,7 @@ export const LightColors = {
     // ─── Semantic ────────────────────────────────────────────
     success: "#15803D",
     warning: "#B45309",
-    danger: "#C2412D",
+    danger: "#ef4444",
     info: "#C2412D",
 
     white: "#FFFFFF",

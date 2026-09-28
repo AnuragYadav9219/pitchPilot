@@ -1,9 +1,9 @@
+export { ActivityHeatmap } from "./ActivityHeatmap";
 export { DashboardHeader } from "./DashboardHeader";
-export { DashboardLoading } from "./DashboardLoading";
-export { QuickPractice } from "./QuickPractice";
-export { RecentSessionItem } from "./RecentSessionItem";
-export { RecentSessions } from "./RecentSessions";
-export { RecentSessionsEmpty } from "./RecentSessionsEmpty";
-export { SkillBar } from "./SkillBar";
-export { SkillOverview } from "./SkillOverview";
-export { StatsGrid } from "./StatsGrid";
+export { DashboardStats } from "./DashboardStats";
+export { EmptyDashboard } from "./EmptyDashboard";
+export { FocusArea } from "./FocusArea";
+export { RecentInterviews } from "./RecentInterviews";
+export { SkillPerformance } from "./SkillPerformance";
+export { StreakCard } from "./StreakCard";
+export { WeeklyGoal } from "./WeeklyGoal";

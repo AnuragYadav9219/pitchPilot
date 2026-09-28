@@ -16,69 +16,83 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-    private final SubscriptionRepository subscriptionRepository;
-    private final SubscriptionProvider subscriptionProvider;
+        private final SubscriptionRepository subscriptionRepository;
+        private final SubscriptionProvider subscriptionProvider;
 
-    @Override
-    @Transactional
-    public Subscription getOrCreate(UUID userId) {
+        @Override
+        @Transactional
+        public Subscription getOrCreate(UUID userId) {
 
-        return subscriptionRepository
-                .findByUserId(userId)
-                .orElseGet(
-                        () -> createFreeSubscription(userId));
-    }
-
-    @Override
-    @Transactional
-    public Subscription createFreeSubscription(UUID userId) {
-
-        Subscription subscription = Subscription
-                .builder()
-                .userId(userId)
-                .plan(SubscriptionPlan.FREE)
-                .status(SubscriptionStatus.INACTIVE)
-                .build();
-
-        return subscriptionRepository.save(subscription);
-    }
-
-    @Override
-    @Transactional
-    public Subscription sync(UUID userId) {
-
-        Subscription subscription = getOrCreate(userId);
-
-        if (subscription.getProviderCustomerId() == null) {
-            return subscription;
+                return subscriptionRepository
+                                .findByUserId(userId)
+                                .orElseGet(() -> createFreeSubscription(userId));
         }
 
-        SubscriptionProvider.SubscriptionInfo remote = subscriptionProvider
-                .getSubscription(subscription.getProviderCustomerId());
+        @Override
+        @Transactional
+        public Subscription createFreeSubscription(UUID userId) {
 
-        subscription.setPlan(remote.plan());
+                Subscription subscription = Subscription
+                                .builder()
+                                .userId(userId)
+                                .plan(SubscriptionPlan.FREE)
+                                .status(SubscriptionStatus.ACTIVE)
+                                .build();
 
-        subscription.setStatus(
-                remote.status());
+                return subscriptionRepository.save(subscription);
+        }
 
-        subscription.setProviderSubscriptionId(
-                remote.subscriptionId());
+        @Override
+        @Transactional
+        public Subscription sync(UUID userId) {
 
-        subscription.setProductId(
-                remote.productId());
+                Subscription subscription = getOrCreate(userId);
 
-        subscription.setStartedAt(
-                remote.startedAt());
+                if (subscription.getProviderSubscriptionId() == null) {
+                        return subscription;
+                }
 
-        subscription.setExpiresAt(
-                remote.expiresAt());
+                SubscriptionProvider.SubscriptionInfo remote = subscriptionProvider
+                                .getSubscription(subscription.getProviderCustomerId());
 
-        subscription.setAutoRenew(
-                remote.autoRenew());
+                subscription.setPlan(remote.plan());
+                subscription.setStatus(remote.status());
+                subscription.setProviderSubscriptionId(remote.subscriptionId());
+                subscription.setProductId(remote.productId());
+                subscription.setStartedAt(remote.startedAt());
+                subscription.setExpiresAt(remote.expiresAt());
+                subscription.setAutoRenew(remote.autoRenew());
+                subscription.setEnvironment(remote.environment());
 
-        subscription.setEnvironment(
-                remote.environment());
+                return subscriptionRepository.save(subscription);
+        }
 
-        return subscriptionRepository.save(subscription);
-    }
+        @Override
+        @Transactional
+        public Subscription getCurrentSubscription(UUID userId) {
+                return getOrCreate(userId);
+        }
+
+        @Override
+        @Transactional(readOnly = true)
+        public SubscriptionPlan getEffectivePlan(UUID userId) {
+
+                Subscription subscription = subscriptionRepository
+                                .findByUserId(userId)
+                                .orElse(null);
+
+                if (subscription == null) {
+                        return SubscriptionPlan.FREE;
+                }
+
+                if (subscription.getPlan() == SubscriptionPlan.FREE) {
+                        return SubscriptionPlan.FREE;
+                }
+
+                if (subscription.getStatus() != SubscriptionStatus.ACTIVE) {
+                        return SubscriptionPlan.FREE;
+                }
+
+                return subscription.getPlan();
+        }
 }

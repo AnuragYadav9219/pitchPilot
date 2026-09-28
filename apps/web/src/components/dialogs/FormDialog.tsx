@@ -16,6 +16,7 @@ interface FormDialogProps {
     cancelLabel?: string;
 
     loading?: boolean;
+    submitDisabled?: boolean;
 
     onSubmit: () => void;
     onCancel: () => void;
@@ -29,6 +30,7 @@ export function FormDialog({
     submitLabel = "Save",
     cancelLabel = "Cancel",
     loading = false,
+    submitDisabled = false,
     onSubmit,
     onCancel,
 }: FormDialogProps) {
@@ -125,7 +127,7 @@ export function FormDialog({
                         <button
                             type="button"
                             onClick={onSubmit}
-                            disabled={loading}
+                            disabled={loading || submitDisabled}
                             className="inline-flex h-10 items-center justify-center gap-2 rounded-(--vm-radius-md) bg-(--vm-primary) px-5 text-sm font-semibold text-white hover:bg-(--vm-primary-pressed) disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {loading && (
@@ -136,7 +138,7 @@ export function FormDialog({
                             )}
 
                             {loading
-                                ? "Saving..."
+                                ? "Processing..."
                                 : submitLabel}
                         </button>
                     </div>

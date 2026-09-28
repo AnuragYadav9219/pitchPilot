@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.virtualmentor.common.response.ApiResponse;
 import com.virtualmentor.common.response.ResponseBuilder;
 import com.virtualmentor.common.security.CurrentUserProvider;
+import com.virtualmentor.config.configurations.CreditPricingConfig;
+import com.virtualmentor.config.configurations.SubscriptionCreditConfig;
 import com.virtualmentor.subscription.dto.SubscriptionLimitResponse;
 import com.virtualmentor.subscription.dto.SubscriptionResponse;
 import com.virtualmentor.subscription.entity.Subscription;
 import com.virtualmentor.subscription.entity.SubscriptionLimit;
+import com.virtualmentor.subscription.entity.SubscriptionPlan;
 import com.virtualmentor.subscription.service.EntitlementService;
 import com.virtualmentor.subscription.service.SubscriptionLimitService;
 import com.virtualmentor.subscription.service.SubscriptionService;
@@ -29,59 +32,74 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SubscriptionController {
 
-    private final SubscriptionLimitService subscriptionLimitService;
-    private final SubscriptionService subscriptionService;
-    private final EntitlementService entitlementService;
-    private final CurrentUserProvider currentUserProvider;
-    private final ResponseBuilder responseBuilder;
+        private final SubscriptionLimitService subscriptionLimitService;
+        private final SubscriptionService subscriptionService;
+        private final EntitlementService entitlementService;
+        private final CurrentUserProvider currentUserProvider;
+        private final ResponseBuilder responseBuilder;
+        private final SubscriptionCreditConfig subscriptionCreditConfig;
+        private final CreditPricingConfig creditPricingConfig;
 
-    @GetMapping("/me")
-    public ResponseEntity<ApiResponse<SubscriptionResponse>> getMySubscription() {
+        @GetMapping("/me")
+        public ResponseEntity<ApiResponse<SubscriptionResponse>> getMySubscription() {
 
-        var userId = currentUserProvider.getUserId();
+                var userId = currentUserProvider.getUserId();
 
-        Subscription subscription = subscriptionService.getOrCreate(userId);
+                Subscription subscription = subscriptionService.getOrCreate(userId);
 
-        return responseBuilder.ok(
-                "Subscription fetched successfully",
-                toResponse(subscription, userId));
-    }
+                return responseBuilder.ok(
+                                "Subscription fetched successfully",
+                                toResponse(subscription, userId));
+        }
 
-    @PostMapping("/sync")
-    public ResponseEntity<ApiResponse<SubscriptionResponse>> sync() {
+        @PostMapping("/sync")
+        public ResponseEntity<ApiResponse<SubscriptionResponse>> sync() {
 
-        var userId = currentUserProvider.getUserId();
+                var userId = currentUserProvider.getUserId();
 
-        Subscription subscription = subscriptionService.sync(userId);
+                Subscription subscription = subscriptionService.sync(userId);
 
-        return responseBuilder.ok(
-                "Subscription synchronized successfully",
-                toResponse(subscription, userId));
-    }
+                return responseBuilder.ok(
+                                "Subscription synchronized successfully",
+                                toResponse(subscription, userId));
+        }
 
-    private SubscriptionResponse toResponse(
-            Subscription subscription,
-            UUID userId) {
+        private SubscriptionResponse toResponse(Subscription subscription, UUID userId) {
 
-        return new SubscriptionResponse(
-                subscription.getId(),
-                subscription.getPlan(),
-                subscription.getStatus(),
-                entitlementService.getEntitlements(userId),
-                subscription.getStartedAt(),
-                subscription.getExpiresAt(),
-                subscription.isAutoRenew(),
-                getLimits(userId));
-    }
+                SubscriptionPlan effectivePlan = subscriptionService.getEffectivePlan(userId);
 
-    private Map<SubscriptionLimit, SubscriptionLimitResponse> getLimits(UUID userId) {
+                long monthlyCredits = subscriptionCreditConfig.getMonthlyCredits(effectivePlan);
+                long monthlyCreditValueInPaise = creditPricingConfig.calculatePriceInPaise(monthlyCredits);
 
-        return Arrays.stream(
-                SubscriptionLimit.values()).collect(
-                        Collectors.toMap(
-                                limit -> limit,
-                                limit -> new SubscriptionLimitResponse(
-                                        subscriptionLimitService.getUsed(userId, limit),
-                                        subscriptionLimitService.getLimit(userId, limit))));
-    }
+                Map<SubscriptionLimit, SubscriptionLimitResponse> limits = getLimits(userId);
+
+                var entitlements = entitlementService.getEntitlements(userId);
+
+                return new SubscriptionResponse(
+                                subscription.getId(),
+                                effectivePlan,
+                                subscription.getStatus(),
+                                entitlements,
+                                subscription.getStartedAt(),
+                                subscription.getExpiresAt(),
+                                subscription.isAutoRenew(),
+                                limits,
+                                monthlyCredits,
+                                monthlyCreditValueInPaise);
+
+        }
+
+        private Map<SubscriptionLimit, SubscriptionLimitResponse> getLimits(UUID userId) {
+
+                return Arrays.stream(SubscriptionLimit
+                                .values())
+                                .collect(Collectors
+                                                .toMap(
+                                                                limit -> limit,
+                                                                limit -> new SubscriptionLimitResponse(
+                                                                                subscriptionLimitService.getUsed(userId,
+                                                                                                limit),
+                                                                                subscriptionLimitService.getLimit(
+                                                                                                userId, limit))));
+        }
 }

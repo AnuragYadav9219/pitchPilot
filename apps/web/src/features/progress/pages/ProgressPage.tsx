@@ -1,226 +1,189 @@
-import {
-    ArrowRight,
-    TrendingUp,
-} from "lucide-react";
-import { Link } from "react-router-dom";
-
-import { ApiErrorState, Card, Container } from "@/components/ui";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 import { useGetProgressQuery } from "../progressApi";
-import { OverallScore, ProgressChart, ProgressInsight, ProgressLoading, SkillScoreCard } from "../components";
-import { getApiErrorMessage } from "@/services/apiError";
+
+import ProgressHeader from "../components/ProgressHeader";
+import ProgressOverview from "../components/ProgressOverview";
+import ScoreTrend from "../components/ScoreTrend";
+import SkillPerformance from "../components/SkillPerformance";
+import FocusArea from "../components/FocusArea";
+import StrengthsAndImprovements from "../components/StrengthsAndImprovements";
+import PracticeGoal from "../components/PracticeGoal";
+import InterviewHistory from "../components/InterviewHistory";
 
 export default function ProgressPage() {
     const {
         data,
-        error,
         isLoading,
-        isFetching,
         isError,
         refetch,
     } = useGetProgressQuery();
 
     if (isLoading) {
-        return <ProgressLoading />;
+        return <ProgressSkeleton />;
     }
 
     if (isError) {
         return (
-            <ApiErrorState
-                title="Couldn't load your progress"
-                message={getApiErrorMessage(error)}
-                onRetry={() => void refetch()}
-                showHome
-            />
-        );
-    }
-
-    if (!data?.data) {
-        return (
-            <ApiErrorState
-                title="Progress unavailable"
-                message="We couldn't find the information needed to display your practice progress."
-                onRetry={() => void refetch()}
-                showHome
-            />
-        );
-    }
-
-    const progress = data.data;
-
-    return (
-        <main className="min-h-full bg-(--vm-background)">
-            <Container className="py-6 sm:py-8 lg:py-10">
-                {/* Header */}
-                <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-(--vm-primary)">
-                            Progress
-                        </p>
-
-                        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-(--vm-text) sm:text-3xl">
-                            See how you're improving
-                        </h1>
-
-                        <p className="mt-2 max-w-xl text-sm leading-6 text-(--vm-muted)">
-                            Track your performance across practice sessions and focus on the skills that matter most.
-                        </p>
-                    </div>
-
-                    {isFetching && (
-                        <span className="text-xs text-(--vm-muted)">
-                            Updating...
-                        </span>
-                    )}
-                </header>
-
-                {/* Overall + Trend */}
-                <section className="mt-6 grid gap-4 lg:grid-cols-[0.7fr_1.3fr]">
-                    <OverallScore
-                        current={progress.overall.current}
-                        previous={progress.overall.previous}
-                        change={progress.overall.change}
-                    />
-
-                    <Card className="p-5 sm:p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-semibold text-(--vm-text)">
-                                    Score over time
-                                </p>
-
-                                <p className="mt-1 text-xs text-(--vm-muted)">
-                                    Your overall evaluation score across sessions.
-                                </p>
-                            </div>
-
-                            <TrendingUp
-                                size={18}
-                                className="text-(--vm-primary)"
-                            />
+            <main className="min-h-full bg-(--vm-background) px-4 py-6 sm:px-6 lg:px-8">
+                <div className="mx-auto flex min-h-[60vh] max-w-7xl items-center justify-center">
+                    <div className="w-full max-w-md rounded-2xl border border-(--vm-border) bg-(--vm-surface) p-6 text-center shadow-sm">
+                        <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-(--vm-danger)/10 text-(--vm-danger)">
+                            <AlertCircle className="h-5 w-5" />
                         </div>
 
-                        <div className="mt-5">
-                            <ProgressChart
-                                points={progress.trend}
-                            />
-                        </div>
-                    </Card>
-                </section>
-
-                {/* Skills */}
-                <section className="mt-6">
-                    <div className="mb-3">
-                        <h2 className="text-sm font-semibold text-(--vm-text)">
-                            Skill performance
+                        <h2 className="mt-4 text-lg font-semibold text-(--vm-text)">
+                            Unable to load your progress
                         </h2>
 
-                        <p className="mt-1 text-xs text-(--vm-muted)">
-                            Your latest performance across
-                            the core communication skills.
+                        <p className="mt-2 text-sm text-(--vm-muted)">
+                            Something went wrong while loading your interview progress.
                         </p>
+
+                        <button
+                            type="button"
+                            onClick={() => refetch()}
+                            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-(--vm-primary) px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-(--vm-primary-pressed)"
+                        >
+                            <RefreshCw className="h-4 w-4" />
+                            Try again
+                        </button>
                     </div>
+                </div>
+            </main>
+        );
+    }
 
-                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                        <SkillScoreCard
-                            label="Communication"
-                            description="How effectively you express ideas."
-                            score={
-                                progress.skills.communication
-                            }
-                            type="communication"
+    if (!data) {
+        return null;
+    }
+
+    const hasProgress = data.completedInterviews > 0;
+
+    return (
+        <main className="min-h-full bg-(--vm-background) px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl space-y-6">
+                <ProgressHeader />
+
+                {!hasProgress ? (
+                    <EmptyProgress />
+                ) : (
+                    <>
+                        <ProgressOverview
+                            overallScore={data.overallScore}
+                            improvementPercentage={data.improvementPercentage}
+                            highestScore={data.highestScore}
+                            completedInterviews={data.completedInterviews}
+                            currentStreak={data.currentStreak}
+                            weeklyInterviews={data.weeklyInterviews}
                         />
 
-                        <SkillScoreCard
-                            label="Clarity"
-                            description="How clearly you communicate."
-                            score={
-                                progress.skills.clarity
-                            }
-                            type="clarity"
-                        />
+                        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,0.8fr)]">
+                            <ScoreTrend
+                                scoreTrend={data.scoreTrend}
+                            />
 
-                        <SkillScoreCard
-                            label="Confidence"
-                            description="How confidently you respond."
-                            score={
-                                progress.skills.confidence
-                            }
-                            type="confidence"
-                        />
-
-                        <SkillScoreCard
-                            label="Relevance"
-                            description="How directly you answer."
-                            score={
-                                progress.skills.relevance
-                            }
-                            type="relevance"
-                        />
-                    </div>
-                </section>
-
-                {/* Insights */}
-                {(progress.strongestSkill ||
-                    progress.needsAttention) && (
-                        <section className="mt-6 grid gap-3 md:grid-cols-2">
-                            {progress.strongestSkill && (
-                                <ProgressInsight
-                                    type="strongest"
-                                    name={
-                                        progress
-                                            .strongestSkill
-                                            .name
-                                    }
-                                    score={
-                                        progress
-                                            .strongestSkill
-                                            .score
-                                    }
-                                />
-                            )}
-
-                            {progress.needsAttention && (
-                                <ProgressInsight
-                                    type="attention"
-                                    name={
-                                        progress
-                                            .needsAttention
-                                            .name
-                                    }
-                                    score={
-                                        progress
-                                            .needsAttention
-                                            .score
-                                    }
-                                />
-                            )}
-                        </section>
-                    )}
-
-                {/* Practice CTA */}
-                <section className="mt-6">
-                    <Card className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-                        <div>
-                            <p className="text-sm font-semibold text-(--vm-text)">
-                                Ready for another session?
-                            </p>
-
-                            <p className="mt-1 text-xs text-(--vm-muted)">
-                                Practice your weakest skill and see how your score changes.
-                            </p>
+                            <SkillPerformance
+                                skills={data.skills}
+                            />
                         </div>
 
-                        <Link
-                            to="/scenarios"
-                            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-(--vm-radius-md) bg-(--vm-primary) px-4 text-xs font-medium text-white transition-colors hover:bg-(--vm-primary-pressed)"
-                        >
-                            Start Practice
-                            <ArrowRight size={14} />
-                        </Link>
-                    </Card>
-                </section>
-            </Container>
+                        <FocusArea
+                            focusArea={data.focusArea}
+                        />
+
+                        <StrengthsAndImprovements
+                            strengths={data.strengths}
+                            areasToImprove={data.areasToImprove}
+                        />
+
+                        <PracticeGoal
+                            goal={data.weeklyGoal}
+                        />
+
+                        <InterviewHistory
+                            interviews={data.interviewHistory}
+                        />
+                    </>
+                )}
+            </div>
         </main>
+    );
+}
+
+function ProgressSkeleton() {
+    return (
+        <main className="min-h-full bg-(--vm-background) px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl animate-pulse space-y-6">
+                <div className="space-y-2">
+                    <div className="h-8 w-48 rounded-lg bg-(--vm-surface-2)" />
+                    <div className="h-4 w-80 max-w-full rounded-lg bg-(--vm-surface-2)" />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                        <div
+                            key={index}
+                            className="h-36 rounded-2xl border border-(--vm-border) bg-(--vm-surface)"
+                        />
+                    ))}
+                </div>
+
+                <div className="grid gap-6 lg:grid-cols-[1.5fr_0.8fr]">
+                    <div className="h-80 rounded-2xl bg-(--vm-surface)" />
+                    <div className="h-80 rounded-2xl bg-(--vm-surface)" />
+                </div>
+
+                <div className="h-40 rounded-2xl bg-(--vm-surface)" />
+
+                <div className="grid gap-6 lg:grid-cols-2">
+                    <div className="h-60 rounded-2xl bg-(--vm-surface)" />
+                    <div className="h-60 rounded-2xl bg-(--vm-surface)" />
+                </div>
+            </div>
+        </main>
+    );
+}
+
+function EmptyProgress() {
+    return (
+        <section className="flex min-h-105 items-center justify-center rounded-2xl border border-(--vm-border) bg-(--vm-surface) p-6 text-center shadow-sm">
+            <div className="max-w-md">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-(--vm-primary)/10 text-(--vm-primary)">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        className="h-6 w-6"
+                    >
+                        <path d="M4 19V5" />
+                        <path d="M4 19h16" />
+                        <path d="M8 16v-5" />
+                        <path d="M12 16V8" />
+                        <path d="M16 16v-9" />
+                    </svg>
+                </div>
+
+                <h2 className="mt-5 text-xl font-bold text-(--vm-text)">
+                    Your progress starts here
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-(--vm-muted)">
+                    Complete your first mock interview to start tracking your
+                    scores, skills, streaks, and improvement.
+                </p>
+
+                <button
+                    type="button"
+                    onClick={() => {
+                        window.location.href = "/interviews";
+                    }}
+                    className="mt-5 inline-flex rounded-xl bg-(--vm-primary) px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-(--vm-primary-pressed)"
+                >
+                    Start an interview
+                </button>
+            </div>
+        </section>
     );
 }

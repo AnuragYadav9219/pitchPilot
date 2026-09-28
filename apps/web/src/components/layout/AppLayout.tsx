@@ -1,26 +1,23 @@
 import { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-
 import { Header } from "./Header";
 import { MobileSidebar } from "./MobileSidebar";
 import { Sidebar } from "./Sidebar";
+import { useGetDashboardQuery } from "@/features/dashboard/dashboardApi";
 
 export function AppLayout() {
     const location = useLocation();
     const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-    // Practice pages have their own layout (no global chrome/sidebar/header)
-    const isPracticeExperience =
-        location.pathname === "/practice" ||
-        location.pathname.startsWith("/practice/");
+    const { data: dashboard } = useGetDashboardQuery();
+
+    const isVoiceInterviewExperience = location.pathname.startsWith("/voice-interview/");
 
     // Lock body scroll when mobile sidebar is open
     useEffect(() => {
         if (!mobileSidebarOpen) return;
-
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
-
         return () => {
             document.body.style.overflow = previousOverflow;
         };
@@ -31,7 +28,7 @@ export function AppLayout() {
         setMobileSidebarOpen(false);
     }, [location.pathname]);
 
-    if (isPracticeExperience) {
+    if (isVoiceInterviewExperience) {
         return (
             <div className="min-h-dvh bg-(--vm-background) text-(--vm-text)">
                 <main className="min-h-dvh min-w-0">
@@ -56,7 +53,11 @@ export function AppLayout() {
 
             {/* Main Application */}
             <div className="flex min-h-dvh min-w-0 flex-col lg:ml-64">
-                <Header onMenuClick={() => setMobileSidebarOpen(true)} />
+                <Header
+                    currentStreak={dashboard?.stats.currentStreak ?? 0}
+                    onMenuClick={() => setMobileSidebarOpen(true)}
+                />
+
                 <main className="min-w-0 flex-1">
                     <Outlet />
                 </main>

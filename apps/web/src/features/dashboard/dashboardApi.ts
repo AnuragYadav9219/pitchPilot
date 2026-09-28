@@ -1,28 +1,16 @@
 import { baseApi } from "@/services/baseApi";
+import type { DashboardResponse } from "./types";
 
-import type {
-    DashboardResponse,
-} from "./types";
-import type { ApiResponse } from "@/types/types";
-
-export const dashboardApi =
-    baseApi.injectEndpoints({
-        endpoints: (builder) => ({
-            getDashboard: builder.query<ApiResponse<DashboardResponse>, void>({
-                query: () => ({
-                    url: "/api/dashboard",
-                    method: "GET",
-                }),
-
-                providesTags: [
-                    {
-                        type: "Dashboard",
-                        id: "MAIN",
-                    },
-                ],
+export const dashboardApi = baseApi.injectEndpoints({
+    endpoints: (builder) => ({
+        getDashboard: builder.query<DashboardResponse, void>({
+            query: () => ({
+                url: "/api/dashboard",
+                method: "GET",
             }),
         }),
-    });
+    }),
+});
 
 export const {
     useGetDashboardQuery,

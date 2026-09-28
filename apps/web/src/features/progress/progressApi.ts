@@ -1,23 +1,14 @@
 import { baseApi } from "@/services/baseApi";
 
-import type {
-    ProgressResponse,
-} from "./types";
-import type { ApiResponse } from "@/types/types";
+import type { ProgressResponse } from "./types";
 
 export const progressApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getProgress: builder.query<ApiResponse<ProgressResponse>, void>({
+        getProgress: builder.query<ProgressResponse, void>({
             query: () => ({
-                url: "/api/dashboard/progress",
+                url: "/api/progress",
                 method: "GET",
             }),
-            providesTags: [
-                {
-                    type: "Dashboard",
-                    id: "PROGRESS",
-                },
-            ],
         }),
     }),
 });

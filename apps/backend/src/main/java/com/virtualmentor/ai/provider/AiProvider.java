@@ -1,9 +1,9 @@
 package com.virtualmentor.ai.provider;
 
-public interface AiProvider {
+import com.virtualmentor.ai.model.AiRequest;
+import com.virtualmentor.ai.model.AiResponse;
 
-    AiProviderType getType();
-
-    AiResponse generate(
-            AiRequest request);
+public interface  AiProvider {
+    
+    AiResponse generate(AiRequest request);
 }

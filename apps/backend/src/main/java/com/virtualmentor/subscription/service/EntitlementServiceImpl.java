@@ -4,12 +4,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.virtualmentor.config.PlanEntitlementConfig;
+import com.virtualmentor.config.configurations.PlanEntitlementConfig;
 import com.virtualmentor.subscription.entity.Entitlement;
-import com.virtualmentor.subscription.entity.Subscription;
 import com.virtualmentor.subscription.entity.SubscriptionPlan;
-import com.virtualmentor.subscription.entity.SubscriptionStatus;
 import com.virtualmentor.subscription.exception.SubscriptionRequiredException;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +21,7 @@ public class EntitlementServiceImpl implements EntitlementService {
     private final PlanEntitlementConfig planEntitlementConfig;
 
     @Override
+    @Transactional(readOnly = true)
     public boolean hasEntitlement(UUID userId, Entitlement entitlement) {
 
         return getEntitlements(userId)
@@ -39,18 +39,12 @@ public class EntitlementServiceImpl implements EntitlementService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Entitlement> getEntitlements(UUID userId) {
 
-        Subscription subscription = subscriptionService.getOrCreate(userId);
+        SubscriptionPlan effectivePlan = subscriptionService.getEffectivePlan(userId);
 
-        if (subscription.getPlan() != SubscriptionPlan.FREE
-                && subscription.getStatus() != SubscriptionStatus.ACTIVE) {
-                    
-            return planEntitlementConfig.getEntitlements(SubscriptionPlan.FREE);
-        }
-
-        return planEntitlementConfig
-                .getEntitlements(subscription.getPlan());
+        return planEntitlementConfig.getEntitlements(effectivePlan);
     }
 
 }

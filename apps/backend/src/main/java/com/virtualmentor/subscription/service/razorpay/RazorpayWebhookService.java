@@ -1,6 +1,7 @@
 package com.virtualmentor.subscription.service.razorpay;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import com.virtualmentor.subscription.entity.Subscription;
 import com.virtualmentor.subscription.entity.SubscriptionPlan;
 import com.virtualmentor.subscription.entity.SubscriptionStatus;
 import com.virtualmentor.subscription.repository.SubscriptionRepository;
+import com.virtualmentor.subscription.service.credit.SubscriptionCreditService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +23,7 @@ public class RazorpayWebhookService {
 
     private final RazorpayProperties properties;
     private final SubscriptionRepository subscriptionRepository;
+    private final SubscriptionCreditService subscriptionCreditService;
 
     @Transactional
     public void process(String payload, String signature) {
@@ -36,27 +39,32 @@ public class RazorpayWebhookService {
             case "subscription.activated" ->
                 updateSubscription(
                         webhook,
-                        SubscriptionStatus.ACTIVE);
+                        SubscriptionStatus.ACTIVE,
+                        false);
 
             case "subscription.charged" ->
                 updateSubscription(
                         webhook,
-                        SubscriptionStatus.ACTIVE);
+                        SubscriptionStatus.ACTIVE,
+                        true);
 
             case "subscription.cancelled" ->
                 updateSubscription(
                         webhook,
-                        SubscriptionStatus.CANCELLED);
+                        SubscriptionStatus.CANCELLED,
+                        false);
 
             case "subscription.completed" ->
                 updateSubscription(
                         webhook,
-                        SubscriptionStatus.EXPIRED);
+                        SubscriptionStatus.EXPIRED,
+                        false);
 
             case "subscription.halted" ->
                 updateSubscription(
                         webhook,
-                        SubscriptionStatus.BILLING_RETRY);
+                        SubscriptionStatus.BILLING_RETRY,
+                        false);
 
             default -> {
                 // Event does not require a local subscription update.
@@ -81,7 +89,7 @@ public class RazorpayWebhookService {
         }
     }
 
-    private void updateSubscription(JSONObject webhook, SubscriptionStatus status) {
+    private void updateSubscription(JSONObject webhook, SubscriptionStatus status, boolean grantCredits) {
 
         JSONObject payload = webhook.optJSONObject("payload");
 
@@ -135,6 +143,45 @@ public class RazorpayWebhookService {
         }
 
         subscriptionRepository.save(subscription);
+
+        if (grantCredits) {
+
+            String paymentReference = extractBillingReference(webhook);
+
+            subscriptionCreditService.grantMonthlyCredits(
+                    subscription.getUserId(),
+                    subscription.getId(),
+                    paymentReference);
+        }
+    }
+
+    private String extractBillingReference(JSONObject webhook) {
+
+        JSONObject payload = webhook.optJSONObject("payload");
+
+        if (payload == null) {
+            throw new IllegalArgumentException("Razorpay webhook payload is missing");
+        }
+
+        JSONObject paymentPayload = payload.optJSONObject("payment");
+
+        if (paymentPayload == null) {
+            return webhook.optString("id", UUID.randomUUID().toString());
+        }
+
+        JSONObject entity = paymentPayload.optJSONObject("entity");
+
+        if (entity == null) {
+            return webhook.optString("id", UUID.randomUUID().toString());
+        }
+
+        String paymentId = entity.optString("id", null);
+
+        if (paymentId == null || paymentId.isBlank()) {
+            throw new IllegalArgumentException("Razorpay payment ID is missing");
+        }
+
+        return paymentId;
     }
 
     private SubscriptionPlan resolvePlan(String productId) {

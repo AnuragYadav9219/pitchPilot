@@ -21,8 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserProfileServiceImpl
-                implements UserProfileService {
+public class UserProfileServiceImpl implements UserProfileService {
 
         private final UserProfileRepository profileRepository;
 
@@ -174,5 +173,14 @@ public class UserProfileServiceImpl
                 }
 
                 return result;
+        }
+
+        @Override
+        @Transactional
+        public UserProfile getOrCreateProfile(UUID userId) {
+
+                return profileRepository
+                                .findByUserIdWithContext(userId)
+                                .orElseGet(() -> createDefaultProfile(userId));
         }
 }

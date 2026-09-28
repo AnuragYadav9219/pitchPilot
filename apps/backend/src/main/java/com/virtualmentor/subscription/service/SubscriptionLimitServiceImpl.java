@@ -6,9 +6,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.virtualmentor.config.PlanLimitConfig;
-import com.virtualmentor.subscription.entity.Subscription;
+import com.virtualmentor.config.configurations.PlanLimitConfig;
 import com.virtualmentor.subscription.entity.SubscriptionLimit;
+import com.virtualmentor.subscription.entity.SubscriptionPlan;
 import com.virtualmentor.subscription.entity.SubscriptionUsage;
 import com.virtualmentor.subscription.exception.SubscriptionLimitExceededException;
 import com.virtualmentor.subscription.repository.SubscriptionUsageRepository;
@@ -19,93 +19,102 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SubscriptionLimitServiceImpl implements SubscriptionLimitService {
 
-    private static final int UNLIMITED = -1;
+        private final SubscriptionService subscriptionService;
+        private final SubscriptionUsageRepository usageRepository;
+        private final PlanLimitConfig planLimitConfig;
 
-    private final SubscriptionService subscriptionService;
-    private final SubscriptionUsageRepository usageRepository;
-    private final PlanLimitConfig planLimitConfig;
+        @Override
+        @Transactional(readOnly = true)
+        public boolean canUse(UUID userId, SubscriptionLimit limit) {
 
-    @Override
-    @Transactional(readOnly = true)
-    public boolean canUse(UUID userId, SubscriptionLimit limit) {
+                SubscriptionPlan effectivePlan = subscriptionService.getEffectivePlan(userId);
 
-        Subscription subscription = subscriptionService.getOrCreate(userId);
+                int max = planLimitConfig.getLimit(effectivePlan, limit);
 
-        int max = planLimitConfig.getLimit(
-                subscription.getPlan(),
-                limit);
+                if (max == PlanLimitConfig.UNLIMITED) {
+                        return true;
+                }
 
-        if (max == UNLIMITED) {
-            return true;
+                int used = getUsed(userId, limit);
+
+                return used < max;
         }
 
-        return getUsed(userId, limit) < max;
-    }
+        @Override
+        @Transactional
+        public void consume(UUID userId, SubscriptionLimit limit) {
 
-    @Override
-    @Transactional
-    public void consume(UUID userId, SubscriptionLimit limit) {
+                SubscriptionPlan effectivePlan = subscriptionService.getEffectivePlan(userId);
 
-        Subscription subscription = subscriptionService.getOrCreate(userId);
+                int max = planLimitConfig.getLimit(effectivePlan, limit);
 
-        int max = planLimitConfig.getLimit(
-                subscription.getPlan(),
-                limit);
+                // Unlimited feature
+                if (max == PlanLimitConfig.UNLIMITED) {
+                        return;
+                }
 
-        if (max == UNLIMITED) {
-            return;
+                String usageMonth = YearMonth.now().toString();
+
+                SubscriptionUsage usage = usageRepository
+                                .findForUpdate(userId, limit, usageMonth)
+                                .orElseGet(() -> createUsage(userId, limit, usageMonth));
+
+                if (usage.getUsageCount() >= max) {
+                        throw new SubscriptionLimitExceededException("Monthly "
+                                        + formatLimitName(limit)
+                                        + " limit reached");
+                }
+
+                usage.setUsageCount(usage.getUsageCount() + 1);
+
+                usageRepository.save(usage);
         }
 
-        String month = YearMonth.now().toString();
+        @Override
+        @Transactional(readOnly = true)
+        public int getLimit(UUID userId, SubscriptionLimit limit) {
 
-        SubscriptionUsage usage = usageRepository
-                .findByUserIdAndLimitTypeAndUsageMonth(
-                        userId,
-                        limit,
-                        month)
-                .orElseGet(() -> SubscriptionUsage.builder()
-                        .userId(userId)
-                        .limitType(limit)
-                        .usageMonth(month)
-                        .usageCount(0)
-                        .build());
-
-        if (usage.getUsageCount() >= max) {
-            throw new SubscriptionLimitExceededException(
-                    "Monthly "
-                            + limit.name().toLowerCase()
-                            + " limit reached");
+                SubscriptionPlan effectivePlan = subscriptionService.getEffectivePlan(userId);
+                return planLimitConfig.getLimit(effectivePlan, limit);
         }
 
-        usage.setUsageCount(
-                usage.getUsageCount() + 1);
+        @Override
+        @Transactional(readOnly = true)
+        public int getUsed(UUID userId, SubscriptionLimit limit) {
 
-        usageRepository.save(usage);
-    }
+                String usageMonth = YearMonth.now().toString();
 
-    @Override
-    @Transactional(readOnly = true)
-    public int getLimit(UUID userId, SubscriptionLimit limit) {
+                return usageRepository
+                                .findByUserIdAndLimitTypeAndUsageMonth(userId, limit, usageMonth)
+                                .map(SubscriptionUsage::getUsageCount)
+                                .orElse(0);
+        }
 
-        Subscription subscription = subscriptionService.getOrCreate(userId);
+        // ===================== PRIVATE METHODS ======================
 
-        return planLimitConfig.getLimit(
-                subscription.getPlan(),
-                limit);
-    }
+        private SubscriptionUsage createUsage(UUID userId, SubscriptionLimit limit, String usageMonth) {
 
-    @Override
-    @Transactional(readOnly = true)
-    public int getUsed(UUID userId, SubscriptionLimit limit) {
+                return SubscriptionUsage.builder()
+                                .userId(userId)
+                                .limitType(limit)
+                                .usageMonth(usageMonth)
+                                .usageCount(0)
+                                .build();
+        }
 
-        String month = YearMonth.now().toString();
+        private String formatLimitName(
+                        SubscriptionLimit limit) {
 
-        return usageRepository
-                .findByUserIdAndLimitTypeAndUsageMonth(
-                        userId,
-                        limit,
-                        month)
-                .map(SubscriptionUsage::getUsageCount)
-                .orElse(0);
-    }
+                return switch (limit) {
+
+                        case VOICE_INTERVIEWS ->
+                                "voice interview";
+
+                        case RESUME_ANALYSES ->
+                                "resume analysis";
+
+                        case JOB_SEARCHES ->
+                                "job search";
+                };
+        }
 }

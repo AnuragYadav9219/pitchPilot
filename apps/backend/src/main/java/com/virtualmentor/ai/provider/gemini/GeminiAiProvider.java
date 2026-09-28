@@ -1,260 +1,209 @@
 package com.virtualmentor.ai.provider.gemini;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.virtualmentor.ai.exception.AiProviderException;
-import com.virtualmentor.ai.exception.AiProviderRateLimitException;
-import com.virtualmentor.ai.exception.AiProviderUnavailableException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.virtualmentor.ai.config.GeminiProperties;
+import com.virtualmentor.ai.model.AiRequest;
+import com.virtualmentor.ai.model.AiResponse;
 import com.virtualmentor.ai.provider.AiProvider;
-import com.virtualmentor.ai.provider.AiProviderType;
-import com.virtualmentor.ai.provider.AiRequest;
-import com.virtualmentor.ai.provider.AiResponse;
-import com.virtualmentor.ai.provider.AiUsage;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Component
+@Slf4j
+@Service
 @RequiredArgsConstructor
 public class GeminiAiProvider implements AiProvider {
 
-        private final GeminiProperties properties;
-        private final RestClient.Builder restClientBuilder;
+    private final GeminiProperties properties;
+    private final RestClient.Builder restClientBuilder;
 
-        @Override
-        public AiProviderType getType() {
-                return AiProviderType.GEMINI;
+    @Override
+    public AiResponse generate(AiRequest request) {
+        if (properties.getApiKey() == null || properties.getApiKey().isBlank()) {
+            throw new IllegalStateException("GEMINI api key is not configured");
         }
 
-        @Override
-        public AiResponse generate(AiRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("AI request cannot be null");
+        }
 
-                String actualModel = request.model() != null &&
-                                !request.model().isBlank()
-                                                ? request.model()
-                                                : properties.getModel();
+        String prompt = buildPrompt(request);
 
-                if (actualModel == null || actualModel.isBlank()) {
-                        throw new AiProviderException(
-                                        "Gemini model is not configured. " +
-                                                        "Set virtualmentor.ai.gemini.model or GEMINI_MODEL.");
+        GeminiGenerateRequest body = new GeminiGenerateRequest(
+                List.of(new GeminiContent("user", List.of(new GeminiPart(prompt)))),
+                new GeminiGenerationConfig(properties.getTemperature(), properties.getMaxOutputTokens()));
+
+        try {
+
+            GeminiGenerateResponse response = restClientBuilder
+                    .baseUrl(properties.getBaseUrl())
+                    .build()
+                    .post()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/v1beta/models/{model}:generateContent")
+                            .queryParam(
+                                    "key",
+                                    properties.getApiKey())
+                            .build(properties.getModel()))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .body(body)
+                    .retrieve()
+                    .body(GeminiGenerateResponse.class);
+
+            if (response == null) {
+                throw new IllegalStateException("Gemini returned an empty response");
+            }
+
+            String content = extractContent(response);
+
+            if (content == null || content.isBlank()) {
+                throw new IllegalStateException("Gemini returned no generated text");
+            }
+
+            log.info(
+                    "Gemini response generated successfully. length={}",
+                    content.length());
+
+            return new AiResponse(
+                    content,
+                    Map.of(
+                            "provider", "GEMINI",
+                            "model", properties.getModel()));
+
+        } catch (Exception e) {
+            log.error(
+                    "Gemini AI generation failed. model={}",
+                    properties.getModel(),
+                    e);
+
+            throw new IllegalStateException(
+                    "Gemini AI request failed",
+                    e);
+        }
+    }
+
+    private String buildPrompt(AiRequest request) {
+
+        StringBuilder prompt = new StringBuilder();
+
+        if (request.systemPrompt() != null && !request.systemPrompt().isBlank()) {
+
+            prompt.append("""
+                    SYSTEM INSTRUCTIONS:
+                    """);
+
+            prompt.append(request.systemPrompt());
+
+            prompt.append("\n\n");
+        }
+
+        if (request.context() != null && !request.context().isEmpty()) {
+
+            prompt.append("""
+                    CONTEXT:
+                    """);
+
+            for (String context : request.context()) {
+                if (context != null && !context.isBlank()) {
+                    prompt.append(context);
+                    prompt.append("\n");
                 }
+            }
 
-                System.out.println("Gemini model = " + actualModel);
-System.out.println(
-        "Gemini base URL = " + properties.getBaseUrl()
-);
-
-                actualModel = actualModel
-                                .replaceFirst("^models/", "");
-
-                RestClient client = restClientBuilder
-                                .baseUrl(properties.getBaseUrl())
-                                .build();
-
-                GeminiRequest geminiRequest = buildRequest(request);
-
-                try {
-                        GeminiResponse response = client
-                                        .post()
-                                        .uri("/v1beta/models/{model}:generateContent", actualModel)
-                                        .header("x-goog-api-key", properties.getApiKey())
-                                        .contentType(MediaType.APPLICATION_JSON)
-                                        .body(geminiRequest)
-                                        .retrieve()
-                                        .body(GeminiResponse.class);
-
-                        return mapResponse(
-                                        response,
-                                        request);
-
-                } catch (HttpClientErrorException.TooManyRequests ex) {
-
-                        throw new AiProviderRateLimitException(
-                                        "AI provider rate limit reached");
-
-                } catch (HttpServerErrorException.ServiceUnavailable ex) {
-
-                        throw new AiProviderUnavailableException(
-                                        "AI provider is unavailable",
-                                        ex);
-
-                } catch (HttpServerErrorException.GatewayTimeout ex) {
-
-                        throw new AiProviderUnavailableException(
-                                        "AI provider time out",
-                                        ex);
-
-                } catch (ResourceAccessException ex) {
-
-                        throw new AiProviderUnavailableException(
-                                        "AI provider request timed out or is unreachable",
-                                        ex);
-
-                } catch (RestClientException ex) {
-
-                        throw new AiProviderException(
-                                        "AI provider request failed",
-                                        ex);
-                }
+            prompt.append("\n");
         }
 
-        // =============================================================
-        // PRIVATE METHODS
-        // =============================================================
+        prompt.append("""
+                USER REQUEST:
+                """);
 
-        private GeminiRequest buildRequest(AiRequest request) {
-                List<GeminiContent> contents = request
-                                .messages()
-                                .stream()
-                                .map(message -> new GeminiContent(
-                                                mapRole(message.role()),
-                                                List.of(
-                                                                new GeminiPart(message.content()))))
-                                .toList();
+        prompt.append(
+                request.userPrompt() == null
+                        ? ""
+                        : request.userPrompt());
 
-                GeminiGenerationConfig config = new GeminiGenerationConfig(
-                                request.temperature() != null
-                                                ? request.temperature()
-                                                : properties.getTemperature(),
+        return prompt.toString();
+    }
 
-                                request.maxOutputTokens() != null
-                                                ? request.maxOutputTokens()
-                                                : properties.getMaxOutputTokens());
+    private String extractContent(GeminiGenerateResponse response) {
 
-                GeminiSystemInstruction systemInstruction = request.systemInstruction() == null
-                                ? null
-                                : new GeminiSystemInstruction(
-                                                List.of(
-                                                                new GeminiPart(request.systemInstruction())));
-
-                return new GeminiRequest(
-                                contents,
-                                systemInstruction,
-                                config);
+        if (response.candidates() == null || response.candidates().isEmpty()) {
+            return null;
         }
 
-        private String mapRole(String role) {
+        GeminiCandidate candidate = response.candidates().get(0);
 
-                return switch (role.toLowerCase()) {
-                        case "assistant" -> "model";
-                        case "user" -> "user";
-                        default -> "user";
-                };
+        if (candidate.content() == null
+                || candidate.content().parts() == null
+                || candidate.content().parts().isEmpty()) {
+            return null;
         }
 
-        private AiResponse mapResponse(GeminiResponse response, AiRequest request) {
+        return candidate.content()
+                .parts()
+                .stream()
+                .map(GeminiPartResponse::text)
+                .filter(text -> text != null && !text.isBlank())
+                .reduce(
+                        "",
+                        (a, b) -> a.isBlank()
+                                ? b
+                                : a + b);
+    }
 
-                if (response == null ||
-                                response.candidates() == null ||
-                                response.candidates().isEmpty()) {
-                        throw new AiProviderException(
-                                        "Gemini returned an empty response");
-                }
+    // ============================================================
+    // Gemini request models
+    // ============================================================
 
-                GeminiCandidate candidate = response.candidates().get(0);
+    private record GeminiGenerateRequest(
+            List<GeminiContent> contents,
+            GeminiGenerationConfig generationConfig) {
+    }
 
-                if (candidate.content() == null ||
-                                candidate.content().parts() == null ||
-                                candidate.content().parts().isEmpty()) {
-                        throw new AiProviderException(
-                                        "Gemini returned no generated content");
-                }
+    private record GeminiContent(
+            String role,
+            List<GeminiPart> parts) {
+    }
 
-                String content = candidate.content()
-                                .parts()
-                                .stream()
-                                .map(GeminiPart::text)
-                                .filter(text -> text != null &&
-                                                !text.isBlank())
-                                .reduce(
-                                                "",
-                                                (a, b) -> a + b);
+    private record GeminiPart(
+            String text) {
+    }
 
-                if (content.isBlank()) {
-                        throw new AiProviderException("Gemini returned empty generated content");
-                }
+    private record GeminiGenerationConfig(
+            double temperature,
+            int maxOutputTokens) {
+    }
 
-                GeminiUsageMetadata usage = response.usageMetadata();
+    // ============================================================
+    // Gemini response models
+    // ============================================================
 
-                AiUsage aiUsage = usage == null
-                                ? new AiUsage(null, null, null)
-                                : new AiUsage(
-                                                usage.promptTokenCount(),
-                                                usage.candidatesTokenCount(),
-                                                usage.totalTokenCount());
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private record GeminiGenerateResponse(
+            List<GeminiCandidate> candidates) {
+    }
 
-                String actualModel = request
-                                .model() != null &&
-                                !request.model().isBlank()
-                                                ? request.model()
-                                                : properties.getModel();
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private record GeminiCandidate(
+            GeminiResponseContent content) {
+    }
 
-                return new AiResponse(
-                                content,
-                                AiProviderType.GEMINI,
-                                actualModel,
-                                aiUsage,
-                                null);
-        }
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private record GeminiResponseContent(
+            List<GeminiPartResponse> parts) {
+    }
 
-        // =========================================================
-        // GEMINI REQUEST MODELS
-        // =========================================================
-
-        private record GeminiRequest(
-                        List<GeminiContent> contents,
-                        GeminiSystemInstruction systemInstruction,
-                        GeminiGenerationConfig generationConfig) {
-
-        }
-
-        private record GeminiContent(
-                        String role,
-                        List<GeminiPart> parts) {
-
-        }
-
-        private record GeminiSystemInstruction(
-                        List<GeminiPart> parts) {
-        }
-
-        private record GeminiPart(
-                        String text) {
-        }
-
-        private record GeminiGenerationConfig(
-                        double temperature,
-                        int maxOutputTokens) {
-        }
-
-        // =========================================================
-        // GEMINI RESPONSE MODELS
-        // =========================================================
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        private record GeminiResponse(
-                        List<GeminiCandidate> candidates,
-                        GeminiUsageMetadata usageMetadata) {
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        private record GeminiCandidate(
-                        GeminiContent content) {
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        private record GeminiUsageMetadata(
-                        Integer promptTokenCount,
-                        Integer candidatesTokenCount,
-                        Integer totalTokenCount) {
-        }
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private record GeminiPartResponse(
+            @JsonProperty("text") String text) {
+    }
 }

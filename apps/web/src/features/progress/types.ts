@@ -1,35 +1,68 @@
-import type { ApiResponse } from "@/types/types";
-
-export interface ProgressScoreSummary {
-    current: number | null;
-    previous: number | null;
-    change: number | null;
+export interface SkillProgress {
+    name: string;
+    currentScore: number;
+    previousScore: number;
+    improvementPercentage: number;
 }
 
-export interface ProgressSkillScores {
-    communication: number | null;
-    clarity: number | null;
-    confidence: number | null;
-    relevance: number | null;
+export interface ScoreTrendPoint {
+    date: string;
+    score: number;
 }
 
-export interface ProgressTrendPoint {
-    sessionNumber: number;
-    score: number | null;
+export interface InterviewProgressItem {
+    interviewId: number;
+    role: string;
+    score: number;
     completedAt: string | null;
 }
 
-export interface ProgressSkillInsight {
-    name: string;
-    score: number | null;
+export interface ProgressResponse {
+    overallScore: number;
+    previousScore: number;
+    improvementPercentage: number;
+    skills: SkillProgress[];
+    scoreTrend: ScoreTrendPoint[];
+    interviewHistory: InterviewProgressItem[];
+    strengths: string[];
+    areasToImprove: string[];
+}
+
+export interface FocusArea {
+    skill: string;
+    score: number;
+    gapFromOverall: number;
+    recommendation: string;
+}
+
+export interface GoalProgress {
+    completed: number;
+    target: number;
+    percentage: number;
 }
 
 export interface ProgressResponse {
-    overall: ProgressScoreSummary;
-    skills: ProgressSkillScores;
-    trend: ProgressTrendPoint[];
-    strongestSkill: ProgressSkillInsight | null;
-    needsAttention: ProgressSkillInsight | null;
-}
+    overallScore: number;
+    previousScore: number;
+    improvementPercentage: number;
 
-export type ProgressApiResponse = ApiResponse<ProgressResponse>;
+    totalInterviews: number;
+    completedInterviews: number;
+    highestScore: number;
+
+    currentStreak: number;
+    longestStreak: number;
+
+    weeklyInterviews: number;
+    monthlyInterviews: number;
+
+    skills: SkillProgress[];
+    scoreTrend: ScoreTrendPoint[];
+    interviewHistory: InterviewProgressItem[];
+
+    strengths: string[];
+    areasToImprove: string[];
+
+    focusArea: FocusArea | null;
+    weeklyGoal: GoalProgress;
+}

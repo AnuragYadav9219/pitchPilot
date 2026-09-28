@@ -1,36 +1,29 @@
 package com.virtualmentor.progress.dto;
 
-import java.time.Instant;
 import java.util.List;
 
 public record ProgressResponse(
-                ScoreSummary overall,
-                SkillScores skills,
-                List<TrendPoint> trend,
-                SkillInsight strongestSkill,
-                SkillInsight needsAttention) {
+                double overallScore,
+                double previousScore,
+                double improvementPercentage,
 
-        public record ScoreSummary(
-                        Integer current,
-                        Integer previous,
-                        Double change) {
-        }
+                int totalInterviews,
+                int completedInterviews,
+                double highestScore,
 
-        public record SkillScores(
-                        Integer communication,
-                        Integer clarity,
-                        Integer confidence,
-                        Integer relevance) {
-        }
+                int currentStreak,
+                int longestStreak,
 
-        public record TrendPoint(
-                        int sessionNumber,
-                        Integer score,
-                        Instant completedAt) {
-        }
+                int weeklyInterviews,
+                int monthlyInterviews,
 
-        public record SkillInsight(
-                        String name,
-                        Integer score) {
-        }
+                List<SkillProgress> skills,
+                List<ScoreTrendPoint> scoreTrend,
+                List<InterviewProgressItem> interviewHistory,
+
+                List<String> strengths,
+                List<String> areasToImprove,
+
+                FocusArea focusArea,
+                GoalProgress weeklyGoal) {
 }
